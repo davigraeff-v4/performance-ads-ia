@@ -1,0 +1,4 @@
+interface:
+  display_name: "Executor de Mudanças"
+  short_description: "Executa somente mudanças explicitamente aprovadas"
+  default_prompt: "Use $13-approved-change-executor para executar um lote Meta já aprovado."

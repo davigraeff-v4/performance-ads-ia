@@ -1,0 +1,4 @@
+interface:
+  display_name: "Metas e Baseline"
+  short_description: "Define KPIs, metas, baseline e breakeven"
+  default_prompt: "Use $04-goals-kpis-baseline para definir as metas e referências da campanha."

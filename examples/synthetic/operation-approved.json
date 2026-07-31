@@ -1,0 +1,43 @@
+{
+  "operation_id": "op-20260801-1430-empresa-exemplo",
+  "version": 1,
+  "status": "proposed",
+  "type": "otimizacao",
+  "client_slug": "empresa-exemplo",
+  "created_at": "2026-08-01T14:30:00-03:00",
+  "updated_at": "2026-08-01T14:30:00-03:00",
+  "scope": "Campanha A",
+  "currency": "BRL",
+  "timezone": "America/Sao_Paulo",
+  "sources": ["Meta Ads sintético"],
+  "changes": [
+    {
+      "change_id": "chg-001",
+      "target_type": "campaign",
+      "target_ref": "campaign-****1234",
+      "field": "daily_budget",
+      "before": 500,
+      "after": 650,
+      "rationale": "Cenário sintético para validar hash e schema.",
+      "evidence": ["Caso sintético"],
+      "financial_impact": 150,
+      "risk": "Maior gasto diário.",
+      "rollback": "Restaurar daily_budget para 500 em novo lote aprovado.",
+      "execution_mode": "mcp"
+    }
+  ],
+  "approval": {
+    "approved": false,
+    "approved_by": null,
+    "approved_at": null,
+    "version": null,
+    "hash": null,
+    "statement": null
+  },
+  "execution": {
+    "started_at": null,
+    "finished_at": null,
+    "results": [],
+    "post_snapshot": null
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Orçamento e Lances"
+  short_description: "Planeja verba, distribuição e estratégia de lance"
+  default_prompt: "Use $08-budget-bidding-allocation para planejar orçamento e lances com base em metas."

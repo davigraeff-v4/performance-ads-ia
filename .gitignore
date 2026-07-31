@@ -1,0 +1,32 @@
+# Sistema e editores
+.DS_Store
+.idea/
+.vscode/
+__pycache__/
+*.pyc
+
+# Configuração local, autenticação e segredos
+.claude/settings.local.json
+.mcp.json
+*.env
+.env.*
+!.env.example
+*.token
+*.secret
+
+# Dados reais de clientes. Mantém somente o template sintético.
+clients/*
+!clients/cliente-template/
+!clients/cliente-template/**
+
+# Exportações e dossiês reais
+outputs/
+imports/
+exports/
+*.csv
+*.xlsx
+*.xls
+
+# Evidências e testes locais com contas reais
+TESTE-REAL-*
+HANDOFF-*

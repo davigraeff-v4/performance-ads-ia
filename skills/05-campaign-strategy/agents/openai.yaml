@@ -1,0 +1,4 @@
+interface:
+  display_name: "Estratégia de Campanha"
+  short_description: "Conecta objetivo comercial à estratégia Meta"
+  default_prompt: "Use $05-campaign-strategy para planejar a estratégia de uma campanha Meta."

@@ -1,0 +1,18 @@
+{
+  "00-configuracao-mcp": [],
+  "01-client-campaign-intake": [],
+  "02-meta-account-connection": ["00-configuracao-mcp", "01-client-campaign-intake"],
+  "03-measurement-data-quality": ["02-meta-account-connection"],
+  "04-goals-kpis-baseline": ["01-client-campaign-intake", "03-measurement-data-quality"],
+  "05-campaign-strategy": ["04-goals-kpis-baseline"],
+  "06-account-campaign-architecture": ["05-campaign-strategy"],
+  "07-audience-strategy": ["05-campaign-strategy"],
+  "08-budget-bidding-allocation": ["04-goals-kpis-baseline", "06-account-campaign-architecture"],
+  "09-creative-performance-brief": ["05-campaign-strategy"],
+  "10-campaign-build-plan": ["06-account-campaign-architecture", "07-audience-strategy", "08-budget-bidding-allocation", "09-creative-performance-brief"],
+  "11-performance-diagnosis": ["02-meta-account-connection", "03-measurement-data-quality", "04-goals-kpis-baseline"],
+  "12-optimization-change-set": ["11-performance-diagnosis"],
+  "13-approved-change-executor": ["10-campaign-build-plan", "12-optimization-change-set"],
+  "14-reporting-memory-learning": ["11-performance-diagnosis"],
+  "15-meta-help-center-retrieval": []
+}

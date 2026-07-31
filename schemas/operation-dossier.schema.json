@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MetaPerformanceOperationDossier",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["operation_id", "version", "status", "type", "client_slug", "created_at", "updated_at", "scope", "sources", "changes", "approval", "execution"],
+  "properties": {
+    "operation_id": {"type": "string", "pattern": "^op-[a-z0-9-]+$"},
+    "version": {"type": "integer", "minimum": 1},
+    "status": {"enum": ["draft", "proposed", "approved", "executing", "executed", "partial_failure", "failed", "reverted", "analysis_only"]},
+    "type": {"enum": ["configuracao", "onboarding", "planejamento", "criacao", "auditoria", "analise", "otimizacao", "execucao", "reversao", "relatorio"]},
+    "client_slug": {"type": "string"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "scope": {"type": "string"},
+    "currency": {"type": ["string", "null"]},
+    "timezone": {"type": ["string", "null"]},
+    "sources": {"type": "array", "items": {"type": "string"}},
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["change_id", "target_type", "target_ref", "field", "before", "after", "rationale", "risk", "rollback", "execution_mode"],
+        "properties": {
+          "change_id": {"type": "string"},
+          "target_type": {"enum": ["campaign", "adset", "ad", "creative", "audience", "account_setting"]},
+          "target_ref": {"type": "string"},
+          "field": {"type": "string"},
+          "before": {},
+          "after": {},
+          "rationale": {"type": "string"},
+          "evidence": {"type": "array", "items": {"type": "string"}},
+          "financial_impact": {"type": ["number", "null"]},
+          "risk": {"type": "string"},
+          "rollback": {"type": "string"},
+          "execution_mode": {"enum": ["mcp", "manual_only", "blocked"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "approval": {
+      "type": "object",
+      "required": ["approved", "approved_by", "approved_at", "version", "hash", "statement"],
+      "properties": {
+        "approved": {"type": "boolean"},
+        "approved_by": {"type": ["string", "null"]},
+        "approved_at": {"type": ["string", "null"], "format": "date-time"},
+        "version": {"type": ["integer", "null"]},
+        "hash": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+        "statement": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "execution": {
+      "type": "object",
+      "required": ["started_at", "finished_at", "results", "post_snapshot"],
+      "properties": {
+        "started_at": {"type": ["string", "null"], "format": "date-time"},
+        "finished_at": {"type": ["string", "null"], "format": "date-time"},
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["change_id", "status"],
+            "properties": {
+              "change_id": {"type": "string"},
+              "status": {"enum": ["success", "failed", "not_attempted"]},
+              "message": {"type": ["string", "null"]},
+              "timestamp": {"type": ["string", "null"], "format": "date-time"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "post_snapshot": {"type": ["object", "null"]}
+      },
+      "additionalProperties": false
+    }
+  }
+}

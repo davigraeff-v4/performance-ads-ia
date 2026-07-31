@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MetaPerformanceCampaignState",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["campaign_slug", "client_slug", "status", "objective", "business_goal", "sources", "facts", "hypotheses", "constraints", "updated_at"],
+  "properties": {
+    "campaign_slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "client_slug": {"type": "string"},
+    "status": {"enum": ["planning", "proposed", "approved", "active", "paused", "completed", "unknown"]},
+    "objective": {"type": ["string", "null"]},
+    "business_goal": {"type": "string"},
+    "conversion_location": {"type": ["string", "null"]},
+    "performance_goal": {"type": ["string", "null"]},
+    "optimization_event": {"type": ["string", "null"]},
+    "budget": {"type": ["number", "null"], "minimum": 0},
+    "currency": {"type": ["string", "null"]},
+    "sources": {"type": "array", "items": {"type": "string"}},
+    "facts": {"type": "array", "items": {"type": "string"}},
+    "hypotheses": {"type": "array", "items": {"type": "string"}},
+    "constraints": {"type": "array", "items": {"type": "string"}},
+    "strategy": {"type": "object"},
+    "updated_at": {"type": "string", "format": "date-time"}
+  }
+}
+

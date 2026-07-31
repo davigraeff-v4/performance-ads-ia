@@ -1,0 +1,4 @@
+interface:
+  display_name: "Conexão da Conta Meta"
+  short_description: "Valida conta, ativos, moeda e permissões Meta"
+  default_prompt: "Use $02-meta-account-connection para validar a conta Meta antes da análise."

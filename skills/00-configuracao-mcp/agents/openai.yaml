@@ -1,0 +1,4 @@
+interface:
+  display_name: "Configuração MCP"
+  short_description: "Configura e valida o MCP oficial do Meta Ads"
+  default_prompt: "Use $00-configuracao-mcp para configurar e validar com segurança o MCP do Meta Ads."

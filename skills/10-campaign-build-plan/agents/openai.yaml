@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plano de Construção"
+  short_description: "Consolida a configuração de uma nova campanha"
+  default_prompt: "Use $10-campaign-build-plan para gerar o plano completo de construção de campanha."

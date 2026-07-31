@@ -1,0 +1,4 @@
+interface:
+  display_name: "Intake de Cliente"
+  short_description: "Organiza cliente, campanha, metas e restrições"
+  default_prompt: "Use $01-client-campaign-intake para cadastrar o contexto de um cliente e campanha."

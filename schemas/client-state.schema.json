@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MetaPerformanceClientState",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["client_slug", "client_name", "business_model", "updated_at", "goals", "constraints", "sources"],
+  "properties": {
+    "client_slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "client_name": {"type": "string", "minLength": 1},
+    "business_model": {"enum": ["lead_generation", "ecommerce"]},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "account": {
+      "type": ["object", "null"],
+      "properties": {
+        "name": {"type": ["string", "null"]},
+        "masked_id": {"type": ["string", "null"]},
+        "currency": {"type": ["string", "null"]},
+        "timezone": {"type": ["string", "null"]},
+        "connection_status": {"enum": ["unknown", "validated_read", "validated_write", "ambiguous", "unavailable"]}
+      },
+      "required": ["connection_status"],
+      "additionalProperties": false
+    },
+    "goals": {"type": "array", "items": {"$ref": "#/definitions/keyValueSource"}},
+    "constraints": {"type": "array", "items": {"type": "string"}},
+    "sources": {"type": "array", "items": {"$ref": "#/definitions/source"}},
+    "sales_cycle_days": {"type": ["number", "null"], "minimum": 0},
+    "margin": {"type": ["number", "null"]},
+    "notes": {"type": "array", "items": {"type": "string"}}
+  },
+  "definitions": {
+    "source": {
+      "type": "object",
+      "required": ["name", "kind", "status"],
+      "properties": {
+        "name": {"type": "string"},
+        "kind": {"enum": ["meta", "csv", "xlsx", "google_sheets", "crm", "manual"]},
+        "status": {"enum": ["available", "unavailable", "stale", "unverified"]}
+      },
+      "additionalProperties": false
+    },
+    "keyValueSource": {
+      "type": "object",
+      "required": ["name", "value", "unit", "source"],
+      "properties": {
+        "name": {"type": "string"},
+        "value": {"type": ["number", "string", "null"]},
+        "unit": {"type": "string"},
+        "source": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  }
+}
+

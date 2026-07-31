@@ -1,0 +1,37 @@
+---
+name: 02-meta-account-connection
+description: Confirma de forma não destrutiva a conta Meta correta, ativos, moeda, timezone, permissões e capacidades do MCP. Use antes de qualquer leitura de performance, planejamento operacional ou execução.
+---
+
+# Conexão e Escopo da Conta Meta
+
+## Pré-requisitos
+
+1. Skill `00` concluída ao menos para leitura.
+2. Skill `01` com cliente e conta esperada.
+3. `CLIENTE.md` e dossiê atual.
+
+## Processo
+
+1. Listar contas acessíveis sem fazer mutação.
+2. Comparar nome, ID mascarado, business, moeda e timezone com a ficha.
+3. Confirmar pixel/dataset, página, Instagram, catálogo e domínio quando aplicáveis.
+4. Inventariar ferramentas de leitura e escrita realmente expostas.
+5. Registrar permissões insuficientes e ativos indisponíveis.
+6. Pedir confirmação se houver qualquer ambiguidade.
+
+## Gate
+
+- `validated_read`: conta inequívoca e leitura testada.
+- `validated_write`: leitura validada mais ferramenta/permissão de escrita detectada.
+- `ambiguous`: mais de uma conta plausível; bloquear.
+- `unavailable`: conta ou ferramenta ausente; modo consultivo/local.
+
+## Registro
+
+Salvar no dossiê data da consulta, nome, ID mascarado, moeda, timezone, ativos e capacidades. ID integral só pode existir em estado local estritamente necessário; nunca em conhecimento ou exemplo.
+
+## Proibição
+
+Não usar uma conta "parecida" para continuar. Não testar escrita criando objeto descartável.
+
