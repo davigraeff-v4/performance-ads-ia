@@ -1,0 +1,4 @@
+interface:
+  display_name: "Construção Google Ads"
+  short_description: "Consolida o plano de campanha Google Ads"
+  default_prompt: "Use $23-google-ads-campaign-build-plan para consolidar uma campanha Google Ads em um plano aprovável."

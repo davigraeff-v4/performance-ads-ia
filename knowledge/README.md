@@ -1,10 +1,10 @@
-# Base de Conhecimento — META PERFORMANCE IA
+# Base de Conhecimento — PERFORMANCE ADS IA
 
 Use este índice no início de toda auditoria, análise, criação ou otimização. Leia apenas os arquivos relevantes, mas cumpra as leituras obrigatórias da skill.
 
 ## Precedência
 
-1. Fonte oficial Meta atualizada para funcionamento, produto e política.
+1. Fonte oficial atual da plataforma para funcionamento, produto e política.
 2. Dados confirmados do cliente para resultado comercial.
 3. Metodologia interna para tomada de decisão.
 4. Aprendizados sanitizados aprovados.
@@ -40,6 +40,20 @@ Este snapshot foi extraído em 2026-07-31. Em políticas, cobrança, segurança,
 
 Cada arquivo inclui `verificado_em`. Verifique a fonte ao vivo se a decisão for sensível, houver indício de mudança ou o arquivo estiver marcado para revisão. Registre a URL consultada no dossiê.
 
+## Oficial Google Ads
+
+O Google Ads usa uma base leve, não um snapshot integral do Help Center:
+
+- `official-google/source-catalog.md` — rotas oficiais para leitura ao vivo.
+- `official-google/campaign-types-and-structure.md`.
+- `official-google/keywords-and-search-terms.md`.
+- `official-google/conversions-bidding-and-budget.md`.
+- `official-google/ads-assets-and-landing-pages.md`.
+- `official-google/google-ads-mcp-and-api.md`.
+- `skills/17-google-ads-official-retrieval/SKILL.md` — gate seletivo Google Ads.
+
+Para comportamento atual, elegibilidade, política, cobrança, campos da API ou decisão material, abrir a fonte oficial ao vivo. Não atribuir metodologia interna ao Google.
+
 ## Metodologia
 
 - `methodology/diagnostic-framework.md`
@@ -48,6 +62,9 @@ Cada arquivo inclui `verificado_em`. Verifique a fonte ao vivo se a decisão for
 - `methodology/testing-and-prioritization.md`
 - `methodology/budget-and-scaling.md`
 - `methodology/naming-and-architecture.md`
+- `google-ads/keyword-research-methodology.md`
+- `google-ads/account-architecture.md`
+- `google-ads/diagnostic-framework.md`
 
 Metodologia é regra operacional interna, não recomendação oficial da Meta.
 
@@ -64,4 +81,4 @@ Metodologia é regra operacional interna, não recomendação oficial da Meta.
 
 ## Regra de citação
 
-No dossiê, registre título, URL e data de consulta. Parafraseie; não copie páginas extensas. Diferencie claramente `Meta informa` de `metodologia recomenda`.
+No dossiê, registre título, URL e data de consulta. Parafraseie; não copie páginas extensas. Diferencie claramente `Meta informa`, `Google informa` e `metodologia recomenda`.

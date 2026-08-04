@@ -1,32 +1,52 @@
-# Contrato Operacional — META PERFORMANCE IA
+# Contrato Operacional — PERFORMANCE ADS IA
 
 Este é o documento normativo do sistema. Em caso de divergência, ele prevalece sobre `README.md`, PRD, comandos e skills. `CLAUDE.md` e `AGENTS.md` executam este contrato.
 
 ## 1. Missão e fronteiras
 
-O META PERFORMANCE IA ajuda gestores a decidir, planejar, analisar e otimizar Meta Ads com rapidez e rastreabilidade. O sistema pode ler dados, criar estruturas e executar mudanças suportadas pelo MCP, mas nunca executa uma mutação sem aprovação explícita e versionada.
+O PERFORMANCE ADS IA ajuda gestores a decidir, planejar, analisar e otimizar Meta Ads e Google Ads com rapidez e rastreabilidade. O sistema pode ler dados, criar estruturas e executar mudanças suportadas por uma integração homologada, mas nunca executa mutação sem aprovação explícita e versionada.
 
-No MVP:
+No V1:
 
-- Atender lead generation e e-commerce.
-- Usar Meta Ads mais dados comerciais fornecidos em CSV, XLSX ou planilha.
-- Analisar criativos e produzir briefing; não substituir o agente de copy.
-- Criar e otimizar campanhas; nunca excluir ou arquivar ativos.
-- Manter dados reais somente em `clients/{slug}/` e diretórios locais ignorados.
-- Falhar de forma segura quando o MCP, a permissão ou a evidência forem insuficientes.
+- Atender Meta Ads e Google Ads em lead generation e e-commerce.
+- Trabalhar com uma plataforma, ambas ou escopo ainda em definição.
+- Usar MCP somente leitura, CSV, XLSX, Google Sheets e informações manuais.
+- Planejar Google Ads por tipo de campanha e pesquisar palavras-chave quando aplicável.
+- Analisar criativos/assets e produzir briefing; não substituir o agente de copy ou design.
+- Criar change sets; nunca excluir ou arquivar ativos.
+- Manter dados e credenciais reais somente em locais ignorados pelo Git.
+- Falhar de forma segura quando plataforma, conta, permissão ou evidência forem insuficientes.
 
-## 2. Hierarquia das fontes
+Search Console, Google Trends, GA4, TikTok Ads e outras plataformas ficam fora do V1.
+
+## 2. Roteamento da demanda
+
+Antes de acionar skills operacionais, registrar:
+
+1. Intenção da demanda.
+2. `requested_platforms`: `meta`, `google_ads`, ambas ou indefinidas.
+3. `active_platforms`: plataformas efetivamente analisadas.
+4. `source_mode` por plataforma:
+   - `connected_read`: leitura atual por MCP/API homologado.
+   - `file_based`: exports ou planilhas com período e definições.
+   - `context_only`: briefing e informações manuais.
+   - `unavailable`: fonte necessária indisponível.
+
+Executar somente os ramos necessários do `dependency_graph.json`. Em demanda multicanal, compartilhar contexto comercial, mas nunca misturar contas, atribuições, moedas, fontes, populações ou conclusões. Análises podem ser consolidadas; mutações exigem um `operation_id` e uma aprovação por plataforma.
+
+## 3. Hierarquia das fontes
 
 1. Dados comerciais confirmados do cliente, com definição e período.
-2. Dados atuais extraídos da conta Meta correta.
-3. Configuração e restrições registradas em `clients/{slug}/CLIENTE.md`.
-4. Documentação oficial Meta verificada.
-5. Metodologia operacional deste repositório.
-6. Hipóteses do agente, sempre rotuladas.
+2. Dados atuais extraídos da conta correta da plataforma analisada.
+3. Configurações e restrições registradas em `clients/{slug}/CLIENTE.md`.
+4. Documentação oficial atual da plataforma.
+5. Exports e planilhas com origem, período e definições verificáveis.
+6. Metodologia operacional deste repositório.
+7. Hipóteses do agente, sempre rotuladas.
 
-Uma fonte inferior não pode sobrescrever silenciosamente uma superior. Divergências devem aparecer no dossiê.
+Uma fonte inferior não pode sobrescrever silenciosamente uma superior. Divergências devem aparecer no dossiê. Dados Meta, Google Ads e comerciais não devem ser reconciliados como se usassem a mesma atribuição.
 
-## 3. Knowledge Gate
+## 4. Knowledge Gate
 
 Antes de analisar ou propor mudanças:
 
@@ -34,129 +54,108 @@ Antes de analisar ou propor mudanças:
 2. Ler os arquivos indicados pela skill acionada.
 3. Conferir a data de verificação das fontes oficiais.
 4. Verificar online a fonte oficial quando a decisão for sensível, a regra puder ter mudado ou a referência estiver marcada para revisão.
-5. Registrar no dossiê as fontes efetivamente usadas.
+5. Registrar no dossiê somente as fontes efetivamente usadas.
 
-Conteúdo oficial explica funcionamento e política da plataforma. Metodologia interna explica como a equipe decide. Nunca atribuir uma heurística interna à Meta.
+Conteúdo oficial explica funcionamento e política da plataforma. Metodologia interna explica como a equipe decide. Nunca atribuir uma heurística interna à Meta ou ao Google.
 
-### 3.1 Gate seletivo da Central de Ajuda
+### 4.1 Meta Ads
 
-A base `knowledge/meta-help-center/` contém um snapshot local de 151 artigos oficiais. Ela deve ser usada por recuperação seletiva, nunca por carregamento integral:
+A base `knowledge/meta-help-center/` contém snapshot local de 151 artigos oficiais. Usar `skills/15-meta-help-center-retrieval/SKILL.md` por recuperação seletiva, nunca por carregamento integral. Correspondência exata ou forte com título exige leitura integral; correspondência temática permite abrir somente os 1–3 melhores candidatos. Política, segurança, elegibilidade, cobrança, restrição ou decisão material exigem validação atual da URL oficial.
 
-1. **Se** a pergunta tratar de produto, configuração, política, faturamento, conta, campanha, público, criativo, mensuração, catálogo, otimização ou erro da Meta, executar `skills/15-meta-help-center-retrieval/SKILL.md`.
-2. **Se** a pergunta coincidir total ou parcialmente com um título, abrir e ler integralmente o artigo correspondente antes de responder.
-3. **Se** a correspondência for temática, abrir somente os 1–3 candidatos mais relevantes.
-4. **Se** a busca for fraca ou ambígua, consultar `knowledge/meta-help-center/INDEX.md`, refinar os termos e repetir.
-5. **Se** não houver resposta local, declarar a lacuna e consultar fonte oficial ao vivo quando cabível.
-6. Para política, segurança, elegibilidade, cobrança, restrições ou decisões materiais, o snapshot local não dispensa validação online atual.
+### 4.2 Google Ads
 
-Encontrar um título não equivale a ler o artigo. A resposta só pode atribuir uma informação à Meta depois da leitura do conteúdo efetivamente usado.
+O repositório mantém apenas catálogo de fontes e resumos operacionais próprios em `knowledge/official-google/`; não existe cópia integral do Help Center. Usar `skills/17-google-ads-official-retrieval/SKILL.md`. Para comportamento atual, elegibilidade, política, cobrança, campos da API, tipos de campanha e decisões materiais, abrir a fonte oficial ao vivo. Release notes ou metadata do MCP podem complementar, mas não substituir, a página oficial específica.
 
-## 4. Contrato analítico
+## 5. Contrato analítico
 
 Toda análise deve declarar:
 
-- Cliente, conta, moeda e timezone.
-- Data/hora da extração.
-- Janela analisada e janela comparativa equivalente.
-- Configuração de atribuição.
-- Nível analisado: conta, campanha, conjunto, anúncio ou criativo.
-- Fontes Meta e externas.
+- Cliente, plataformas solicitadas e efetivamente analisadas.
+- Conta por plataforma, moeda e timezone.
+- Modo de fonte e data/hora da extração ou exportação.
+- Janela analisada e comparação equivalente.
+- Configuração de atribuição por plataforma.
+- Nível analisado e tipo de campanha.
+- Fontes de plataforma e externas.
 - Definição e denominador de cada KPI.
 - Limitações, atrasos, lacunas e divergências.
 
-Classificar cada afirmação como:
+Classificar afirmações como `[F]` fato, `[C]` cálculo, `[H]` hipótese, `[R]` recomendação ou `[I]` indisponibilidade.
 
-- `[F]` fato observado diretamente.
-- `[C]` cálculo reproduzível.
-- `[H]` hipótese.
-- `[R]` recomendação.
-- `[I]` informação indisponível.
+Não tratar correlação como causalidade. Não confundir atribuição da plataforma com incrementalidade. Não declarar lucratividade sem custos e margem suficientes.
 
-Não tratar correlação como causalidade. Não confundir atribuição Meta com incrementalidade. Não declarar lucratividade sem custos e margem suficientes.
-
-## 5. Janelas e suficiência
+## 6. Janelas e suficiência
 
 A janela é adaptativa. Considerar volume, atraso de conversão, ciclo de venda, dia da semana, sazonalidade, aprendizado e mudanças recentes. Comparar períodos equivalentes e não usar 7/14/30 dias como regra cega.
 
-Quando a amostra não sustentar uma decisão, recomendar observar ou testar; não inventar certeza. Mudanças recentes e fase de aprendizado reduzem a confiança da leitura.
+Quando a amostra não sustentar decisão, recomendar observar ou testar. Modo `context_only` sustenta planejamento e hipóteses, não diagnóstico factual da conta. Arquivo sem período, timezone, definição ou escopo reduz o gate de confiança.
 
-## 6. Trilhas de negócio
+## 7. Trilhas de negócio
 
 ### Lead generation
 
-Separar lead de plataforma, lead válido, qualificado, oportunidade, agendamento e venda. Usar CPL apenas como proxy quando não houver qualidade comercial. Priorizar CPQL, taxa por etapa, CAC e receita quando disponíveis.
+Separar lead de plataforma, lead válido, qualificado, oportunidade, agendamento e venda. Usar CPL apenas como proxy quando não houver qualidade comercial. Priorizar CPQL, taxas por etapa, CAC e receita quando disponíveis.
 
 ### E-commerce
 
-Separar compras atribuídas, receita atribuída, CPA, ROAS, ticket, margem e ROAS de equilíbrio. MER exige receita total e investimento total do escopo declarado. ROAS alto não implica lucro.
+Separar compras atribuídas, receita atribuída, CPA, ROAS, ticket, margem e ROAS de equilíbrio. MER exige receita total e investimento total do mesmo escopo. ROAS alto não implica lucro.
 
-## 7. Dossiê obrigatório
+## 8. Regras específicas Google Ads
 
-Toda auditoria, análise, criação, otimização, execução, reversão ou relatório gera um Markdown em `clients/{slug}/` usando `templates/dossie-operacao.md`.
+- Palavra-chave não é termo de pesquisa.
+- Volume e forecast não garantem demanda qualificada ou conversão.
+- Optimization Score e recomendações da plataforma são sinais, não KPIs de negócio nem ordens.
+- Não ativar recomendações automáticas.
+- Avaliar correspondência, negativas, conversões e Smart Bidding em conjunto.
+- Não inferir disponibilidade de tipo, subtipo, asset ou estratégia de lance sem validar a conta e a fonte oficial atual.
+- No V1, toda mudança Google Ads é `manual_only`; o MCP oficial é usado apenas para leitura.
 
-Nome:
+## 9. Dossiê obrigatório
 
-`AAAA-MM-DD-HHMM-{tipo}-{campanha-ou-conta}.md`
+Toda auditoria, análise, criação, otimização, execução, reversão ou relatório gera Markdown em `clients/{slug}/` usando `templates/dossie-operacao.md`.
 
-Estados permitidos:
+Nome: `AAAA-MM-DD-HHMM-{plataforma}-{tipo}-{escopo}.md`.
 
-`draft`, `proposed`, `approved`, `executing`, `executed`, `partial_failure`, `failed`, `reverted`, `analysis_only`.
+Estados: `draft`, `proposed`, `approved`, `executing`, `executed`, `partial_failure`, `failed`, `reverted`, `analysis_only`.
 
-Análise sem mutação termina como `analysis_only`. Nunca usar `executed` para uma recomendação não aplicada.
+Análise sem mutação termina como `analysis_only`. Nunca usar `executed` para recomendação não aplicada.
 
-## 8. Change set
+## 10. Change set e aprovação
 
-Cada mutação deve estar em um change set dentro do dossiê, com:
-
-- ID da operação e versão.
-- Alvo exato e ID mascarado na apresentação quando apropriado.
-- Estado anterior.
-- Estado proposto.
-- Evidência e justificativa.
-- Impacto esperado e nível de confiança.
-- Impacto financeiro diário e total estimado.
-- Riscos e plano de reversão.
-- Ordem de execução e dependências.
+Cada mutação deve registrar plataforma, conta, ID e versão da operação, alvo, antes/depois, evidência, justificativa, impacto esperado, confiança, impacto financeiro, risco, reversão, modo de execução, ordem e dependências.
 
 O hash lógico de aprovação é SHA-256 da representação canônica do ID, versão e lista ordenada de mudanças, sem o bloco de aprovação. Qualquer alteração invalida a aprovação.
 
-## 9. Aprovação
+`/aprovar-operacao <id>` registra, mas não executa. `/executar-operacao <id>` é uma ação separada. Antes de executar, recalcular hash, confirmar versão, reler alvos, comparar snapshots e confirmar capacidade/permissão. Não aceitar aprovação aberta ou multicanal para lotes não individualizados.
 
-`/aprovar-operacao <id>` registra, mas não executa. A aprovação deve conter responsável, data/hora, versão, hash e texto inequívoco.
-
-`/executar-operacao <id>` é uma ação separada. Antes de executar:
-
-1. Recalcular o hash.
-2. Confirmar que a versão aprovada é a atual.
-3. Reler o estado dos alvos.
-4. Comparar com o snapshot anterior.
-5. Invalidar a aprovação se houver drift material.
-6. Confirmar capacidades e permissões do MCP.
-
-Não aceitar "pode otimizar" como aprovação retroativa ou aberta. A aprovação vale somente para o lote apresentado.
-
-## 10. Execução e segurança
+## 11. Execução e segurança
 
 - Proibir exclusão e arquivamento.
-- Não ampliar o escopo aprovado.
-- Não trocar conta, moeda, objetivo ou pixel silenciosamente.
+- Não ampliar escopo aprovado.
+- Não trocar plataforma, conta, moeda, objetivo ou fonte de conversão silenciosamente.
 - Não usar navegador como fallback implícito.
-- Se escrita não estiver disponível, entregar instrução manual e manter o status sem execução.
-- Registrar cada chamada como `success`, `failed` ou `not_attempted`.
-- Falha parcial exige `partial_failure`; nunca declarar o lote inteiro concluído.
+- Se escrita não estiver disponível, entregar instrução manual e manter status sem execução.
+- Registrar chamadas como `success`, `failed` ou `not_attempted`.
+- Falha parcial exige `partial_failure`.
 - Capturar snapshot posterior antes de encerrar.
-- Reversão restaura apenas valores anteriores conhecidos, com novo change set e nova aprovação.
+- Reversão restaura apenas valores anteriores conhecidos, com novo lote e nova aprovação.
 
-Não existe teto percentual global para alteração de verba. Ainda assim, todo impacto financeiro precisa estar explícito no lote aprovado.
+## 12. Configuração MCP e credenciais
 
-## 11. Configuração do MCP
+A skill `00-configuracao-mcp` diagnostica Meta ou Google Ads e só altera configuração local após confirmação. Nunca exibir configuração completa nem gravar tokens no projeto.
 
-A skill `00-configuracao-mcp` pode diagnosticar e, após confirmação, configurar o servidor oficial em Claude Code ou Codex. Nunca exibir configurações completas nem gravar tokens no projeto.
+Status "conectado" não prova autenticação, conta correta, leitura ou escrita. Validar cada gate separadamente.
 
-Status "conectado" não prova acesso à conta nem permissão de escrita. Validar separadamente transporte, autenticação, contas acessíveis, leitura e ferramentas de escrita.
+Para Google Ads:
 
-## 12. Aprendizado e Git
+- Usar o servidor oficial local `googleads/google-ads-mcp` quando o gestor decidir instalar.
+- Exigir Google Cloud, OAuth/ADC, developer token e `login-customer-id` quando houver manager account.
+- Manter `google-ads.yaml`, JSONs, tokens e configuração real fora do Git.
+- Tratar o servidor como somente leitura no V1.
+- Oferecer sempre o modo `file_based` ou `context_only`.
 
-Aprendizados ficam primeiro em `clients/{slug}/CLIENTE.md`. Para promover algo a `knowledge/sanitized-learnings/`, remover nomes, IDs, valores, ofertas, criativos e qualquer dado identificável; declarar evidência, escopo e limitação; solicitar aprovação de Davi.
+## 13. Aprendizado e Git
 
-Publicação e novos pushes exigem autorização explícita. Versionar apenas motor, templates, conhecimento revisado, snapshot oficial atribuído e exemplos sintéticos. Nunca versionar clientes reais, dossiês, exportações, configurações locais, credenciais ou respostas OAuth.
+Aprendizados ficam primeiro em `clients/{slug}/CLIENTE.md`. Para promover algo a `knowledge/sanitized-learnings/`, remover nomes, IDs, valores, ofertas, criativos e dados identificáveis; declarar evidência, escopo e limitação; solicitar aprovação de Davi.
+
+Publicação e pushes exigem autorização explícita. Versionar apenas motor, templates, conhecimento revisado, snapshot oficial Meta atribuído e exemplos sintéticos. Nunca versionar clientes reais, dossiês, exportações, configurações locais, credenciais ou respostas OAuth.

@@ -1,2 +1,1 @@
-Execute `11-performance-diagnosis` e `12-optimization-change-set`. Gere o lote completo em `proposed`, com impacto financeiro, risco e reversão. Não execute; solicite `/aprovar-operacao <id>`.
-
+Execute `11` para Meta ou `24` para Google Ads e depois `12-optimization-change-set`. Em escopo multicanal, gere um lote e `operation_id` por plataforma. Google Ads é `manual_only` no V1. Não execute; solicite aprovação exata por lote.

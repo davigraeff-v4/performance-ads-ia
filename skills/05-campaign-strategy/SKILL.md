@@ -1,9 +1,9 @@
 ---
 name: 05-campaign-strategy
-description: Converte objetivo comercial, oferta, funil e mensuração em uma estratégia de campanha Meta. Use em /planejar-campanha, /criar-campanha, reposicionamento de funil ou revisão de objetivo e performance goal.
+description: Converte objetivo comercial, oferta, funil e mensuração em estratégia de campanha Meta Ads. Use somente no ramo Meta de /planejar-campanha, /criar-campanha ou revisão de objetivo e performance goal.
 ---
 
-# Estratégia de Campanha
+# Estratégia de Campanha Meta Ads
 
 ## Leituras
 
@@ -36,4 +36,3 @@ Riscos e limitações:
 ```
 
 Não escolher objetivo por costume. Explicar a relação entre objetivo da campanha e resultado de negócio.
-

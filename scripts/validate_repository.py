@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Structural validation for the local META PERFORMANCE IA model."""
+"""Structural validation for the local PERFORMANCE ADS IA model."""
 
 from __future__ import annotations
 
@@ -29,6 +29,15 @@ EXPECTED_SKILLS = {
     "13-approved-change-executor",
     "14-reporting-memory-learning",
     "15-meta-help-center-retrieval",
+    "16-google-ads-account-connection",
+    "17-google-ads-official-retrieval",
+    "18-google-ads-keyword-research",
+    "19-google-ads-campaign-strategy",
+    "20-google-ads-campaign-architecture",
+    "21-google-ads-budget-bidding-conversions",
+    "22-google-ads-creative-assets-landing-page",
+    "23-google-ads-campaign-build-plan",
+    "24-google-ads-performance-diagnosis",
 }
 EXPECTED_COMMANDS = {
     "configuracao-mcp.md",
@@ -39,6 +48,7 @@ EXPECTED_COMMANDS = {
     "analisar-campanha.md",
     "otimizar-campanha.md",
     "relatorio-performance.md",
+    "pesquisar-palavras-chave.md",
     "aprovar-operacao.md",
     "executar-operacao.md",
     "reverter-operacao.md",
@@ -60,6 +70,18 @@ def validate_frontmatter(path: Path, errors: list[str]) -> None:
     expected = path.parent.name
     if f"name: {expected}" not in match.group(0):
         fail(errors, f"name não corresponde à pasta: {path.relative_to(ROOT)}")
+    if "TODO" in text:
+        fail(errors, f"TODO remanescente: {path.relative_to(ROOT)}")
+
+
+def validate_openai_yaml(path: Path, skill_name: str, errors: list[str]) -> None:
+    text = path.read_text(encoding="utf-8")
+    required = ["display_name:", "short_description:", "default_prompt:"]
+    for key in required:
+        if key not in text:
+            fail(errors, f"{key[:-1]} ausente: {path.relative_to(ROOT)}")
+    if f"${skill_name}" not in text:
+        fail(errors, f"default_prompt não menciona ${skill_name}: {path.relative_to(ROOT)}")
     if "TODO" in text:
         fail(errors, f"TODO remanescente: {path.relative_to(ROOT)}")
 
@@ -118,7 +140,7 @@ def main() -> int:
         "AGENTS.md",
         "CLAUDE.md",
         "README.md",
-        "PRD-META-PERFORMANCE-IA.md",
+        "PRD-PERFORMANCE-ADS-IA.md",
         "CONTRATO-OPERACIONAL.md",
         "dependency_graph.json",
         ".gitignore",
@@ -132,8 +154,11 @@ def main() -> int:
         fail(errors, f"skills divergentes: {sorted(skill_dirs ^ EXPECTED_SKILLS)}")
     for name in sorted(EXPECTED_SKILLS):
         validate_frontmatter(ROOT / "skills" / name / "SKILL.md", errors)
-        if not (ROOT / "skills" / name / "agents" / "openai.yaml").is_file():
+        openai_yaml = ROOT / "skills" / name / "agents" / "openai.yaml"
+        if not openai_yaml.is_file():
             fail(errors, f"openai.yaml ausente: {name}")
+        else:
+            validate_openai_yaml(openai_yaml, name, errors)
 
     graph = json.loads((ROOT / "dependency_graph.json").read_text(encoding="utf-8"))
     if set(graph) != EXPECTED_SKILLS:
@@ -172,6 +197,11 @@ def main() -> int:
         "quality/execution-checklist.md",
         "examples/synthetic/operation-approved.json",
         "tests/test_meta_help_search.py",
+        "tests/test_multichannel_structure.py",
+        "knowledge/official-google/source-catalog.md",
+        "knowledge/official-google/google-ads-mcp-and-api.md",
+        "knowledge/google-ads/keyword-research-methodology.md",
+        "templates/pesquisa-palavras-chave.md",
     ]
     for relative in required_references:
         if not (ROOT / relative).is_file():
@@ -185,7 +215,11 @@ def main() -> int:
         except json.JSONDecodeError as exc:
             fail(errors, f"JSON inválido {schema.name}: {exc}")
 
-    sensitive = re.compile(r"(?:access[_-]?token|client[_-]?secret|bearer\s+[A-Za-z0-9._-]{12,})", re.I)
+    sensitive = re.compile(
+        r"(?:access[_-]?token|client[_-]?secret|developer[_-]?token)\s*[:=]\s*[\"']?(?!SEU_|YOUR_|\$\{|<)[A-Za-z0-9._-]{12,}"
+        r"|bearer\s+[A-Za-z0-9._-]{12,}",
+        re.I,
+    )
     for path in ROOT.rglob("*"):
         if not path.is_file() or ".git" in path.parts:
             continue
@@ -203,8 +237,8 @@ def main() -> int:
             print(f"- {error}")
         return 1
     print(
-        f"VALIDATION OK: {len(EXPECTED_SKILLS)} skills, "
-        f"{EXPECTED_META_HELP_ARTICLES} artigos Meta e schemas JSON válidos"
+        f"VALIDATION OK: {len(EXPECTED_SKILLS)} skills multicanal, "
+        f"{EXPECTED_META_HELP_ARTICLES} artigos Meta, base Google Ads e schemas JSON válidos"
     )
     return 0
 

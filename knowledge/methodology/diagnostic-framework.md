@@ -1,6 +1,6 @@
 # Framework de Diagnóstico
 
-> Metodologia interna. Não atribuir à Meta.
+> Metodologia interna. Não atribuir à Meta nem ao Google.
 
 ## Ordem de leitura
 
@@ -23,4 +23,3 @@
 ## Evidência
 
 Para cada diagnóstico, listar pelo menos uma hipótese alternativa e o dado que poderia distingui-la. Priorizar ações por impacto, confiança, esforço e reversibilidade.
-

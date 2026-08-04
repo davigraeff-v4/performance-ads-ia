@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lances e Conversões Google"
+  short_description: "Planeja budget, lances e metas de conversão"
+  default_prompt: "Use $21-google-ads-budget-bidding-conversions para planejar budget, lances e conversões no Google Ads."

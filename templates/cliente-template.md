@@ -7,7 +7,11 @@
 - Responsável:
 - Atualizado em:
 
-## Conta Meta
+## Plataformas
+
+- Ativas: meta | google_ads
+
+## Conta Meta Ads
 
 - Nome:
 - ID mascarado:
@@ -17,6 +21,18 @@
 - Pixel/dataset:
 - Página/Instagram:
 - Status: unknown | validated_read | validated_write | ambiguous | unavailable
+- Modo de fonte: connected_read | file_based | context_only | unavailable
+
+## Conta Google Ads
+
+- Nome:
+- Customer ID mascarado:
+- Manager customer ID mascarado:
+- Moeda:
+- Timezone:
+- Conversões principais:
+- Status: unknown | validated_read | ambiguous | unavailable
+- Modo de fonte: connected_read | file_based | context_only | unavailable
 
 ## Negócio
 
@@ -37,6 +53,8 @@
 ## Dados disponíveis
 
 - Meta Ads:
+- Google Ads:
+- Keyword Planner:
 - CRM/vendas:
 - CSV/XLSX/Sheets:
 - Tracking:
@@ -51,4 +69,3 @@
 ## Histórico e aprendizados
 
 Acrescente entradas datadas. Nunca apague o histórico anterior; quando algo mudar, registre a substituição e a data.
-

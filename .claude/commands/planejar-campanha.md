@@ -1,2 +1,1 @@
-Planeje sem executar. Rode as skills `01` a `09` conforme `dependency_graph.json`, cumpra o Knowledge Gate e gere um dossiê `analysis_only` com estratégia, arquitetura, públicos, budget, lances e briefing criativo.
-
+Planeje sem executar. Roteie `meta`, `google_ads` ou ambas. Para Meta, rode `01` e `02`–`09` conforme o escopo. Para Google Ads, rode `01`, `03`, `04` e `17`–`22`, incluindo `18` quando keywords/demanda forem pertinentes. Gere dossiê `analysis_only` com ramos separados por plataforma.

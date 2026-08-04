@@ -1,9 +1,9 @@
 ---
 name: 11-performance-diagnosis
-description: Analisa performance de conta, campanha, conjunto, anúncio ou criativo e identifica gargalos, tendências, anomalias e oportunidades. Use em /auditar-conta, /analisar-campanha, /otimizar-campanha ou queda de resultado.
+description: Analisa performance Meta Ads por conta, campanha, conjunto, anúncio ou criativo. Use somente no ramo Meta de /auditar-conta, /analisar-campanha, /otimizar-campanha ou queda de resultado.
 ---
 
-# Diagnóstico de Performance
+# Diagnóstico de Performance Meta Ads
 
 ## Leituras
 
@@ -33,4 +33,3 @@ Para cada achado: marcador `[F/C/H/R/I]`, evidência, impacto, confiança, limit
 - Problema de mensuração.
 
 Se a solicitação for apenas analítica, finalizar o dossiê como `analysis_only` depois da revisão, sem gerar mutação.
-

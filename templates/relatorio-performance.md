@@ -3,6 +3,7 @@
 ## Sumário executivo
 
 - Objetivo:
+- Plataformas solicitadas/analisadas:
 - Resultado principal:
 - Variação versus comparação:
 - Veredito:
@@ -10,7 +11,8 @@
 
 ## Contexto de leitura
 
-- Conta, moeda e timezone:
+- Conta, moeda, timezone e atribuição por plataforma:
+- Modo de fonte por plataforma:
 - Janela e comparação:
 - Atribuição:
 - Qualidade dos dados:
@@ -22,6 +24,8 @@
 |---|---:|---:|---:|---:|---|---|
 
 ## Diagnóstico
+
+Separar Meta Ads, Google Ads e comercial antes da síntese multicanal.
 
 ## Decisões e operações
 
@@ -37,4 +41,3 @@
 ## Apêndice operacional
 
 Liste dossiês, fontes, definições e cálculos.
-

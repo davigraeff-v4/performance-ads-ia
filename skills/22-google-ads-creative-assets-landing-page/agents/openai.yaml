@@ -1,0 +1,4 @@
+interface:
+  display_name: "Assets e Landing Pages"
+  short_description: "Orienta anúncios, assets e páginas de destino"
+  default_prompt: "Use $22-google-ads-creative-assets-landing-page para criar um briefing de anúncios, assets e landing pages."

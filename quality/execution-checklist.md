@@ -4,8 +4,8 @@
 - [ ] Dossiê está `approved`.
 - [ ] Versão e hash conferem.
 - [ ] Aprovação tem responsável, timestamp e declaração.
-- [ ] Conta, moeda e timezone conferem.
-- [ ] MCP e permissão de escrita foram validados.
+- [ ] Plataforma, conta, moeda e timezone conferem.
+- [ ] Integração e permissão de escrita foram validadas; Google Ads V1 está bloqueado para escrita.
 - [ ] Estado atual dos alvos confere com snapshot.
 - [ ] Não há exclusão ou arquivamento.
 - [ ] Todos os budgets mostram impacto financeiro.
@@ -16,4 +16,3 @@
 - [ ] Snapshot posterior será lido antes do encerramento.
 
 Falha em qualquer item crítico bloqueia a execução.
-

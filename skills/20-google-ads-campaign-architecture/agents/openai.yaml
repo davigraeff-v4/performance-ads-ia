@@ -1,0 +1,4 @@
+interface:
+  display_name: "Arquitetura Google Ads"
+  short_description: "Estrutura campanhas, grupos e assets Google"
+  default_prompt: "Use $20-google-ads-campaign-architecture para desenhar a arquitetura de uma campanha Google Ads."

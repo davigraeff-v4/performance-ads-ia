@@ -1,6 +1,7 @@
 # Briefing de Teste Criativo
 
 - Cliente/campanha:
+- Plataforma e tipo de campanha:
 - Objetivo e funil:
 - Público:
 - Problema observado:

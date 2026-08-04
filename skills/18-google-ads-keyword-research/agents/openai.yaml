@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pesquisa de Palavras-chave"
+  short_description: "Pesquisa intenção, termos e oportunidades"
+  default_prompt: "Use $18-google-ads-keyword-research para estruturar uma pesquisa auditável de palavras-chave."

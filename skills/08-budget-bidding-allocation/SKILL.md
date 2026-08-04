@@ -1,9 +1,9 @@
 ---
 name: 08-budget-bidding-allocation
-description: Planeja e revisa budget, distribuição e estratégia de lance conforme meta, volume, arquitetura e risco. Use em planejamento, escala, redução de verba ou quando o investimento está fragmentado.
+description: Planeja e revisa budget, distribuição e lances no Meta Ads conforme meta, volume, arquitetura e risco. Use somente no ramo Meta em planejamento, escala, redução ou fragmentação.
 ---
 
-# Orçamento, Lances e Alocação
+# Orçamento, Lances e Alocação Meta Ads
 
 ## Leituras
 
@@ -30,4 +30,3 @@ description: Planeja e revisa budget, distribuição e estratégia de lance conf
 ## Saída
 
 Tabela de alocação, premissas, cenários, riscos, sinais para escalar/manter/reduzir e próxima janela de avaliação.
-

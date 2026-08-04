@@ -1,6 +1,6 @@
 ---
 name: 04-goals-kpis-baseline
-description: Define KPIs, metas, baseline, breakeven e indicadores de saúde com fonte e denominador. Use antes de planejar ou otimizar, ao cadastrar metas ou quando houver confusão entre métricas Meta e resultado de negócio.
+description: Define KPIs, metas, baseline, breakeven e indicadores de saúde com fonte e denominador. Use antes de planejar ou otimizar Meta/Google Ads ou quando houver confusão entre métrica de plataforma e resultado de negócio.
 ---
 
 # Metas, KPIs e Baseline
@@ -13,7 +13,7 @@ description: Define KPIs, metas, baseline, breakeven e indicadores de saúde com
 
 ## Processo
 
-1. Definir objetivo comercial e evento Meta mais próximo.
+1. Definir objetivo comercial e resultado/evento mais próximo em cada plataforma ativa.
 2. Escolher um KPI principal de decisão e indicadores de saúde.
 3. Registrar meta, unidade, fonte, janela, denominador e responsável.
 4. Calcular baseline somente com período comparável.

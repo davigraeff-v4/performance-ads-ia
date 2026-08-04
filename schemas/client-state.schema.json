@@ -1,25 +1,22 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "MetaPerformanceClientState",
+  "title": "PerformanceAdsClientState",
   "type": "object",
   "additionalProperties": false,
-  "required": ["client_slug", "client_name", "business_model", "updated_at", "goals", "constraints", "sources"],
+  "required": ["client_slug", "client_name", "business_model", "platforms", "updated_at", "goals", "constraints", "sources"],
   "properties": {
     "client_slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
     "client_name": {"type": "string", "minLength": 1},
     "business_model": {"enum": ["lead_generation", "ecommerce"]},
+    "platforms": {"type": "array", "items": {"enum": ["meta", "google_ads"]}, "uniqueItems": true},
     "updated_at": {"type": "string", "format": "date-time"},
-    "account": {
-      "type": ["object", "null"],
+    "accounts": {
+      "type": "object",
+      "additionalProperties": false,
       "properties": {
-        "name": {"type": ["string", "null"]},
-        "masked_id": {"type": ["string", "null"]},
-        "currency": {"type": ["string", "null"]},
-        "timezone": {"type": ["string", "null"]},
-        "connection_status": {"enum": ["unknown", "validated_read", "validated_write", "ambiguous", "unavailable"]}
-      },
-      "required": ["connection_status"],
-      "additionalProperties": false
+        "meta": {"oneOf": [{"$ref": "#/definitions/account"}, {"type": "null"}]},
+        "google_ads": {"oneOf": [{"$ref": "#/definitions/account"}, {"type": "null"}]}
+      }
     },
     "goals": {"type": "array", "items": {"$ref": "#/definitions/keyValueSource"}},
     "constraints": {"type": "array", "items": {"type": "string"}},
@@ -29,12 +26,26 @@
     "notes": {"type": "array", "items": {"type": "string"}}
   },
   "definitions": {
+    "account": {
+      "type": "object",
+      "required": ["connection_status", "source_mode"],
+      "properties": {
+        "name": {"type": ["string", "null"]},
+        "masked_id": {"type": ["string", "null"]},
+        "masked_manager_id": {"type": ["string", "null"]},
+        "currency": {"type": ["string", "null"]},
+        "timezone": {"type": ["string", "null"]},
+        "connection_status": {"enum": ["unknown", "validated_read", "validated_write", "ambiguous", "unavailable"]},
+        "source_mode": {"enum": ["connected_read", "file_based", "context_only", "unavailable"]}
+      },
+      "additionalProperties": false
+    },
     "source": {
       "type": "object",
       "required": ["name", "kind", "status"],
       "properties": {
         "name": {"type": "string"},
-        "kind": {"enum": ["meta", "csv", "xlsx", "google_sheets", "crm", "manual"]},
+        "kind": {"enum": ["meta", "google_ads", "keyword_planner", "csv", "xlsx", "google_sheets", "crm", "manual"]},
         "status": {"enum": ["available", "unavailable", "stale", "unverified"]}
       },
       "additionalProperties": false
@@ -52,4 +63,3 @@
     }
   }
 }
-

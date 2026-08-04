@@ -1,2 +1,1 @@
-Execute `11-performance-diagnosis` com escopo, janela, comparação e atribuição declarados. Cruze dados comerciais quando fornecidos. Gere dossiê `analysis_only` e separe fatos, cálculos, hipóteses e recomendações.
-
+Roteie por plataforma: `11-performance-diagnosis` para Meta e `24-google-ads-performance-diagnosis` para Google Ads. Declare escopo, janela, comparação, atribuição e modo de fonte por plataforma. Cruze dados comerciais sem forçar igualdade. Gere dossiê `analysis_only`.

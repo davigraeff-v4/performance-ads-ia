@@ -1,9 +1,9 @@
 ---
 name: 06-account-campaign-architecture
-description: Desenha ou audita a arquitetura de campanhas, conjuntos, anúncios e nomenclatura evitando fragmentação sem justificativa. Use ao criar campanha, reorganizar conta ou diagnosticar sobreposição e complexidade.
+description: Desenha ou audita a arquitetura Meta Ads de campanhas, conjuntos, anúncios e nomenclatura evitando fragmentação sem justificativa. Use somente no ramo Meta ao criar, reorganizar ou diagnosticar estrutura.
 ---
 
-# Arquitetura de Conta e Campanha
+# Arquitetura Meta Ads
 
 ## Leituras
 
@@ -30,4 +30,3 @@ Não incluir dados pessoais, segredo ou ID de acesso. Adaptar convenção existe
 ## Saída
 
 Mapa hierárquico com justificativa, dependências, riscos de consolidação/separação e transição segura. Não pausar estrutura atual apenas para deixá-la esteticamente mais simples.
-

@@ -1,428 +1,328 @@
-# META PERFORMANCE IA
+# PERFORMANCE ADS IA
 
-Agente especialista em Meta Ads para ajudar gestores a planejar, analisar e otimizar campanhas com mais assertividade, praticidade, velocidade e rastreabilidade.
+Agente especialista em Meta Ads e Google Ads para planejar, analisar e otimizar campanhas com decisões rastreáveis, dados comerciais e aprovação versionada.
 
-O agente roda em **Claude Code** e **Codex**, usa o MCP oficial do Meta Ads quando disponível e registra cada auditoria, análise ou mudança em um dossiê Markdown dentro da pasta do cliente.
+O agent roda em **Claude Code** e **Codex**, seleciona somente as plataformas e skills necessárias para cada demanda e registra auditorias, análises e mudanças em dossiês Markdown locais.
 
-> Estado atual: versão pública inicial. Dados, configurações e dossiês reais de clientes continuam exclusivamente locais e ignorados pelo Git.
+> Estado: V1 multicanal inicial. Meta Ads e Google Ads estão no escopo. Search Console, Google Trends e GA4 ficam para fases futuras. Dados, credenciais, MCPs locais e dossiês reais permanecem fora do Git.
 
-## 1. O que o agente faz
+## 1. O que o agent faz
 
-- Configura e diagnostica a conexão MCP.
-- Cadastra contexto, metas e restrições por cliente.
+- Identifica se a demanda envolve Meta Ads, Google Ads ou ambas.
+- Trabalha com MCP somente leitura, exports/planilhas ou contexto manual.
+- Cadastra cliente, contas, metas, restrições e fontes.
 - Planeja campanhas de lead generation e e-commerce.
-- Audita tracking, estrutura e performance.
-- Analisa campanhas com janelas e atribuição declaradas.
+- Pesquisa e organiza palavras-chave Google Ads quando aplicável.
+- Audita tracking, estrutura, termos, públicos, assets e performance.
 - Propõe otimizações em lotes versionados.
-- Cria ou altera ativos suportados somente após aprovação.
+- Executa somente mudanças suportadas, aprovadas e revalidadas.
 - Registra antes, aprovação, execução e depois no mesmo dossiê.
-- Produz relatórios e briefings criativos.
-- Consulta seletivamente uma base local de 151 artigos oficiais da Central Meta.
+- Consulta seletivamente a Central Meta e fontes oficiais Google Ads.
 
-Não exclui nem arquiva ativos, não executa mudanças silenciosas e não substitui uma análise causal.
+Não exclui nem arquiva ativos, não ativa recomendações automáticas e não executa mudanças silenciosas.
 
-## 2. Requisitos
+## 2. Como o roteamento funciona
+
+Cada demanda define:
+
+1. Intenção: configurar, planejar, criar, auditar, analisar, otimizar, relatar, aprovar, executar ou reverter.
+2. Plataformas: `meta`, `google_ads`, ambas ou ainda indefinidas.
+3. Fonte por plataforma:
+   - `connected_read`: MCP/API somente leitura.
+   - `file_based`: CSV, XLSX ou Google Sheets.
+   - `context_only`: briefing e informações manuais.
+   - `unavailable`: fonte necessária ausente.
+
+O agent não percorre um fluxo fixo. Uma análise Google Ads não carrega as skills Meta; uma demanda multicanal abre os dois ramos e preserva fontes, contas e atribuições separadamente.
+
+## 3. Requisitos
 
 - macOS, Linux ou ambiente compatível com Claude Code/Codex.
-- Claude Code ou Codex instalado.
-- Acesso autorizado ao Business/conta de anúncios Meta.
-- Permissão adequada para leitura; permissão de escrita somente se for operar.
-- Navegador para concluir OAuth quando solicitado pelo MCP.
-- Dados comerciais em CSV, XLSX ou planilha quando a análise exigir qualidade do lead, vendas, receita ou margem.
+- Python 3 e `pipx` para o MCP oficial Google Ads.
+- Acesso autorizado à plataforma usada.
+- Para Google Ads conectado: Google Cloud project, Google Ads API habilitada, developer token e OAuth/ADC.
+- Para modo por arquivos: exports com período, timezone, definições e escopo.
 
-## 3. Instalação local
+## 4. Primeiro uso
 
-### Via Git
+Abra a raiz do projeto no Claude Code ou Codex e confirme a presença de:
 
-```bash
-git clone https://github.com/davigraeff-v4/meta-performance-ia.git
-cd meta-performance-ia
-```
+- `AGENTS.md` ou `CLAUDE.md`.
+- `CONTRATO-OPERACIONAL.md`.
+- `dependency_graph.json`.
+- `skills/`.
 
-Depois:
-
-1. Abra exatamente a raiz `meta-performance-ia` no Claude Code ou Codex.
-2. Confirme que a raiz contém `CLAUDE.md`, `AGENTS.md` e `CONTRATO-OPERACIONAL.md`.
-3. Inicie uma conversa na raiz e execute `/configuracao-mcp`.
-
-## 4. Abrir no Claude Code
-
-No terminal:
-
-```bash
-cd "/caminho/onde-voce-clonou/meta-performance-ia"
-claude
-```
-
-O Claude Code carrega `CLAUDE.md`. Os comandos em `.claude/commands/` ficam disponíveis como slash commands.
-
-Teste inicial:
+Depois escolha uma rota:
 
 ```text
-/configuracao-mcp
+/novo-cliente
 ```
 
-## 5. Abrir no Codex
+```text
+/planejar-campanha
+Plataforma: Google Ads
+```
 
-Abra a pasta clonada `meta-performance-ia` no Codex Desktop. O Codex carrega `AGENTS.md` como instrução do workspace.
+```text
+/analisar-campanha
+Plataformas: Meta e Google Ads
+```
 
-No Codex, os slash commands do projeto são convenções textuais: digite `/configuracao-mcp`, `/auditar-conta` ou outro comando no chat.
+## 5. Meta Ads MCP
 
-## 6. Configurar o MCP no Claude Code
-
-O endpoint usado pelo projeto é:
+Endpoint oficial usado pelo projeto:
 
 ```text
 https://mcp.facebook.com/ads
 ```
 
-### Diagnóstico
+Execute `/configuracao-mcp`, informe `Meta Ads` e siga a skill `00-configuracao-mcp`. O procedimento exige confirmação antes de editar configuração local e termina com teste somente leitura.
 
-```bash
-claude mcp get facebook-ads
-```
+## 6. Google Ads MCP local
 
-Se o servidor não existir, o comando validado na versão local do Claude Code é:
-
-```bash
-claude mcp add --transport http --scope user facebook-ads https://mcp.facebook.com/ads
-```
-
-Depois:
-
-1. Execute `claude mcp get facebook-ads` novamente.
-2. Abra/reinicie a sessão do Claude Code se as ferramentas não aparecerem.
-3. Conclua o OAuth no navegador quando solicitado.
-4. Autorize somente os ativos necessários.
-5. Peça ao agente para listar contas acessíveis sem fazer alterações.
-
-No ambiente usado para construir este modelo, `claude mcp get facebook-ads` retornou transporte HTTP conectado no escopo de usuário. Isso não comprova que outro computador esteja autenticado nem que tenha permissão de escrita.
-
-## 7. Configurar o MCP no Codex
-
-Execute `/configuracao-mcp` no Codex. A skill deve inspecionar apenas a seção Meta da configuração.
-
-Configuração manual esperada em `~/.codex/config.toml`:
-
-```toml
-[mcp_servers.meta_ads]
-url = "https://mcp.facebook.com/ads"
-```
-
-Procedimento:
-
-1. Feche sessões que possam sobrescrever a configuração.
-2. Faça backup apenas do arquivo local de configuração.
-3. Adicione a seção acima se ela não existir.
-4. Reinicie o Codex.
-5. Conclua a autenticação quando o aplicativo solicitar.
-6. Verifique se as ferramentas Meta aparecem na nova sessão.
-7. Faça teste somente de leitura.
-
-O CLI global `codex mcp` pode variar ou estar quebrado por instalação incompleta. Por isso, este README documenta o formato de configuração local observado e exige validação na sessão, sem afirmar que um comando CLI não testado funciona.
-
-## 8. Autenticação e contas
-
-Conexão tem quatro gates separados:
-
-1. **Transporte:** o servidor responde.
-2. **Autenticação:** o usuário concluiu OAuth.
-3. **Escopo:** a conta desejada aparece entre os ativos acessíveis.
-4. **Capacidade:** leitura e escrita disponíveis para a operação pretendida.
-
-Ao selecionar uma conta, confirme:
-
-- Nome da conta.
-- ID mascarado.
-- Business associado.
-- Moeda.
-- Timezone.
-- Pixel/dataset.
-- Página e Instagram quando relevantes.
-- Permissões de leitura e escrita.
-
-Se duas contas tiverem nomes parecidos, o agente deve parar e pedir confirmação.
-
-## 9. Primeiro uso
-
-### 1. Configurar
+O V1 usa o servidor oficial open source:
 
 ```text
-/configuracao-mcp
+https://github.com/googleads/google-ads-mcp
 ```
 
-### 2. Cadastrar cliente
+Ele é tratado como **somente leitura**. As ferramentas esperadas são listagem de customers, consultas GAQL e descoberta de metadata. Não presumir escrita nem Keyword Planner.
+
+### 6.1 Pré-requisitos Google
+
+1. Criar ou selecionar um Google Cloud project.
+2. Habilitar a Google Ads API.
+3. Obter um developer token no API Center de uma manager account.
+4. Criar OAuth client ou configurar Application Default Credentials.
+5. Garantir que o usuário autenticado tenha acesso aos customers necessários.
+6. Instalar `pipx`.
+
+O developer token precisa de nível compatível com as contas consultadas. Acesso de teste não comprova leitura de contas de produção.
+
+### 6.2 Credenciais
+
+Guardar credenciais fora do repositório. Nunca copiar para `clients/`, `skills/`, `knowledge/`, exemplos ou dossiês.
+
+Variáveis usadas pelo servidor:
 
 ```text
-/novo-cliente
-
-Cliente: Exemplo Solar
-Modelo: lead generation
-Objetivo: gerar oportunidades qualificadas
-Oferta: projeto de energia solar residencial
-Meta: CPQL de até R$ 120
-Ciclo de venda: 30 a 60 dias
+GOOGLE_APPLICATION_CREDENTIALS
+GOOGLE_PROJECT_ID
+GOOGLE_ADS_DEVELOPER_TOKEN
+GOOGLE_ADS_LOGIN_CUSTOMER_ID
 ```
 
-O agente cria `clients/exemplo-solar/CLIENTE.md` e um dossiê de onboarding.
+`GOOGLE_ADS_LOGIN_CUSTOMER_ID` é necessário quando o acesso ao customer ocorre por uma manager account. Os valores reais devem existir somente no ambiente/configuração local.
 
-### 3. Planejar ou auditar
+### 6.3 Comando local do servidor
+
+O servidor pode ser iniciado por `pipx`:
 
 ```text
-/planejar-campanha
+pipx run --spec git+https://github.com/googleads/google-ads-mcp.git google-ads-mcp
 ```
 
-ou:
+Antes de executar, configure as credenciais no ambiente local conforme a documentação oficial. Não coloque valores reais em scripts versionados.
 
-```text
-/auditar-conta
-```
-
-### 4. Aprovar e executar
-
-Quando houver mudanças, o agente gera um ID de operação:
-
-```text
-/aprovar-operacao op-20260801-1430-exemplo-solar-v1
-```
-
-Aprovar não executa. Para executar:
-
-```text
-/executar-operacao op-20260801-1430-exemplo-solar-v1
-```
-
-## 10. Fornecer arquivos e planilhas
-
-Formatos aceitos no MVP:
-
-- CSV.
-- XLSX/XLS.
-- Link de Google Sheets acessível no ambiente.
-- Markdown com definição dos campos.
-
-Informe junto:
-
-- Período dos dados.
-- Timezone.
-- Definição de cada etapa.
-- Chave de agregação: data, campanha, conjunto, anúncio ou UTM.
-- Se receita é bruta, líquida ou aprovada.
-- Se cancelamentos e reembolsos foram removidos.
-- Se leads duplicados/inválidos foram tratados.
-
-Não inclua dados pessoais quando bastarem dados agregados.
-
-## 11. Comandos
-
-| Comando | Resultado |
-|---|---|
-| `/configuracao-mcp` | Diagnostica/configura o MCP e gera dossiê sem segredos. |
-| `/novo-cliente` | Cria ou atualiza a ficha operacional. |
-| `/planejar-campanha` | Produz estratégia sem executar. |
-| `/criar-campanha` | Produz plano completo e change set de criação. |
-| `/auditar-conta` | Audita conexão, tracking, estrutura e riscos. |
-| `/analisar-campanha` | Analisa performance de escopo e janela definidos. |
-| `/otimizar-campanha` | Diagnostica e propõe lote priorizado. |
-| `/relatorio-performance` | Gera resumo executivo e apêndice operacional. |
-| `/aprovar-operacao <id>` | Registra aprovação da versão; não executa. |
-| `/executar-operacao <id>` | Revalida e executa somente a versão aprovada. |
-| `/reverter-operacao <id>` | Propõe restauração de valores conhecidos; exige nova aprovação. |
-
-## 12. Catálogo das 16 skills
-
-| Skill | Use para | Entrada principal | Saída |
-|---|---|---|---|
-| `00-configuracao-mcp` | Instalar/diagnosticar MCP | Ambiente e endpoint | Dossiê de configuração |
-| `01-client-campaign-intake` | Cadastrar contexto | Briefing e ficha | Cliente/campanha estruturados |
-| `02-meta-account-connection` | Confirmar conta | MCP e cliente | Snapshot de conta/permissões |
-| `03-measurement-data-quality` | Auditar tracking | Eventos e fontes | Gate de confiabilidade |
-| `04-goals-kpis-baseline` | Definir sucesso | Metas e histórico | KPIs e baseline |
-| `05-campaign-strategy` | Planejar campanha | Objetivo e oferta | Estratégia Meta |
-| `06-account-campaign-architecture` | Estruturar ativos | Estratégia | Campanhas/conjuntos/anúncios |
-| `07-audience-strategy` | Planejar públicos | Mercado e dados | Públicos, exclusões e testes |
-| `08-budget-bidding-allocation` | Planejar verba | Meta e arquitetura | Alocação/lances |
-| `09-creative-performance-brief` | Melhorar criativos | Breakdown e peças | Diagnóstico/briefing |
-| `10-campaign-build-plan` | Consolidar criação | Skills 05–09 | Plano e change set |
-| `11-performance-diagnosis` | Encontrar gargalos | Insights + comercial | Diagnóstico priorizado |
-| `12-optimization-change-set` | Propor otimização | Diagnóstico | Lote versionado |
-| `13-approved-change-executor` | Executar lote | Aprovação válida | Resultado por item |
-| `14-reporting-memory-learning` | Relatar/aprender | Dossiês e resultados | Relatório e memória |
-| `15-meta-help-center-retrieval` | Consultar Central Meta | Pergunta ou trecho de título | Artigos relevantes lidos e fontes |
-
-Leia o `SKILL.md` correspondente para o fluxo e gates completos.
-
-### Validar o modelo local
+### 6.4 Codex
 
 Execute:
 
-```bash
-python3 scripts/validate_repository.py
-python3 -m unittest tests/test_meta_help_search.py
+```text
+/configuracao-mcp
+Plataforma: Google Ads
 ```
 
-Para calcular o hash canônico de um dossiê JSON estruturado:
+A skill deve:
 
-```bash
-python3 scripts/hash_change_set.py examples/synthetic/operation-approved.json
+1. Inspecionar somente a seção Google Ads de `~/.codex/config.toml`.
+2. Mostrar a configuração proposta com placeholders.
+3. Pedir confirmação antes de editar o arquivo global local.
+4. Apontar para credenciais armazenadas fora do projeto.
+5. Reiniciar a sessão.
+6. Testar somente listagem de customers, metadata e GAQL.
+
+Exemplo estrutural com placeholders, para o arquivo global local:
+
+```toml
+[mcp_servers.google_ads]
+command = "pipx"
+args = ["run", "--spec", "git+https://github.com/googleads/google-ads-mcp.git", "google-ads-mcp"]
+
+[mcp_servers.google_ads.env]
+GOOGLE_APPLICATION_CREDENTIALS = "/CAMINHO/LOCAL/FORA/DO/REPOSITORIO/credentials.json"
+GOOGLE_PROJECT_ID = "SEU_PROJECT_ID"
+GOOGLE_ADS_DEVELOPER_TOKEN = "SEU_DEVELOPER_TOKEN"
+GOOGLE_ADS_LOGIN_CUSTOMER_ID = "SEU_MANAGER_CUSTOMER_ID"
 ```
 
-## 13. Interpretar uma análise
+Este bloco é documentação com placeholders. Nunca criar um arquivo equivalente dentro do repositório.
 
-O agente usa marcadores:
+### 6.5 Claude Code
 
-- `[F]`: fato observado.
-- `[C]`: cálculo reproduzível.
-- `[H]`: hipótese ainda não comprovada.
-- `[R]`: recomendação.
-- `[I]`: informação indisponível.
+Execute `/configuracao-mcp`, informe `Google Ads` e siga a configuração atual documentada pelo repositório oficial. O server command é o mesmo de `pipx`; variáveis e caminhos permanecem na configuração local do usuário.
 
-Confiança:
+### 6.6 Homologação
 
-- **Alta:** fonte confiável, volume e comparação adequados, sem contradição relevante.
-- **Média:** evidência útil, mas com ressalva de volume, tracking ou contexto.
-- **Baixa:** hipótese exploratória; não sustenta mudança irreversível.
+Validar nesta ordem:
 
-## 14. Dossiês
+1. Processo do servidor inicia.
+2. Credencial OAuth/ADC funciona.
+3. Developer token é aceito.
+4. Customers acessíveis podem ser listados.
+5. Customer correto é confirmado por nome, ID mascarado, moeda e timezone.
+6. Consulta GAQL simples funciona.
 
-Local:
+Nenhum teste de escrita faz parte do V1.
+
+## 7. Usar sem MCP
+
+O MCP é opcional. Sem conexão, informe `file_based` ou `context_only`.
+
+### Google Ads — pacote mínimo
+
+Exportar, quando a análise exigir:
+
+- Campanhas.
+- Grupos de anúncios.
+- Investimento, impressões, cliques e conversões.
+- Budget e estratégia de lance.
+- Ações de conversão relevantes.
+
+### Google Ads — pacote completo
+
+- Palavras-chave.
+- Termos de pesquisa.
+- Negativas.
+- Anúncios e assets.
+- Landing pages.
+- Parcela de impressões e perdas por budget/ranking.
+- Dispositivo, rede, localização, data e horário.
+- Histórico de alterações.
+- Export do Keyword Planner.
+- Dados comerciais/CRM.
+
+### Contrato do arquivo
+
+Informar junto:
+
+- Plataforma e conta.
+- Período e timezone.
+- Nível do export.
+- Modelo de atribuição.
+- Definição das conversões.
+- Se receita é bruta, líquida ou aprovada.
+- Se duplicados, inválidos, cancelamentos ou reembolsos foram tratados.
+
+Campo ausente permanece `null`; nunca vira zero.
+
+## 8. Pesquisa de palavras-chave
+
+Use:
 
 ```text
-clients/{cliente}/AAAA-MM-DD-HHMM-{tipo}-{escopo}.md
+/pesquisar-palavras-chave
 ```
 
-O mesmo arquivo acompanha proposta, aprovação, execução e snapshot posterior. Nunca altere manualmente uma versão aprovada sem invalidar a aprovação.
+Informe oferta, geografia, idioma, rede, URLs/seeds e fonte. Modos aceitos:
 
-Estados: `draft`, `proposed`, `approved`, `executing`, `executed`, `partial_failure`, `failed`, `reverted`, `analysis_only`.
+- Keyword Planner/API disponível.
+- Export do Keyword Planner.
+- Termos/keywords atuais da conta.
+- Apenas contexto e seeds.
 
-## 15. Reversão
+Sem fonte oficial, o agent pode estruturar intenções, clusters, negativas, grupos e landing pages, mas deixa volume, CPC, concorrência e forecast indisponíveis.
 
-`/reverter-operacao <id>` não desfaz magicamente uma operação. Ele:
+## 9. Comandos
 
-1. Lê o snapshot anterior.
-2. Identifica somente campos restauráveis.
-3. Cria um novo change set.
-4. Expõe riscos e efeitos colaterais.
-5. Exige aprovação e execução separadas.
+| Comando | Resultado |
+|---|---|
+| `/configuracao-mcp` | Diagnostica/configura o MCP da plataforma escolhida. |
+| `/novo-cliente` | Cria ou atualiza a ficha operacional multicanal. |
+| `/planejar-campanha` | Produz estratégia sem executar. |
+| `/criar-campanha` | Produz plano e change set por plataforma. |
+| `/pesquisar-palavras-chave` | Pesquisa intenção, clusters, match types e negativas. |
+| `/auditar-conta` | Audita conta, mensuração, estrutura e riscos. |
+| `/analisar-campanha` | Analisa performance do escopo. |
+| `/otimizar-campanha` | Gera lote priorizado por plataforma. |
+| `/relatorio-performance` | Gera relatório mono ou multicanal. |
+| `/aprovar-operacao <id>` | Registra aprovação; não executa. |
+| `/executar-operacao <id>` | Revalida e executa somente lote suportado. |
+| `/reverter-operacao <id>` | Propõe restauração conhecida com nova aprovação. |
 
-Não reverte criativos, aprendizado, revisão ou efeitos históricos que a plataforma não permita restaurar.
+## 10. Catálogo das 25 skills
 
-## 16. Base de conhecimento
+### Núcleo e Meta Ads
 
-Comece por `knowledge/README.md`. A base separa:
+| Skill | Responsabilidade |
+|---|---|
+| `00-configuracao-mcp` | Configurar MCP da plataforma escolhida |
+| `01-client-campaign-intake` | Cliente, plataformas, contas e briefing |
+| `02-meta-account-connection` | Conta Meta |
+| `03-measurement-data-quality` | Mensuração compartilhada |
+| `04-goals-kpis-baseline` | Metas e baseline |
+| `05-campaign-strategy` | Estratégia Meta |
+| `06-account-campaign-architecture` | Arquitetura Meta |
+| `07-audience-strategy` | Públicos Meta |
+| `08-budget-bidding-allocation` | Budget e lances Meta |
+| `09-creative-performance-brief` | Criativos Meta |
+| `10-campaign-build-plan` | Construção Meta |
+| `11-performance-diagnosis` | Diagnóstico Meta |
+| `12-optimization-change-set` | Change set compartilhado |
+| `13-approved-change-executor` | Executor aprovado |
+| `14-reporting-memory-learning` | Relatório e memória |
+| `15-meta-help-center-retrieval` | Fontes oficiais Meta |
 
-- Snapshot local de 151 artigos da Central de Ajuda Meta, com URL e data.
-- Resumos operacionais de documentação oficial Meta.
-- Metodologia operacional interna.
-- Trilhas lead generation e e-commerce.
-- Mensuração.
-- Performance criativa.
-- Aprendizados sanitizados aprovados.
+### Google Ads
 
-### Como a recuperação seletiva funciona
+| Skill | Responsabilidade |
+|---|---|
+| `16-google-ads-account-connection` | Customer, manager e leitura |
+| `17-google-ads-official-retrieval` | Fontes oficiais Google |
+| `18-google-ads-keyword-research` | Keywords, intenções e negativas |
+| `19-google-ads-campaign-strategy` | Tipo e estratégia da campanha |
+| `20-google-ads-campaign-architecture` | Arquitetura por tipo |
+| `21-google-ads-budget-bidding-conversions` | Budget, lances e conversões |
+| `22-google-ads-creative-assets-landing-page` | Ads, assets e landing pages |
+| `23-google-ads-campaign-build-plan` | Plano de construção Google |
+| `24-google-ads-performance-diagnosis` | Diagnóstico Google |
 
-O agente não “memoriza” nem carrega os 151 artigos em toda conversa. Ele usa recuperação progressiva:
+## 11. Aprovação e execução
 
-1. Recebe a pergunta original.
-2. Busca lexical leve por título e categoria usando primeiro apenas o índice.
-3. Se houver correspondência exata ou forte de título, lê o artigo inteiro.
-4. Se houver correspondência temática, lê somente os 1–3 melhores candidatos.
-5. Se o índice produzir resultado fraco, usa uma varredura local de conteúdo apenas como fallback e refina a busca; os arquivos não são carregados no contexto do agente.
-6. Em decisões sensíveis ou regras mutáveis, valida também a URL oficial ao vivo.
+Análises multicanal podem compartilhar um dossiê, mas mutações usam um `operation_id` por plataforma. Aprovar Meta não aprova Google Ads e vice-versa.
 
-Busca manual:
+No V1:
 
-```bash
-python3 scripts/search_meta_help.py "como funciona a meta de ROAS" --limit 3
+- Meta pode ser executado somente se escrita tiver sido homologada.
+- Google Ads é sempre `manual_only`.
+- Recomendações automáticas nunca são aplicadas por padrão.
+
+## 12. Conhecimento
+
+- Meta: snapshot seletivo de 151 artigos mais resumos operacionais.
+- Google Ads: catálogo leve, resumos próprios e consulta oficial ao vivo.
+- Metodologia: regras internas separadas das afirmações das plataformas.
+- Aprendizados: somente padrões sanitizados e aprovados.
+
+## 13. Validação local
+
+```text
+python3 scripts/validate_repository.py
+python3 -m unittest discover -s tests
 ```
 
-Busca apenas em títulos:
+O validador verifica 25 skills, grafo, comandos, schemas, base Meta e arquivos obrigatórios Google Ads.
 
-```bash
-python3 scripts/search_meta_help.py "público semelhante" --title-only --limit 5
-```
+## 14. Segurança e Git
 
-Cada resultado informa força da correspondência, título, caminho, categoria, data de extração e URL. A regra completa está em `skills/15-meta-help-center-retrieval/SKILL.md`.
+Nunca versionar:
 
-### Atualidade e atribuição
+- Clientes e dossiês reais.
+- CSV/XLSX/exports reais.
+- `google-ads.yaml`.
+- JSONs OAuth, ADC ou service account.
+- Developer tokens e refresh tokens.
+- Configuração local de MCP.
+- Respostas de autenticação.
 
-O snapshot contém 151 artigos extraídos em 2026-07-31. Quando uma regra oficial puder ter mudado, o agente deve verificar a fonte ao vivo e registrar a consulta no dossiê.
-
-O repositório inclui o snapshot para que clones públicos preservem a recuperação local. Os textos mantêm título, fonte e URL original. Consulte `NOTICE-META-CONTENT.md`: o projeto não é afiliado, endossado ou mantido pela Meta, e o conteúdo de terceiros continua sujeito aos direitos e termos de seus titulares.
-
-## 17. Atualizar conhecimento
-
-1. Registre o aprendizado real em `clients/{cliente}/CLIENTE.md`.
-2. Peça ao agente uma proposta sanitizada.
-3. Confirme que não há nome, ID, valor, oferta ou criativo identificável.
-4. Revise evidência, escopo e limitação.
-5. Aprove explicitamente.
-6. Somente então adicione em `knowledge/sanitized-learnings/`.
-
-## 18. Solução de problemas
-
-### MCP conectado, mas ferramentas não aparecem
-
-- Reinicie a sessão.
-- Confirme o endpoint e o ambiente.
-- Refaça OAuth.
-- Verifique se o host suporta o transporte HTTP.
-
-### Conta não aparece
-
-- Confirme o usuário autenticado.
-- Verifique permissões no Business.
-- Confirme se a conta pertence ao Business esperado.
-- Não tente contornar permissão com outro cliente/conta.
-
-### Leitura funciona, escrita não
-
-- Verifique a lista real de ferramentas e permissões.
-- Mantenha modo consultivo.
-- Gere change set e instrução manual.
-- Não use navegador automaticamente.
-
-### Codex CLI retorna erro de instalação
-
-- Use o Codex Desktop e a configuração TOML validada.
-- Corrija o CLI separadamente; não confunda falha do binário com falha do servidor MCP.
-
-### Dados Meta e planilha divergem
-
-- Confira timezone, janela, atribuição, chaves, cancelamentos, duplicidade e definição de receita/lead.
-- Mantenha ambos os valores e explique a incompatibilidade.
-- Não force reconciliação sem evidência.
-
-## 19. Segurança do repositório
-
-Nunca publicar:
-
-- `clients/` reais.
-- CSV/XLSX/exportações.
-- Tokens, cookies, OAuth ou configurações locais.
-- Dossiês reais.
-- IDs completos de conta, pixel, página ou catálogo.
-- Criativos, ofertas ou resultados identificáveis.
-Antes de qualquer push:
-
-1. Auditar `.gitignore`.
-2. Buscar padrões de segredo e IDs.
-3. Conferir que exemplos são sintéticos.
-4. Revisar a lista completa de arquivos staged.
-
-## 20. Checklist de homologação
-
-- [ ] PRD, README e contrato revisados.
-- [ ] 16 skills válidas.
-- [ ] 151 artigos validados, sem títulos ou URLs duplicados.
-- [ ] Busca seletiva testada com correspondência exata, temática e fraca.
-- [ ] Grafo e schemas válidos.
-- [ ] Claude e Codex coerentes.
-- [ ] MCP validado nos dois ambientes.
-- [ ] Smoke test somente leitura concluído.
-- [ ] Casos sintéticos aprovados.
-- [ ] Um dossiê real revisado.
-- [ ] Uma operação controlada aprovada separadamente, se desejada.
-- [ ] Nenhum segredo ou dado real fora de `clients/`.
-- [ ] Nenhum cliente, segredo ou exportação real staged.
-- [ ] Publicação ou atualização aprovada por Davi.
+Antes de publicar, revisar `git status`, `git diff`, testes e auditoria de segredos. Push continua exigindo autorização explícita.

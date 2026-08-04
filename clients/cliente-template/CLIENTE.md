@@ -8,8 +8,9 @@
 - Modelo: lead_generation
 - Responsável: Gestor Exemplo
 - Atualizado em: 2026-07-31
+- Plataformas: meta, google_ads
 
-## Conta Meta
+## Conta Meta Ads
 
 - Nome: Conta Exemplo
 - ID mascarado: act_****1234
@@ -18,6 +19,18 @@
 - Timezone: America/Sao_Paulo
 - Pixel/dataset: dataset-****5678
 - Status: unknown
+- Modo de fonte: context_only
+
+## Conta Google Ads
+
+- Nome: Conta Google Exemplo
+- Customer ID mascarado: •••-•••-••123
+- Manager customer ID mascarado: null
+- Moeda: BRL
+- Timezone: America/Sao_Paulo
+- Conversões principais: lead qualificado
+- Status: unknown
+- Modo de fonte: context_only
 
 ## Negócio
 
@@ -36,4 +49,3 @@
 ## Histórico e aprendizados
 
 Nenhuma operação real. Conteúdo sintético para validação estrutural.
-

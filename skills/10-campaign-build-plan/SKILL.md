@@ -1,9 +1,9 @@
 ---
 name: 10-campaign-build-plan
-description: Consolida estratégia, arquitetura, públicos, budget, lances, tracking e criativos em um plano completo de campanha e change set aprovável. Use em /criar-campanha antes de qualquer criação no Meta.
+description: Consolida estratégia, arquitetura, públicos, budget, lances, tracking e criativos Meta Ads em plano e change set aprovável. Use somente no ramo Meta de /criar-campanha.
 ---
 
-# Plano de Construção de Campanha
+# Plano de Construção Meta Ads
 
 ## Pré-requisitos
 

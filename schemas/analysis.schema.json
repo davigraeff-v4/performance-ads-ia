@@ -1,10 +1,13 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "MetaPerformanceAnalysis",
+  "title": "PerformanceAdsAnalysis",
   "type": "object",
   "additionalProperties": false,
-  "required": ["scope", "extracted_at", "timezone", "currency", "window", "comparison_window", "attribution", "measurement_gate", "sources", "findings", "limitations"],
+  "required": ["platform", "source_mode", "scope", "extracted_at", "timezone", "currency", "window", "comparison_window", "attribution", "measurement_gate", "sources", "findings", "limitations"],
   "properties": {
+    "platform": {"enum": ["meta", "google_ads", "cross_channel"]},
+    "active_platforms": {"type": "array", "items": {"enum": ["meta", "google_ads"]}, "uniqueItems": true},
+    "source_mode": {"enum": ["connected_read", "file_based", "context_only", "mixed", "unavailable"]},
     "scope": {"type": "string"},
     "extracted_at": {"type": "string", "format": "date-time"},
     "timezone": {"type": "string"},
@@ -44,4 +47,3 @@
     }
   }
 }
-

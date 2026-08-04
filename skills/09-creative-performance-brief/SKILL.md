@@ -1,9 +1,9 @@
 ---
 name: 09-creative-performance-brief
-description: Diagnostica performance e fadiga de criativos e gera briefings de novos testes sem escrever a copy final. Use quando o gestor pedir análise criativa, novos ângulos ou houver queda de resposta, frequência e concentração de gasto.
+description: Diagnostica performance e fadiga de criativos Meta Ads e gera briefings de testes sem escrever copy final. Use somente no ramo Meta para análise criativa, novos ângulos ou queda de resposta.
 ---
 
-# Performance Criativa e Briefing
+# Performance Criativa Meta Ads
 
 ## Leituras
 
@@ -26,4 +26,3 @@ Não produzir copy final. Não declarar elemento criativo vencedor quando múlti
 ## Saída
 
 Diagnóstico por criativo, concentração de entrega, hipóteses de fadiga, lacunas de diversificação e briefing pronto para o agente/time de copy e design.
-

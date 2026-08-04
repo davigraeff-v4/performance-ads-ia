@@ -1,2 +1,1 @@
-Rode as skills `01` a `10`. Gere plano completo e change set em status `proposed`. Não chame ferramenta de escrita. Oriente o gestor a usar `/aprovar-operacao <id>` e, em outro comando, `/executar-operacao <id>`.
-
+Roteie por plataforma. Para Meta, rode `01` e `02`–`10`. Para Google Ads, rode `01`, `03`, `04` e `17`–`23`. Gere um change set por plataforma em `proposed`. Não chame escrita; no V1, Google Ads é `manual_only`. Aprovação e execução permanecem comandos separados.

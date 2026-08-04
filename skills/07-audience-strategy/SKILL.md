@@ -1,9 +1,9 @@
 ---
 name: 07-audience-strategy
-description: Planeja e avalia públicos amplos, Advantage+, personalizados, semelhantes, remarketing, controles e exclusões. Use ao criar campanhas, testar segmentação ou investigar saturação e sobreposição.
+description: Planeja e avalia públicos Meta Ads amplos, Advantage+, personalizados, semelhantes, remarketing, controles e exclusões. Use somente no ramo Meta ao criar campanhas ou investigar segmentação.
 ---
 
-# Estratégia de Públicos
+# Estratégia de Públicos Meta Ads
 
 ## Leituras
 
@@ -23,4 +23,3 @@ description: Planeja e avalia públicos amplos, Advantage+, personalizados, seme
 ## Saída
 
 Para cada público: papel, fonte, controles, sugestões, exclusões, hipótese, risco de privacidade, KPI e critério de leitura. Dados de lista permanecem fora do repositório.
-

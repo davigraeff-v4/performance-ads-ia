@@ -1,2 +1,1 @@
-Execute `02-meta-account-connection`, `03-measurement-data-quality`, `04-goals-kpis-baseline` e `11-performance-diagnosis`. Cubra conexão, mensuração, estrutura e riscos. Gere dossiê `analysis_only`; não altere a conta.
-
+Roteie por plataforma. Para Meta, execute `02`, `03`, `04` e `11`. Para Google Ads, execute `16`, `03`, `04`, `17` e `24`. Em escopo multicanal, mantenha fontes e conclusões separadas. Gere dossiê `analysis_only`; não altere contas.

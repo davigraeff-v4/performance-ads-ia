@@ -1,0 +1,1 @@
+Execute `skills/18-google-ads-keyword-research/SKILL.md`. Confirme oferta, geografia, idioma, rede, período e modo de fonte. Nunca invente volume, CPC, concorrência ou forecast. Entregue clusters, intenções, match types, negativas, grupos e landing pages com limitações.

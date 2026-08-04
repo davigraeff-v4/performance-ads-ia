@@ -13,6 +13,15 @@ __pycache__/
 !.env.example
 *.token
 *.secret
+.secrets/
+credentials/
+credentials*.json
+google-ads.yaml
+client_secret*.json
+application_default_credentials.json
+adc*.json
+service-account*.json
+oauth*.json
 
 # Dados reais de clientes. Mantém somente o template sintético.
 clients/*

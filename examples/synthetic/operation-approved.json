@@ -4,6 +4,9 @@
   "status": "proposed",
   "type": "otimizacao",
   "client_slug": "empresa-exemplo",
+  "platform": "meta",
+  "active_platforms": ["meta"],
+  "source_mode": "connected_read",
   "created_at": "2026-08-01T14:30:00-03:00",
   "updated_at": "2026-08-01T14:30:00-03:00",
   "scope": "Campanha A",
@@ -13,6 +16,7 @@
   "changes": [
     {
       "change_id": "chg-001",
+      "platform": "meta",
       "target_type": "campaign",
       "target_ref": "campaign-****1234",
       "field": "daily_budget",

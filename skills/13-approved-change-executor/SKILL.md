@@ -1,6 +1,6 @@
 ---
 name: 13-approved-change-executor
-description: Revalida e executa somente um change set Meta explicitamente aprovado, registrando resultado por item e snapshot posterior. Use exclusivamente em /executar-operacao ou na execução aprovada de /reverter-operacao.
+description: Revalida e executa somente change set de plataforma explicitamente aprovado, registrando resultado por item e snapshot posterior. Use exclusivamente em /executar-operacao ou reversão aprovada; Google Ads permanece manual_only no V1.
 ---
 
 # Executor de Mudanças Aprovadas
@@ -10,7 +10,7 @@ description: Revalida e executa somente um change set Meta explicitamente aprova
 1. Comando explícito `/executar-operacao <id>`.
 2. Dossiê com status `approved`.
 3. Responsável, horário, versão e hash de aprovação.
-4. Conta `validated_write`.
+4. Plataforma e conta `validated_write`; Google Ads não satisfaz este gate no V1.
 5. `quality/execution-checklist.md` aprovado.
 
 ## Preflight
@@ -19,7 +19,7 @@ description: Revalida e executa somente um change set Meta explicitamente aprova
 2. Reler cada alvo e comparar com o snapshot.
 3. Invalidar aprovação diante de drift material.
 4. Confirmar ferramenta, permissão, parâmetros e ordem.
-5. Remover da fila itens `manual_only`, `blocked`, exclusão ou arquivamento.
+5. Remover da fila itens `manual_only`, `blocked`, exclusão ou arquivamento. Se o lote for Google Ads V1, bloquear toda chamada de escrita.
 
 ## Execução
 
@@ -40,4 +40,3 @@ description: Revalida e executa somente um change set Meta explicitamente aprova
 ## Proibições
 
 Não executar por frases genéricas. Não ampliar o lote. Não esconder falha. Não declarar sucesso antes do readback. Não usar browser como fallback.
-

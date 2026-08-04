@@ -1,26 +1,30 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "MetaPerformanceCampaignState",
+  "title": "PerformanceAdsCampaignState",
   "type": "object",
   "additionalProperties": false,
-  "required": ["campaign_slug", "client_slug", "status", "objective", "business_goal", "sources", "facts", "hypotheses", "constraints", "updated_at"],
+  "required": ["campaign_slug", "client_slug", "platform", "status", "business_goal", "source_mode", "sources", "facts", "hypotheses", "constraints", "updated_at"],
   "properties": {
     "campaign_slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
     "client_slug": {"type": "string"},
+    "platform": {"enum": ["meta", "google_ads"]},
     "status": {"enum": ["planning", "proposed", "approved", "active", "paused", "completed", "unknown"]},
-    "objective": {"type": ["string", "null"]},
     "business_goal": {"type": "string"},
+    "campaign_type": {"type": ["string", "null"]},
+    "objective": {"type": ["string", "null"]},
     "conversion_location": {"type": ["string", "null"]},
     "performance_goal": {"type": ["string", "null"]},
     "optimization_event": {"type": ["string", "null"]},
+    "bidding_strategy": {"type": ["string", "null"]},
     "budget": {"type": ["number", "null"], "minimum": 0},
     "currency": {"type": ["string", "null"]},
+    "source_mode": {"enum": ["connected_read", "file_based", "context_only", "unavailable"]},
     "sources": {"type": "array", "items": {"type": "string"}},
     "facts": {"type": "array", "items": {"type": "string"}},
     "hypotheses": {"type": "array", "items": {"type": "string"}},
     "constraints": {"type": "array", "items": {"type": "string"}},
     "strategy": {"type": "object"},
+    "platform_state": {"type": "object"},
     "updated_at": {"type": "string", "format": "date-time"}
   }
 }
-

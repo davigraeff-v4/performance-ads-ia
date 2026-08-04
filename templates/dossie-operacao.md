@@ -7,6 +7,9 @@
   "status": "draft",
   "type": "analise",
   "client_slug": "cliente",
+  "platform": "meta",
+  "active_platforms": ["meta"],
+  "source_mode": "context_only",
   "created_at": "AAAA-MM-DDTHH:MM:SS-03:00",
   "updated_at": "AAAA-MM-DDTHH:MM:SS-03:00",
   "scope": "",
@@ -35,7 +38,10 @@
 
 - Solicitação:
 - Responsável:
-- Conta/ID mascarado:
+- Plataformas solicitadas:
+- Plataformas analisadas:
+- Modo de fonte por plataforma:
+- Conta/ID mascarado por plataforma:
 - Campanha/objeto:
 
 ## Fontes e janela
@@ -45,7 +51,8 @@
 - Janela:
 - Comparação:
 - Atribuição:
-- Fontes Meta:
+- Fontes Meta Ads:
+- Fontes Google Ads:
 - Fontes externas:
 - URLs oficiais verificadas:
 
@@ -73,8 +80,8 @@ Registre somente campos necessários à decisão e reversão.
 
 ## Change set
 
-| ID | Alvo | Campo | Antes | Depois | Evidência | Impacto financeiro | Risco | Reversão | Modo |
-|---|---|---|---|---|---|---:|---|---|---|
+| ID | Plataforma | Alvo | Campo | Antes | Depois | Evidência | Impacto financeiro | Risco | Reversão | Modo |
+|---|---|---|---|---|---|---|---:|---|---|---|
 
 ## Aprovação
 
@@ -102,9 +109,10 @@ Registre somente campos necessários à decisão e reversão.
 
 ## Conclusão e próxima leitura
 
+Em dossiê multicanal, concluir cada plataforma separadamente antes da síntese. Mutações usam `operation_id` e aprovação independentes por plataforma.
+
 ## Aprendizados locais
 
 ## Proposta sanitizada
 
 Não promover à base antes da aprovação de Davi.
-

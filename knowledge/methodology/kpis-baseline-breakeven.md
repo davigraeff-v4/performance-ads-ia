@@ -13,7 +13,7 @@ Todo KPI precisa de nome, definição, fórmula, unidade, fonte, janela, denomin
 - CPM = investimento / impressões × 1.000.
 - Taxa de conversão = conversões / denominador declarado.
 - CPL/CPA = investimento / resultado definido.
-- ROAS = receita atribuída / investimento Meta.
+- ROAS = receita atribuída / investimento da plataforma no mesmo escopo.
 - MER = receita total do escopo / investimento total de marketing do mesmo escopo.
 - ROAS de equilíbrio simplificado = 1 / margem de contribuição, se a margem estiver em proporção e o escopo for compatível.
 
@@ -27,4 +27,3 @@ Usar período representativo e comparável. Registrar mudanças estruturais e sa
 - ROAS não é lucro.
 - CPL baixo não prova qualidade.
 - Percentual sem denominador e população é incompleto.
-

@@ -1,6 +1,6 @@
 ---
 name: 14-reporting-memory-learning
-description: Gera relatórios executivos e operacionais, atualiza a memória local do cliente e propõe aprendizados sanitizados. Use em /relatorio-performance, fechamento de análise/operação ou revisão de resultados.
+description: Gera relatórios Meta Ads, Google Ads ou multicanal, atualiza a memória local do cliente e propõe aprendizados sanitizados. Use em /relatorio-performance ou fechamento de análise/operação.
 ---
 
 # Relatório, Memória e Aprendizado
@@ -15,7 +15,7 @@ description: Gera relatórios executivos e operacionais, atualiza a memória loc
 ## Processo
 
 1. Confirmar período, comparação, atribuição e status dos dossiês.
-2. Consolidar fatos sem misturar populações ou denominadores.
+2. Consolidar fatos sem misturar plataformas, atribuições, populações ou denominadores.
 3. Apresentar sumário executivo, diagnóstico, decisões, mudanças, impacto e próximo passo.
 4. Separar resultado observado de impacto causal.
 5. Atualizar `CLIENTE.md` acrescentando histórico; nunca apagar aprendizado anterior.
