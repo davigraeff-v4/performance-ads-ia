@@ -10,16 +10,36 @@ description: Confirma de forma não destrutiva a conta Google Ads correta, manag
 1. Skill `00-configuracao-mcp` concluída para Google Ads, quando houver MCP.
 2. Skill `01-client-campaign-intake` com cliente e conta esperada.
 3. `CLIENTE.md` e dossiê atual.
+4. Se o MCP ainda não estiver configurado, seguir o apêndice opcional da seção 15 do `README.md`; nunca pedir segredos no chat.
 
 ## Processo
 
 1. Inventariar as ferramentas realmente expostas pelo MCP oficial.
-2. Listar customers diretamente acessíveis sem mutação.
-3. Confirmar customer ID mascarado, nome, moeda e timezone.
-4. Confirmar `login-customer-id`/manager account quando o acesso for indireto.
-5. Testar consulta GAQL simples e somente leitura.
-6. Registrar recursos ou campos indisponíveis sem improvisar alternativa.
-7. Pedir confirmação diante de qualquer ambiguidade.
+2. Chamar `customers_list_accessible_customers` sem mutação. Lembrar que a resposta lista customers diretamente acessíveis e pode retornar MCCs, não toda a hierarquia abaixo delas.
+3. Se houver mais de um customer plausível, mascarar os IDs, apresentar as opções mínimas e pedir confirmação antes de consultar performance.
+4. Confirmar `login-customer-id`/MCC quando o acesso for indireto; remover hífens antes da chamada.
+5. Chamar `metadata_get_resource_metadata` para o recurso que será consultado; não adivinhar campos GAQL.
+6. Testar `search_search` no customer confirmado com consulta pequena, `limit` e somente os campos necessários.
+7. Confirmar ID mascarado, nome, moeda e timezone contra `CLIENTE.md` ou confirmação do gestor.
+8. Registrar recursos ou campos indisponíveis sem improvisar alternativa.
+9. Pedir confirmação diante de qualquer ambiguidade.
+
+## Preflight seguro
+
+- Nunca mostrar developer token, OAuth, ADC, refresh token ou configuração completa.
+- Nunca selecionar automaticamente o primeiro customer quando existirem várias contas plausíveis.
+- Não inferir que a MCC do developer token é a mesma MCC usada como `login-customer-id`.
+- Não chamar `search_search` antes de descobrir os campos com metadata.
+- Não consultar períodos ou níveis além do escopo pedido.
+
+## Diagnóstico de falhas
+
+- Transporte falha: voltar à skill `00-configuracao-mcp` e revisar launcher/executável.
+- `DefaultCredentialsError` ou `invalid_grant`: marcar autenticação indisponível; não pedir o segredo no chat.
+- `USER_PERMISSION_DENIED`: conferir identidade autenticada, customer alvo e cadeia da MCC.
+- Lista vazia: conferir se o usuário/service account recebeu acesso no Google Ads.
+- Token limitado a teste: não alegar acesso a produção.
+- Metadata funciona e GAQL falha: revisar compatibilidade dos campos e condições antes de culpar a autenticação.
 
 ## Gates
 
@@ -33,4 +53,4 @@ No V1 não existe `validated_write` para Google Ads. Não testar escrita criando
 
 ## Registro
 
-Salvar no dossiê data, customer mascarado, manager mascarado, moeda, timezone, modo de fonte, ferramentas e limitações. Nunca registrar developer token, OAuth, ADC, JSON de credencial ou configuração completa.
+Salvar no dossiê data, customer mascarado, manager mascarado, moeda, timezone, modo de fonte, ferramentas, revisão do servidor e limitações. Nunca registrar developer token, OAuth, ADC, JSON de credencial ou configuração completa.

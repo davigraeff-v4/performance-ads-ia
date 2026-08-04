@@ -16,8 +16,14 @@
 | Budget de campanha | https://developers.google.com/google-ads/api/docs/campaigns/budgets/overview |
 | Anúncios responsivos de pesquisa | https://developers.google.com/google-ads/api/docs/responsive-search-ads/overview |
 | Reporting/GAQL | https://developers.google.com/google-ads/api/docs/reporting/overview |
+| Projeto Google Cloud e API | https://developers.google.com/google-ads/api/docs/oauth/cloud-project |
 | OAuth e credenciais | https://developers.google.com/google-ads/api/docs/oauth/credential-management |
+| OAuth de usuário e ADC | https://developers.google.com/google-ads/api/docs/oauth/single-user-authentication |
+| Gerar refresh token sem gcloud | https://developers.google.com/google-ads/api/samples/generate-user-credentials |
+| Service account | https://developers.google.com/google-ads/api/docs/oauth/service-accounts |
 | Developer token | https://developers.google.com/google-ads/api/docs/api-policy/developer-token |
+| Níveis de acesso da API | https://developers.google.com/google-ads/api/docs/api-policy/access-levels |
+| MCC e login customer ID | https://developers.google.com/google-ads/api/docs/concepts/call-structure |
 | MCP oficial | https://github.com/googleads/google-ads-mcp |
 
 ## Regra

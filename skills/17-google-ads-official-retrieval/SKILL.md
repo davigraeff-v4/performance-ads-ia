@@ -13,6 +13,7 @@ description: Localiza e lê seletivamente documentação oficial do Google Ads e
    - `support.google.com/google-ads/`
    - `developers.google.com/google-ads/api/`
    - `github.com/googleads/google-ads-mcp`
+   - `console.cloud.google.com/` somente para orientar a ação interativa do usuário no projeto correto.
 
 ## Processo
 
@@ -23,6 +24,19 @@ description: Localiza e lê seletivamente documentação oficial do Google Ads e
 5. Verificar data, versão da API, elegibilidade e limitações por tipo de campanha.
 6. Separar `Google informa` de `metodologia recomenda`.
 7. Registrar título, URL e data de consulta no dossiê.
+
+## Rotas de configuração
+
+- Projeto e API habilitada: `oauth/cloud-project`.
+- Credenciais e armazenamento seguro: `oauth/credential-management`.
+- OAuth de usuário/ADC: `oauth/single-user-authentication`.
+- Refresh token sem `gcloud`: exemplo oficial `generate-user-credentials`.
+- Service account: `oauth/service-accounts`.
+- Developer token e nível de acesso: `api-policy/developer-token` e `api-policy/access-levels`.
+- MCC/login customer ID: `concepts/call-structure`.
+- Instalação e ferramentas MCP: README atual de `googleads/google-ads-mcp`.
+
+Ao orientar obtenção de credenciais, nunca pedir valores no chat. Explicar onde o usuário encontra cada item e trabalhar somente com caminhos locais e placeholders.
 
 ## Gates
 
