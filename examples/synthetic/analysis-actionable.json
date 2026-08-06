@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "platform": "google_ads",
+  "active_platforms": ["google_ads"],
+  "source_modes": {"google_ads": "file_based"},
+  "scope": "Campanha Search sintética",
+  "extracted_at": "2026-08-06T12:00:00-03:00",
+  "timezones": {"google_ads": "America/Sao_Paulo"},
+  "currencies": {"google_ads": "BRL"},
+  "window": {"start": "2026-07-01", "end": "2026-07-31"},
+  "comparison_window": {"start": "2026-06-01", "end": "2026-06-30"},
+  "attribution": "conforme export sintético",
+  "measurement_gate": "utilizavel_com_ressalvas",
+  "sources": ["Export sintético Google Ads"],
+  "metrics": {"spend": 1000, "conversions": 10, "cpa": 100},
+  "findings": [
+    {
+      "finding_id": "fnd-search-001",
+      "classification": "H",
+      "platform": "google_ads",
+      "level": "search_term",
+      "statement": "Termos pouco aderentes podem estar elevando o CPA.",
+      "evidence": ["Export sintético mostra gasto sem conversão em termos genéricos"],
+      "impact": "Possível desperdício de verba e menor volume qualificado.",
+      "confidence": "media",
+      "limitation": "Qualidade comercial por termo não disponível.",
+      "primary_hypothesis": "Correspondência ampla capturou intenção fraca.",
+      "alternative_hypothesis": "A página converte mal mesmo em termos aderentes.",
+      "discriminating_check": "Cruzar termos com conversões qualificadas e taxa da página por grupo.",
+      "next_action": "Revisar termos com gasto e zero conversões e propor negativas sem aplicar automaticamente.",
+      "priority": "P1",
+      "owner": "gestor de tráfego",
+      "deadline": "próximo ciclo de otimização",
+      "evaluation_window": "14 dias após o lote aprovado",
+      "success_criteria": ["Redução de gasto em termos irrelevantes sem perda de conversões qualificadas"],
+      "stop_criteria": ["Queda de conversões qualificadas acima do limite acordado"]
+    }
+  ],
+  "limitations": ["Exemplo sintético; não representa conta real"]
+}

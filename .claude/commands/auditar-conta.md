@@ -1,1 +1,1 @@
-Roteie por plataforma. Para Meta, execute `02`, `03`, `04` e `11`. Para Google Ads, execute `16`, `03`, `04`, `17` e `24`. Em escopo multicanal, mantenha fontes e conclusões separadas. Gere dossiê `analysis_only`; não altere contas.
+Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `auditoria` e os argumentos do gestor. Siga somente a rota calculada, não altere contas, encerre `analysis_only` e entregue o relatório completo no chat.

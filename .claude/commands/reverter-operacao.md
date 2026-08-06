@@ -1,1 +1,1 @@
-Leia o dossiê informado e o snapshot anterior. Crie um novo change set apenas com valores restauráveis conhecidos, sem excluir/arquivar. Marque `proposed` e exija nova aprovação e execução separadas.
+Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `reversao` e o ID informado. Crie novo change set apenas com valores restauráveis conhecidos, marque `proposed`, entregue-o no chat e exija nova aprovação e execução separadas.

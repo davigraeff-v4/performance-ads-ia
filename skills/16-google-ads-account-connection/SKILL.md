@@ -23,6 +23,7 @@ description: Confirma de forma não destrutiva a conta Google Ads correta, manag
 7. Confirmar ID mascarado, nome, moeda e timezone contra `CLIENTE.md` ou confirmação do gestor.
 8. Registrar recursos ou campos indisponíveis sem improvisar alternativa.
 9. Pedir confirmação diante de qualquer ambiguidade.
+10. Quando `google_ads_extended` estiver instalado, chamar `get_extended_capabilities` e registrar separadamente `planner_enabled`, `write_mode`, presença de credenciais e quantidade de customers permitidos, sem revelar valores.
 
 ## Preflight seguro
 
@@ -49,7 +50,9 @@ description: Confirma de forma não destrutiva a conta Google Ads correta, manag
 - `file_based`: sem conexão, mas exports utilizáveis.
 - `context_only`: planejamento sem dados atuais da conta.
 
-No V1 não existe `validated_write` para Google Ads. Não testar escrita criando objeto descartável.
+Na etapa V1.1 inicial não existe `validated_write` para Google Ads. O complemento instalado com `write_tools_registered: false` não satisfaz esse gate. Não testar escrita criando objeto descartável.
+
+Planner é uma capability separada: somente registrar `planner_connected` depois de `planner_enabled: true`, customer allowlisted e uma chamada real bem-sucedida. Basic Access ou transporte conectado isoladamente não bastam.
 
 ## Registro
 

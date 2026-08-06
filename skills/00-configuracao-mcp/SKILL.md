@@ -37,7 +37,7 @@ description: Configura, diagnostica e valida com segurança o MCP oficial do Met
 
 ## Google Ads
 
-O servidor oficial é executado localmente a partir de `googleads/google-ads-mcp`. No V1, tratá-lo como somente leitura.
+O servidor oficial é executado localmente a partir de `googleads/google-ads-mcp` e permanece somente leitura. O conector `google_ads_extended` roda em processo separado e nunca amplia capacidade apenas porque está instalado.
 
 ### Fontes obrigatórias
 
@@ -48,7 +48,7 @@ O servidor oficial é executado localmente a partir de `googleads/google-ads-mcp
 ### Diagnóstico inicial
 
 1. Verificar Python 3.10+, `pipx`, Claude Code e Codex sem instalar nada.
-2. Inspecionar somente a entrada Google Ads existente em cada cliente.
+2. Inspecionar somente as entradas `google_ads` e, quando fizer parte do pedido, `google_ads_extended` em cada cliente.
 3. Identificar o material disponível sem ler ou imprimir valores:
    - ADC `authorized_user`;
    - OAuth Client JSON e refresh token;
@@ -58,6 +58,7 @@ O servidor oficial é executado localmente a partir de `googleads/google-ads-mcp
    - MCC/login customer ID, quando aplicável.
 4. Confirmar que a Google Ads API está habilitada e que a identidade OAuth/service account tem acesso às contas.
 5. Se faltar uma credencial, orientar o apêndice opcional da seção 15 do `README.md` antes de editar configurações.
+6. Para o conector complementar, chamar primeiro `get_extended_capabilities`; nunca inferir Planner ou escrita pelo nível Basic isolado.
 
 ### Obtenção das credenciais
 
@@ -80,6 +81,7 @@ O servidor oficial é executado localmente a partir de `googleads/google-ads-mcp
 4. Criar o bundle em `~/.config/performance-ads-ia/google-ads/` ou caminho equivalente fora do clone.
 5. Preferir um launcher local compartilhado que carregue `GOOGLE_APPLICATION_CREDENTIALS`, `GOOGLE_PROJECT_ID`, `GOOGLE_ADS_DEVELOPER_TOKEN` e, se necessário, `GOOGLE_ADS_LOGIN_CUSTOMER_ID`.
 6. Fazer Claude e Codex apontarem para o launcher; não duplicar tokens nas configurações quando isso puder ser evitado.
+7. Instalar o complemento em namespace separado, com capabilities `reporting`, Planner `false`, escrita `disabled` e allowlist vazia por padrão.
 
 ### Claude Code
 
@@ -116,6 +118,7 @@ codex mcp add google_ads -- /CAMINHO/LOCAL/run-google-ads-mcp
    - `search_search` com GAQL pequena e limitada.
 3. Se houver mais de uma conta plausível, marcar `ambiguous` e pedir confirmação.
 4. Nunca testar escrita, criar objeto descartável ou presumir suporte ao Keyword Planner.
+5. No complemento, validar somente transporte e `get_extended_capabilities` enquanto o uso permitido for relatórios. Não chamar Planner para sondar autorização.
 
 ### Falhas e reversão de configuração
 

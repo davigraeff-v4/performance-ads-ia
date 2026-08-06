@@ -1,1 +1,1 @@
-Execute integralmente `skills/00-configuracao-mcp/SKILL.md`. Confirme Meta ou Google Ads antes de inspecionar. Diagnostique antes de alterar e peça confirmação para qualquer edição local. O teste final é somente leitura. Gere dossiê sem tokens, JSONs, developer tokens ou configurações de outros servidores.
+Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `configuracao` e os argumentos do gestor. Confirme uma plataforma antes de inspecionar, peça confirmação para edição local e nunca exponha segredos ou outros servidores.

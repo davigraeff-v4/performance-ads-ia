@@ -32,6 +32,6 @@ description: Analisa performance Google Ads por conta, campanha, grupo, keyword,
 
 ## Saída
 
-Para cada achado: `[F/C/H/R/I]`, plataforma, nível, evidência, impacto, confiança, limitação e próxima ação. Optimization Score e recomendações do Google ficam em bloco separado e nunca são aceitos automaticamente.
+Para cada achado, registrar: `finding_id`, `[F/C/H/R/I]`, plataforma, nível, evidência, impacto, confiança, limitação, hipótese principal, hipótese alternativa, verificação que distingue as hipóteses, ação exata, prioridade, responsável, prazo, janela de avaliação e critérios de sucesso e parada. Campo sem evidência deve ficar explicitamente `indisponível`, nunca omitido. Optimization Score e recomendações do Google ficam em bloco separado e nunca são aceitos automaticamente.
 
 Análise pura termina `analysis_only`. Otimização segue para a skill `12` com itens Google Ads `manual_only`.

@@ -21,7 +21,7 @@ Use este índice no início de toda auditoria, análise, criação ou otimizaç�
 Para qualquer dúvida sobre funcionamento do Meta Ads, rode primeiro:
 
 ```bash
-python3 scripts/search_meta_help.py "pergunta original" --limit 3
+python3 scripts/search_meta_help.py "pergunta original" --platform meta --limit 3
 ```
 
 Correspondência exata ou forte de título exige leitura integral do primeiro artigo. Correspondência temática permite abrir até três candidatos. Resultado fraco exige refinar pelo índice; não autoriza responder como se a fonte tivesse sido consultada.

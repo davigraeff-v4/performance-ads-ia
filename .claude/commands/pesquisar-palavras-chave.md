@@ -1,1 +1,1 @@
-Execute `skills/18-google-ads-keyword-research/SKILL.md`. Confirme oferta, geografia, idioma, rede, período e modo de fonte. Nunca invente volume, CPC, concorrência ou forecast. Entregue clusters, intenções, match types, negativas, grupos e landing pages com limitações.
+Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `pesquisa_palavras_chave`, plataforma `google_ads` e os argumentos do gestor. Nunca invente métricas e entregue pesquisa, limitações e próximos passos completos no chat.

@@ -1,10 +1,10 @@
 # PRD — PERFORMANCE ADS IA
 
-**Versão:** 1.1.0-local
-**Data:** 2026-08-04
+**Versão:** 1.3.0-local
+**Data:** 2026-08-06
 **Responsável:** Davi
 **Ambientes:** Claude Code e Codex
-**Estado:** V1 multicanal inicial; MCP Google Ads ainda não instalado
+**Estado:** V1 de roteamento automático e entrega chat-first homologado localmente; MCP oficial validado e complemento local fail-closed instalado
 
 ## 1. Visão geral
 
@@ -24,12 +24,14 @@ Gestores precisam decidir sob pressão usando fontes incompletas, atribuições 
 6. Alterar campanhas sem documentar estado, aprovação e resultado.
 7. Depender de MCP para funcionar.
 8. Misturar contas, plataformas, IDs ou credenciais.
+9. Depender do acionamento manual de skills internas.
+10. Entregar diagnóstico genérico ou exigir a abertura recorrente do dossiê.
 
 ## 3. Proposta de valor
 
 `demanda → roteamento → fontes → qualidade → diagnóstico/estratégia → decisão → aprovação → execução suportada → verificação → aprendizado`
 
-Cada operação possui dossiê Markdown persistente. Análises multicanal preservam ramos independentes; mutações usam operações e aprovações separadas.
+Cada operação possui uma representação estruturada persistida no dossiê e projetada como relatório completo no chat. Análises multicanal preservam ramos independentes; mutações usam operações e aprovações separadas.
 
 ## 4. Usuários
 
@@ -41,7 +43,7 @@ Cada operação possui dossiê Markdown persistente. Análises multicanal preser
 
 1. Roteiar demandas Meta, Google Ads ou multicanal.
 2. Funcionar com `connected_read`, `file_based` e `context_only`.
-3. Configurar/diagnosticar MCP Meta e preparar instalação local do MCP Google Ads.
+3. Configurar/diagnosticar MCP Meta, MCP oficial Google Ads e complemento local condicionado.
 4. Cadastrar contas, metas, restrições e fontes por plataforma.
 5. Planejar campanhas Meta e Google Ads por tipo.
 6. Pesquisar e organizar palavras-chave Google Ads.
@@ -49,6 +51,8 @@ Cada operação possui dossiê Markdown persistente. Análises multicanal preser
 8. Recomendar otimizações com evidência e confiança.
 9. Criar change sets versionados e aprovações por plataforma.
 10. Produzir dossiês, relatórios e memória local.
+11. Acionar skills automaticamente a partir da intenção, plataforma e fonte.
+12. Produzir hipóteses e planos acionáveis com responsáveis e critérios verificáveis.
 
 ## 6. Fora do escopo
 
@@ -75,7 +79,8 @@ Cada operação possui dossiê Markdown persistente. Análises multicanal preser
 - 6 skills compartilhadas de contexto, mensuração, metas, change set, execução e relatório.
 - 9 skills operacionais/transversais Meta Ads.
 - 9 skills Google Ads.
-- Total: 25 skills.
+- 1 skill roteadora pública, descoberta automaticamente no Codex e Claude Code.
+- Total: 26 skills (25 módulos + roteador).
 
 ### Estado
 
@@ -83,6 +88,7 @@ Cada operação possui dossiê Markdown persistente. Análises multicanal preser
 - Dossiê `.md`: registro humano.
 - JSON no dossiê: estado estruturado validável.
 - `dependency_graph.json`: dependências condicionais.
+- `routing_matrix.json`: rotas executáveis por intenção, plataforma e fonte.
 - Schemas: contratos multicanal.
 
 ## 8. Roteamento
@@ -93,6 +99,7 @@ Toda solicitação registra:
 - `active_platforms`.
 - `source_mode` por plataforma.
 - Intenção operacional.
+- Route ID canônico, contrato de saída e skills planejadas, executadas e puladas com motivo.
 
 Regras:
 
@@ -101,6 +108,8 @@ Regras:
 - Escopo indefinido pode usar diagnóstico de canal antes do planejamento.
 - Escopo multicanal compartilha contexto de negócio, mas separa evidência e conclusões.
 - Mutação multicanal gera um `operation_id` por plataforma.
+- Linguagem natural e comandos entram pela mesma skill roteadora pública.
+- Fonte por arquivo/contexto não aciona configuração ou conexão de conta desnecessariamente.
 
 ## 9. Modos de fonte
 
@@ -156,11 +165,11 @@ Gerar seeds, intenções, clusters, marca/não marca, match types, negativas, gr
 
 ### RF-09 — Diagnóstico
 
-Analisar níveis e segmentos relevantes, comparar janelas equivalentes, detectar mudanças e decompor entrega, resposta, conversão e qualidade.
+Analisar níveis e segmentos relevantes, comparar janelas equivalentes, detectar mudanças e decompor entrega, resposta, conversão e qualidade. Cada achado liga evidência, impacto, hipótese principal/alternativa, verificação discriminante e ação exata com responsável, prazo, janela e critérios de sucesso/parada.
 
 ### RF-10 — Change set
 
-Registrar plataforma, conta, alvo, antes/depois, justificativa, impacto, risco, reversão e modo de execução.
+Registrar plataforma, conta, achados de origem, alvo, antes/depois, justificativa, impacto, risco, reversão, precondições, dependências, responsável, janela, critérios e modo de execução.
 
 ### RF-11 — Aprovação
 
@@ -168,11 +177,11 @@ Registrar ID, versão e hash por plataforma. Drift invalida a aprovação.
 
 ### RF-12 — Execução
 
-Executar somente ferramentas homologadas. No V1, Google Ads é `manual_only`.
+Executar somente ferramentas homologadas. Na V1.1 inicial, Google Ads continua `manual_only` porque o complemento não registra ferramentas de escrita.
 
 ### RF-13 — Relatório
 
-Gerar sumário e apêndice preservando fontes, atribuições e denominadores por plataforma.
+Gerar no chat um relatório completo e autossuficiente preservando fontes, atribuições e denominadores por plataforma. Persistir o mesmo resultado no dossiê sem exigir sua abertura.
 
 ### RF-14 — Conhecimento oficial
 
@@ -180,7 +189,7 @@ Meta usa snapshot seletivo; Google Ads usa catálogo leve, resumos próprios e c
 
 ## 11. Google Ads MCP
 
-Servidor previsto: `googleads/google-ads-mcp`, executado localmente com `pipx`.
+Servidor oficial: `googleads/google-ads-mcp`, executado localmente com `pipx`.
 
 Capacidades V1:
 
@@ -196,6 +205,8 @@ Não presumir:
 - Produção liberada pelo developer token.
 
 Configuração e credenciais ficam fora do Git. Ausência do MCP direciona para arquivos ou contexto manual.
+
+Complemento V1.1: `integrations/google_ads_extended/`, instalado em ambiente local separado. Expõe capability report sanitizado e adapter de Keyword Planner bloqueado por padrão. Exige uso permitido compatível, allowlist local e flag explícito. Não registra escrita.
 
 ## 12. Conhecimento Google Ads
 
@@ -239,13 +250,15 @@ Quando aplicável: termos, keywords, match type, negativas, parcela de impressõ
 - Funcionamento sem MCP.
 - Zero mistura silenciosa de contas/plataformas.
 - Zero mutação sem aprovação válida.
-- Google Ads sempre `manual_only` no V1.
+- Google Ads permanece `manual_only` enquanto `write_tools_registered` não estiver homologado.
 - 100% das operações com dossiê.
+- 100% das entregas analíticas compreensíveis e decidíveis diretamente no chat.
+- 100% dos achados sintéticos com ação, responsável, janela e critérios de sucesso/parada.
 - Nenhum segredo ou dado real no Git.
 
 ## 16. Testes de aceite
 
-1. Validar 25 skills e metadados.
+1. Validar 25 módulos, roteador público, metadados e descoberta Codex/Claude Code.
 2. Validar schemas e grafo sem ciclos.
 3. Comparar regras de Claude e Codex.
 4. Rotear Meta, Google Ads e multicanal.
@@ -253,26 +266,29 @@ Quando aplicável: termos, keywords, match type, negativas, parcela de impressõ
 6. Pesquisar keywords sem inventar métricas ausentes.
 7. Diagnosticar Google Ads por MCP/export sintético.
 8. Gerar dois change sets em demanda multicanal.
-9. Bloquear escrita Google Ads.
+9. Bloquear escrita Google Ads e Planner sem capability/allowlist.
 10. Bloquear conta/plataforma ambígua.
 11. Simular drift e falha parcial Meta.
 12. Verificar ausência de segredos e dados reais.
 13. Preservar 151 artigos Meta e regressões existentes.
+14. Bloquear recuperação Meta para consultas Google Ads e impedir vazamento entre ramos.
+15. Rejeitar por schema achados rasos, mudanças sem evidência e dossiês sem trilha de rota.
+16. Executar uma homologação única incluindo os testes do complemento Google Ads com `PYTHONPATH` correto.
 
 ## 17. Roadmap
 
-### V1 atual
+### V1.1 atual
 
-Motor multicanal, Google Ads consultivo, MCP Google Ads preparado, modo por arquivos, keywords, schemas, templates e testes estruturais.
+Motor multicanal, roteador público automático, Google Ads consultivo, MCP oficial validado, complemento local fail-closed, modo por arquivos, keywords, schemas acionáveis, entrega chat-first e regressões de rota/RAG.
 
 ### Homologação seguinte
 
-Instalar MCP Google Ads local, concluir autenticação, validar customers e executar dossiê real somente leitura.
+Ampliar formalmente o uso permitido, homologar Keyword Planner por customer allowlisted e manter escrita ausente.
 
 ### Futuro
 
-Keyword Planner integrado, Search Console, Trends, GA4 e eventual escrita Google Ads somente após contrato, adapter e testes específicos.
+Adapter de escrita Google Ads com `validate_only`, conta de teste, aprovação versionada e readback; depois Search Console, Trends e GA4.
 
 ## 18. Critério final do V1
 
-O V1 está pronto quando nome, contrato, agents, README, PRD, 25 skills, comandos, schemas, templates, conhecimento, grafo e validações estiverem consistentes; o fluxo funcionar com ou sem MCP; e nenhum dado real ou segredo estiver versionado.
+O V1 está pronto quando nome, contrato, agents, README, PRD, 25 módulos mais roteador, comandos, schemas, templates, conhecimento, matriz, grafo e validações estiverem consistentes; o fluxo funcionar com ou sem MCP; o relatório completo chegar ao chat; e nenhum dado real ou segredo estiver versionado.

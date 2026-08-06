@@ -38,6 +38,7 @@ EXPECTED_SKILLS = {
     "22-google-ads-creative-assets-landing-page",
     "23-google-ads-campaign-build-plan",
     "24-google-ads-performance-diagnosis",
+    "25-performance-ads-router",
 }
 EXPECTED_COMMANDS = {
     "configuracao-mcp.md",
@@ -143,6 +144,7 @@ def main() -> int:
         "PRD-PERFORMANCE-ADS-IA.md",
         "CONTRATO-OPERACIONAL.md",
         "dependency_graph.json",
+        "routing_matrix.json",
         ".gitignore",
     ]
     for relative in required:
@@ -186,6 +188,30 @@ def main() -> int:
     for name in graph:
         visit(name)
 
+    matrix = json.loads((ROOT / "routing_matrix.json").read_text(encoding="utf-8"))
+    if matrix.get("version") != "1.0.0":
+        fail(errors, "versão inesperada da matriz de roteamento")
+    declared_platforms = set(matrix.get("platforms", []))
+    if declared_platforms != {"meta", "google_ads"}:
+        fail(errors, f"plataformas declaradas na matriz são inválidas: {sorted(declared_platforms)}")
+    supported_conditions = {"always", "source_mode=connected_read", "requires_keywords=true"}
+    for intent, platforms in matrix.get("intents", {}).items():
+        for platform, route in platforms.items():
+            if platform not in declared_platforms:
+                fail(errors, f"plataforma não declarada na rota {intent}:{platform}")
+            if not isinstance(route.get("output"), str) or not route["output"]:
+                fail(errors, f"contrato de saída ausente na rota {intent}:{platform}")
+            for step in route.get("steps", []):
+                if step.get("skill") not in EXPECTED_SKILLS:
+                    fail(errors, f"skill desconhecida na rota {intent}:{platform}: {step.get('skill')}")
+                if step.get("when") not in supported_conditions:
+                    fail(errors, f"condição desconhecida na rota {intent}:{platform}: {step.get('when')}")
+
+    for discovery_root in [ROOT / ".agents" / "skills", ROOT / ".claude" / "skills"]:
+        router_link = discovery_root / "25-performance-ads-router"
+        if not router_link.is_dir() or not (router_link / "SKILL.md").is_file():
+            fail(errors, f"roteador não descobrível em {discovery_root.relative_to(ROOT)}")
+
     command_names = {path.name for path in (ROOT / ".claude" / "commands").glob("*.md")}
     if command_names != EXPECTED_COMMANDS:
         fail(errors, f"comandos divergentes: {sorted(command_names ^ EXPECTED_COMMANDS)}")
@@ -196,12 +222,22 @@ def main() -> int:
         "quality/analysis-checklist.md",
         "quality/execution-checklist.md",
         "examples/synthetic/operation-approved.json",
+        "examples/synthetic/analysis-actionable.json",
+        "scripts/route_request.py",
+        "scripts/validate_all.py",
         "tests/test_meta_help_search.py",
         "tests/test_multichannel_structure.py",
+        "tests/test_routing.py",
+        "tests/test_schema_contracts.py",
         "knowledge/official-google/source-catalog.md",
         "knowledge/official-google/google-ads-mcp-and-api.md",
         "knowledge/google-ads/keyword-research-methodology.md",
         "templates/pesquisa-palavras-chave.md",
+        "integrations/google_ads_extended/pyproject.toml",
+        "integrations/google_ads_extended/src/performance_ads_google_ads_extended/config.py",
+        "integrations/google_ads_extended/src/performance_ads_google_ads_extended/server.py",
+        "integrations/google_ads_extended/tests/test_config.py",
+        "integrations/google_ads_extended/tests/test_server_registration.py",
     ]
     for relative in required_references:
         if not (ROOT / relative).is_file():
@@ -209,11 +245,29 @@ def main() -> int:
 
     validate_meta_help_center(errors)
 
+    schemas: dict[str, dict[str, object]] = {}
     for schema in sorted((ROOT / "schemas").glob("*.json")):
         try:
-            json.loads(schema.read_text(encoding="utf-8"))
+            schemas[schema.name] = json.loads(schema.read_text(encoding="utf-8"))
         except json.JSONDecodeError as exc:
             fail(errors, f"JSON inválido {schema.name}: {exc}")
+
+    try:
+        import jsonschema
+    except ImportError:
+        fail(errors, "dependência jsonschema ausente; instale requirements-dev.txt")
+    else:
+        fixture_pairs = [
+            ("analysis.schema.json", "examples/synthetic/analysis-actionable.json"),
+            ("operation-dossier.schema.json", "examples/synthetic/operation-approved.json"),
+        ]
+        for schema_name, fixture_path in fixture_pairs:
+            try:
+                jsonschema.Draft7Validator.check_schema(schemas[schema_name])
+                fixture = json.loads((ROOT / fixture_path).read_text(encoding="utf-8"))
+                jsonschema.validate(fixture, schemas[schema_name], format_checker=jsonschema.FormatChecker())
+            except (KeyError, jsonschema.SchemaError, jsonschema.ValidationError) as exc:
+                fail(errors, f"contrato inválido {schema_name} / {fixture_path}: {exc.message if hasattr(exc, 'message') else exc}")
 
     sensitive = re.compile(
         r"(?:access[_-]?token|client[_-]?secret|developer[_-]?token)\s*[:=]\s*[\"']?(?!SEU_|YOUR_|\$\{|<)[A-Za-z0-9._-]{12,}"
@@ -237,7 +291,7 @@ def main() -> int:
             print(f"- {error}")
         return 1
     print(
-        f"VALIDATION OK: {len(EXPECTED_SKILLS)} skills multicanal, "
+        f"VALIDATION OK: {len(EXPECTED_SKILLS)} skills (25 módulos + roteador), "
         f"{EXPECTED_META_HELP_ARTICLES} artigos Meta, base Google Ads e schemas JSON válidos"
     )
     return 0

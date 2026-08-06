@@ -128,6 +128,7 @@ def label_for(score: float) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("query", nargs="+", help="pergunta ou trecho de título")
+    parser.add_argument("--platform", required=True, choices=["meta", "google_ads"], help="plataforma já resolvida pelo roteador")
     parser.add_argument("--limit", type=int, default=3, help="quantidade de resultados (padrão: 3)")
     parser.add_argument("--title-only", action="store_true", help="não usa o corpo como sinal secundário")
     parser.add_argument("--json", action="store_true", dest="as_json", help="retorna JSON")
@@ -136,6 +137,25 @@ def main() -> int:
     query = " ".join(args.query).strip()
     if not query or args.limit < 1:
         parser.error("informe uma consulta e um limite maior que zero")
+
+    query_tokens = tokens(query)
+    platform_conflict = args.platform == "meta" and {"google", "ads"}.issubset(query_tokens)
+    if args.platform != "meta" or platform_conflict:
+        reason = "platform_not_meta" if args.platform != "meta" else "query_platform_conflict"
+        result = {
+            "query": query,
+            "platform": args.platform,
+            "out_of_scope": True,
+            "reason": reason,
+            "article_count": 0,
+            "body_fallback": False,
+            "results": [],
+        }
+        if args.as_json:
+            print(json.dumps(result, ensure_ascii=False, indent=2))
+        else:
+            print(f"Consulta fora do escopo da base Meta: {reason}")
+        return 0
 
     try:
         articles = load_articles()
@@ -169,10 +189,10 @@ def main() -> int:
     ]
 
     if args.as_json:
-        print(json.dumps({"query": query, "article_count": len(articles), "body_fallback": used_body_fallback, "results": payload}, ensure_ascii=False, indent=2))
+        print(json.dumps({"query": query, "platform": "meta", "out_of_scope": False, "article_count": len(articles), "body_fallback": used_body_fallback, "results": payload}, ensure_ascii=False, indent=2))
         return 0
 
-    print(f"Consulta: {query}")
+    print(f"Consulta Meta: {query}")
     stage = "índice + fallback de conteúdo" if used_body_fallback else "somente índice"
     print(f"Base: {len(articles)} artigos | Busca: {stage} | Resultados: {len(payload)}")
     for index, item in enumerate(payload, start=1):

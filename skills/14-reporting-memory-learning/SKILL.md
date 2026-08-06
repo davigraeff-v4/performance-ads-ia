@@ -16,10 +16,11 @@ description: Gera relatórios Meta Ads, Google Ads ou multicanal, atualiza a mem
 
 1. Confirmar período, comparação, atribuição e status dos dossiês.
 2. Consolidar fatos sem misturar plataformas, atribuições, populações ou denominadores.
-3. Apresentar sumário executivo, diagnóstico, decisões, mudanças, impacto e próximo passo.
-4. Separar resultado observado de impacto causal.
-5. Atualizar `CLIENTE.md` acrescentando histórico; nunca apagar aprendizado anterior.
-6. Gerar proposta de aprendizado sanitizado quando houver padrão reutilizável.
+3. Gerar uma única representação estruturada do resultado e projetá-la em dois destinos: dossiê local e relatório completo no chat.
+4. Apresentar no chat sumário executivo, escopo/fontes, resultado de negócio, diagnóstico, hipóteses, plano de ação, decisões, mudanças, impacto, riscos, limitações e próximo passo.
+5. Separar resultado observado de impacto causal.
+6. Atualizar `CLIENTE.md` acrescentando histórico; nunca apagar aprendizado anterior.
+7. Gerar proposta de aprendizado sanitizado quando houver padrão reutilizável.
 
 ## Governança do aprendizado
 
@@ -27,9 +28,11 @@ Remover nome, ID, valores, oferta, criativo e qualquer identificador. Declarar n
 
 ## Saída
 
-- Relatório Markdown.
+- Relatório completo e autossuficiente no chat; o gestor não precisa abrir o dossiê para compreender ou decidir.
 - Dossiê encerrado ou atualizado.
 - Ficha do cliente atualizada.
 - Proposta sanitizada separada, se aplicável.
+
+Informar `operation_id`, status e caminho do dossiê somente como referência ao final. Não despejar JSON, logs ou respostas brutas no chat.
 
 Não confundir aprovação do gestor com melhora medida de performance.

@@ -1,1 +1,1 @@
-Execute `14-reporting-memory-learning` usando período, plataformas e dossiês indicados. Em relatório multicanal, preserve atribuição, fontes e denominadores por plataforma antes da síntese. Não promova aprendizado sem aprovação.
+Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `relatorio` e os argumentos do gestor. Preserve fontes, atribuições e denominadores por plataforma e entregue o relatório completo no chat; não promova aprendizado sem aprovação.

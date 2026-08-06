@@ -24,7 +24,7 @@ description: Analisa performance Meta Ads por conta, campanha, conjunto, anúnci
 
 ## Saída
 
-Para cada achado: marcador `[F/C/H/R/I]`, evidência, impacto, confiança, limitação e próxima ação. Separar:
+Para cada achado, registrar: `finding_id`, marcador `[F/C/H/R/I]`, plataforma, nível, evidência, impacto, confiança, limitação, hipótese principal, hipótese alternativa, verificação que distingue as hipóteses, ação exata, prioridade, responsável, prazo, janela de avaliação e critérios de sucesso e parada. Campo sem evidência deve ficar explicitamente `indisponível`, nunca omitido. Separar:
 
 - Problema de entrega.
 - Problema de resposta/criativo.

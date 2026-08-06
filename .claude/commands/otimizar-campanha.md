@@ -1,1 +1,1 @@
-Execute `11` para Meta ou `24` para Google Ads e depois `12-optimization-change-set`. Em escopo multicanal, gere um lote e `operation_id` por plataforma. Google Ads é `manual_only` no V1. Não execute; solicite aprovação exata por lote.
+Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `otimizacao` e os argumentos do gestor. Exija diagnóstico anterior ao change set, gere um lote e `operation_id` por plataforma, entregue o plano completo no chat e não execute.

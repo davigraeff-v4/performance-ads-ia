@@ -2,14 +2,14 @@
 
 Agente especialista em Meta Ads e Google Ads para planejar, analisar e otimizar campanhas com decisões rastreáveis, dados comerciais e aprovação versionada.
 
-O agent roda em **Claude Code** e **Codex**, seleciona somente as plataformas e skills necessárias para cada demanda e registra auditorias, análises e mudanças em dossiês Markdown locais.
+O agent roda em **Claude Code** e **Codex**, entende solicitações em linguagem natural, seleciona e executa automaticamente somente as skills necessárias e registra auditorias, análises e mudanças em dossiês Markdown locais.
 
-> Estado: V1 multicanal inicial. Meta Ads e Google Ads estão no escopo. Search Console, Google Trends e GA4 ficam para fases futuras. Dados, credenciais, MCPs locais e dossiês reais permanecem fora do Git.
+> Estado: V1.1 homologado localmente com roteamento automático e entrega chat-first. O MCP oficial Google Ads continua somente leitura; o complemento `google_ads_extended` prepara Keyword Planner com gates fail-closed e ainda não registra escrita. Search Console, Google Trends e GA4 ficam para fases futuras. Dados, credenciais, MCPs locais e dossiês reais permanecem fora do Git.
 
 ## 1. O que o agent faz
 
 - Identifica se a demanda envolve Meta Ads, Google Ads ou ambas.
-- Trabalha com MCP somente leitura, exports/planilhas ou contexto manual.
+- Trabalha com MCP oficial somente leitura, complemento local condicionado, exports/planilhas ou contexto manual.
 - Cadastra cliente, contas, metas, restrições e fontes.
 - Planeja campanhas de lead generation e e-commerce.
 - Pesquisa e organiza palavras-chave Google Ads quando aplicável.
@@ -17,6 +17,7 @@ O agent roda em **Claude Code** e **Codex**, seleciona somente as plataformas e 
 - Propõe otimizações em lotes versionados.
 - Executa somente mudanças suportadas, aprovadas e revalidadas.
 - Registra antes, aprovação, execução e depois no mesmo dossiê.
+- Entrega o relatório completo no chat; o dossiê serve como memória estruturada e auditoria.
 - Consulta seletivamente a Central Meta e fontes oficiais Google Ads.
 
 Não exclui nem arquiva ativos, não ativa recomendações automáticas e não executa mudanças silenciosas.
@@ -33,7 +34,7 @@ Cada demanda define:
    - `context_only`: briefing e informações manuais.
    - `unavailable`: fonte necessária ausente.
 
-O agent não percorre um fluxo fixo. Uma análise Google Ads não carrega as skills Meta; uma demanda multicanal abre os dois ramos e preserva fontes, contas e atribuições separadamente.
+O agent não percorre um fluxo fixo. A skill pública `25-performance-ads-router`, descoberta automaticamente pelas pastas `.agents/skills/` e `.claude/skills/`, classifica a demanda e consulta `routing_matrix.json`. Uma análise Google Ads não carrega as skills Meta; uma demanda multicanal abre os dois ramos e preserva fontes, contas e atribuições separadamente. O gestor não precisa mencionar nomes de skills.
 
 ## 3. Requisitos
 
@@ -50,7 +51,10 @@ Abra a raiz do projeto no Claude Code ou Codex e confirme a presença de:
 - `AGENTS.md` ou `CLAUDE.md`.
 - `CONTRATO-OPERACIONAL.md`.
 - `dependency_graph.json`.
+- `routing_matrix.json`.
 - `skills/`.
+
+O roteador público já está exposto em `.agents/skills/25-performance-ads-router` e `.claude/skills/25-performance-ads-router`. Depois de instalar ou atualizar esta estrutura, reinicie a sessão do Codex/Claude Code para renovar a descoberta de skills.
 
 Depois escolha uma rota:
 
@@ -68,6 +72,8 @@ Plataforma: Google Ads
 Plataformas: Meta e Google Ads
 ```
 
+Comandos são atalhos. A mesma execução deve ocorrer com pedidos naturais como: “analise a campanha Search do cliente X usando o export e me diga o que fazer”.
+
 ## 5. Meta Ads MCP
 
 Endpoint oficial usado pelo projeto:
@@ -80,7 +86,7 @@ Execute `/configuracao-mcp`, informe `Meta Ads` e siga a skill `00-configuracao-
 
 ## 6. Google Ads MCP — opcional
 
-O agent funciona normalmente sem MCP usando `file_based` ou `context_only`. A conexão ao Google Ads é opcional e serve apenas para leitura atual da conta.
+O agent funciona normalmente sem MCP usando `file_based` ou `context_only`. O MCP oficial Google Ads serve para leitura atual da conta. O complemento local é opcional, separado e não amplia permissões automaticamente.
 
 Quem quiser instalar pode ignorar esta etapa no primeiro uso e consultar depois o [apêndice completo de instalação](#15-apêndice-opcional--google-ads-mcp-local), no final deste README.
 
@@ -144,6 +150,8 @@ Informe oferta, geografia, idioma, rede, URLs/seeds e fonte. Modos aceitos:
 
 Sem fonte oficial, o agent pode estruturar intenções, clusters, negativas, grupos e landing pages, mas deixa volume, CPC, concorrência e forecast indisponíveis.
 
+No complemento, `planner_connected` exige três evidências: uso permitido compatível no API Center, customer na allowlist local e chamada real bem-sucedida. Basic Access isoladamente não comprova Planner.
+
 ## 9. Comandos
 
 | Comando | Resultado |
@@ -161,7 +169,13 @@ Sem fonte oficial, o agent pode estruturar intenções, clusters, negativas, gru
 | `/executar-operacao <id>` | Revalida e executa somente lote suportado. |
 | `/reverter-operacao <id>` | Propõe restauração conhecida com nova aprovação. |
 
-## 10. Catálogo das 25 skills
+## 10. Catálogo das 26 skills
+
+### Entrada pública
+
+| Skill | Responsabilidade |
+|---|---|
+| `25-performance-ads-router` | Entender a demanda, resolver a rota, executar skills internas e entregar no chat |
 
 ### Núcleo e Meta Ads
 
@@ -202,10 +216,10 @@ Sem fonte oficial, o agent pode estruturar intenções, clusters, negativas, gru
 
 Análises multicanal podem compartilhar um dossiê, mas mutações usam um `operation_id` por plataforma. Aprovar Meta não aprova Google Ads e vice-versa.
 
-No V1:
+Na V1.1 inicial:
 
 - Meta pode ser executado somente se escrita tiver sido homologada.
-- Google Ads é sempre `manual_only`.
+- Google Ads permanece `manual_only`; o complemento ainda não registra ferramentas de escrita.
 - Recomendações automáticas nunca são aplicadas por padrão.
 
 ## 12. Conhecimento
@@ -218,11 +232,11 @@ No V1:
 ## 13. Validação local
 
 ```text
-python3 scripts/validate_repository.py
-python3 -m unittest discover -s tests
+python3 -m pip install -r requirements-dev.txt
+python3 scripts/validate_all.py
 ```
 
-O validador verifica 25 skills, grafo, comandos, schemas, base Meta e arquivos obrigatórios Google Ads.
+O comando único verifica 25 módulos mais o roteador, descoberta nas duas plataformas, matriz e grafo, schemas acionáveis, isolamento do RAG lexical, rotas sintéticas, base Meta e o conector Google Ads fail-closed no runtime `pipx` instalado quando disponível. Não realiza mutações externas.
 
 ## 14. Segurança e Git
 
@@ -482,7 +496,38 @@ Abra uma nova sessão no Claude Code e uma nova tarefa no Codex. Valide nesta or
 
 Nunca faça uma mutação como teste. No V1, `connected_read` comprova somente leitura; mudanças Google Ads continuam `manual_only`.
 
-### 15.12 Erros comuns
+### 15.12 Complemento local experimental
+
+O diretório `integrations/google_ads_extended/` contém um segundo servidor MCP, separado do oficial. Ele reutiliza localmente o mesmo ADC, developer token e login customer ID, sem copiar valores para o repositório.
+
+Instale em ambiente isolado:
+
+```bash
+pipx install --editable /CAMINHO/DO/REPOSITORIO/integrations/google_ads_extended
+```
+
+O launcher deve começar com esta política local:
+
+```text
+PERFORMANCE_ADS_GOOGLE_DECLARED_CAPABILITIES=reporting
+PERFORMANCE_ADS_GOOGLE_PLANNER_ENABLED=false
+PERFORMANCE_ADS_GOOGLE_WRITE_MODE=disabled
+PERFORMANCE_ADS_GOOGLE_ALLOWED_CUSTOMER_IDS=
+```
+
+Registre o mesmo launcher nos dois clientes sob o namespace `google_ads_extended`. Reinicie as sessões e chame primeiro `get_extended_capabilities`. O retorno inicial esperado inclui `planner_enabled: false`, `write_mode: disabled` e `write_tools_registered: false`.
+
+Somente depois da ampliação formal do uso permitido para pesquisa de keywords, configure localmente:
+
+```text
+PERFORMANCE_ADS_GOOGLE_DECLARED_CAPABILITIES=reporting,keyword_planning
+PERFORMANCE_ADS_GOOGLE_PLANNER_ENABLED=true
+PERFORMANCE_ADS_GOOGLE_ALLOWED_CUSTOMER_IDS=SEU_CUSTOMER_ID_SEM_HIFENS
+```
+
+Não habilite Planner para sondar autorização. Escrita não pode ser habilitada por variável nesta versão porque nenhuma ferramenta de mutação foi registrada.
+
+### 15.13 Erros comuns
 
 | Erro | Verificação segura |
 |---|---|
@@ -494,7 +539,7 @@ Nunca faça uma mutação como teste. No V1, `connected_read` comprova somente l
 | MCP conecta, mas não lista contas | Confirmar que o usuário/service account foi adicionado às contas corretas. |
 | Processo desconecta | Confirmar Python 3.10+, `pipx list` e caminho absoluto do executável. |
 
-### 15.13 Rotação ou remoção
+### 15.14 Rotação ou remoção
 
 Ao trocar credenciais, atualize somente os arquivos locais protegidos e reinicie as sessões. Para remover os registros:
 

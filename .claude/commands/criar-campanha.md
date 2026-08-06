@@ -1,1 +1,1 @@
-Roteie por plataforma. Para Meta, rode `01` e `02`–`10`. Para Google Ads, rode `01`, `03`, `04` e `17`–`23`. Gere um change set por plataforma em `proposed`. Não chame escrita; no V1, Google Ads é `manual_only`. Aprovação e execução permanecem comandos separados.
+Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `criacao` e os argumentos do gestor. Gere um change set por plataforma em `proposed`, entregue-o completo no chat e não execute; Google Ads permanece `manual_only` no V1.

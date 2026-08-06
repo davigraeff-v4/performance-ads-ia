@@ -10,7 +10,9 @@
 
 O MCP oficial expõe listagem de customers, consultas GAQL e descoberta de metadata/resources. Ele exige developer token, Google Cloud, credencial OAuth/ADC e `login-customer-id` quando o acesso ocorre por manager account.
 
-Neste projeto, o MCP é somente leitura. Geração de ideias e forecasts do Keyword Planner não deve ser presumida como ferramenta do MCP; usar export fornecido ou integração futura homologada.
+Neste projeto, o MCP oficial é somente leitura. Geração de ideias e forecasts do Keyword Planner não deve ser presumida como ferramenta do MCP oficial.
+
+O complemento local `google_ads_extended` é um processo separado. Na V1.1 inicial ele expõe diagnóstico sanitizado de capacidades e um adapter de `KeywordPlanIdeaService`, bloqueado por padrão. Planner exige uso permitido compatível no API Center, flag local explícito e customer allowlisted. Não existem ferramentas de escrita registradas nesta etapa.
 
 ## Componentes da autenticação
 
@@ -36,6 +38,8 @@ Preferir `pipx install` e um launcher local fora do repositório. Claude Code e 
 ## Segurança
 
 - Manter tokens, JSONs, `google-ads.yaml` e configuração real fora do Git.
+- Reutilizar o bundle local por launcher; nunca copiar o developer token para o código do complemento.
+- Não usar uma chamada de Planner ou mutate como teste de permissão quando o uso permitido registrado for somente relatórios.
 - Nunca pedir que o usuário envie credenciais em chat; trabalhar com caminhos locais e placeholders.
 - Proteger diretório local com `0700` e arquivos secretos com `0600`.
 - Copiar somente credenciais Google Ads quando a fonte local contiver segredos de outros serviços.

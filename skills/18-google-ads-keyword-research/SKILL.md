@@ -14,12 +14,14 @@ description: Pesquisa, classifica e prioriza palavras-chave, intenções, termos
 
 ## Modos
 
-- `planner_connected`: ideias/métricas oficiais disponíveis.
+- `planner_connected`: `google_ads_extended` homologado, Planner habilitado, customer allowlisted e chamada oficial bem-sucedida.
 - `file_based`: export do Keyword Planner ou planilha.
 - `account_terms`: termos e keywords atuais via MCP/export.
 - `context_only`: seeds e hipóteses sem volume oficial.
 
 Nunca apresentar estimativa do modelo como volume do Keyword Planner.
+
+Antes de usar o conector complementar, chamar `get_extended_capabilities`. Se `planner_enabled` for falso ou o customer estiver fora da allowlist, não chamar `generate_keyword_ideas`; usar `file_based`, `account_terms` ou `context_only`.
 
 ## Processo
 

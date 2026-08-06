@@ -1,0 +1,233 @@
+{
+  "version": "1.0.0",
+  "platforms": ["meta", "google_ads"],
+  "source_modes": ["connected_read", "file_based", "context_only", "unavailable"],
+  "intents": {
+    "configuracao": {
+      "meta": {
+        "steps": [{"skill": "00-configuracao-mcp", "when": "always"}],
+        "final_state": "analysis_only",
+        "output": "diagnostico_configuracao"
+      },
+      "google_ads": {
+        "steps": [{"skill": "00-configuracao-mcp", "when": "always"}],
+        "final_state": "analysis_only",
+        "output": "diagnostico_configuracao"
+      }
+    },
+    "onboarding": {
+      "meta": {
+        "steps": [{"skill": "01-client-campaign-intake", "when": "always"}],
+        "final_state": "analysis_only",
+        "output": "ficha_cliente"
+      },
+      "google_ads": {
+        "steps": [{"skill": "01-client-campaign-intake", "when": "always"}],
+        "final_state": "analysis_only",
+        "output": "ficha_cliente"
+      }
+    },
+    "pesquisa_palavras_chave": {
+      "google_ads": {
+        "steps": [
+          {"skill": "01-client-campaign-intake", "when": "always"},
+          {"skill": "16-google-ads-account-connection", "when": "source_mode=connected_read"},
+          {"skill": "17-google-ads-official-retrieval", "when": "always"},
+          {"skill": "18-google-ads-keyword-research", "when": "always"}
+        ],
+        "final_state": "analysis_only",
+        "output": "pesquisa_palavras_chave"
+      }
+    },
+    "planejamento": {
+      "meta": {
+        "steps": [
+          {"skill": "01-client-campaign-intake", "when": "always"},
+          {"skill": "02-meta-account-connection", "when": "source_mode=connected_read"},
+          {"skill": "15-meta-help-center-retrieval", "when": "always"},
+          {"skill": "03-measurement-data-quality", "when": "always"},
+          {"skill": "04-goals-kpis-baseline", "when": "always"},
+          {"skill": "05-campaign-strategy", "when": "always"},
+          {"skill": "06-account-campaign-architecture", "when": "always"},
+          {"skill": "07-audience-strategy", "when": "always"},
+          {"skill": "08-budget-bidding-allocation", "when": "always"},
+          {"skill": "09-creative-performance-brief", "when": "always"}
+        ],
+        "final_state": "analysis_only",
+        "output": "plano_campanha"
+      },
+      "google_ads": {
+        "steps": [
+          {"skill": "01-client-campaign-intake", "when": "always"},
+          {"skill": "16-google-ads-account-connection", "when": "source_mode=connected_read"},
+          {"skill": "17-google-ads-official-retrieval", "when": "always"},
+          {"skill": "03-measurement-data-quality", "when": "always"},
+          {"skill": "04-goals-kpis-baseline", "when": "always"},
+          {"skill": "18-google-ads-keyword-research", "when": "requires_keywords=true"},
+          {"skill": "19-google-ads-campaign-strategy", "when": "always"},
+          {"skill": "20-google-ads-campaign-architecture", "when": "always"},
+          {"skill": "21-google-ads-budget-bidding-conversions", "when": "always"},
+          {"skill": "22-google-ads-creative-assets-landing-page", "when": "always"}
+        ],
+        "final_state": "analysis_only",
+        "output": "plano_campanha"
+      }
+    },
+    "criacao": {
+      "meta": {
+        "steps": [
+          {"skill": "01-client-campaign-intake", "when": "always"},
+          {"skill": "02-meta-account-connection", "when": "source_mode=connected_read"},
+          {"skill": "15-meta-help-center-retrieval", "when": "always"},
+          {"skill": "03-measurement-data-quality", "when": "always"},
+          {"skill": "04-goals-kpis-baseline", "when": "always"},
+          {"skill": "05-campaign-strategy", "when": "always"},
+          {"skill": "06-account-campaign-architecture", "when": "always"},
+          {"skill": "07-audience-strategy", "when": "always"},
+          {"skill": "08-budget-bidding-allocation", "when": "always"},
+          {"skill": "09-creative-performance-brief", "when": "always"},
+          {"skill": "10-campaign-build-plan", "when": "always"}
+        ],
+        "final_state": "proposed",
+        "output": "plano_construcao"
+      },
+      "google_ads": {
+        "steps": [
+          {"skill": "01-client-campaign-intake", "when": "always"},
+          {"skill": "16-google-ads-account-connection", "when": "source_mode=connected_read"},
+          {"skill": "17-google-ads-official-retrieval", "when": "always"},
+          {"skill": "03-measurement-data-quality", "when": "always"},
+          {"skill": "04-goals-kpis-baseline", "when": "always"},
+          {"skill": "18-google-ads-keyword-research", "when": "requires_keywords=true"},
+          {"skill": "19-google-ads-campaign-strategy", "when": "always"},
+          {"skill": "20-google-ads-campaign-architecture", "when": "always"},
+          {"skill": "21-google-ads-budget-bidding-conversions", "when": "always"},
+          {"skill": "22-google-ads-creative-assets-landing-page", "when": "always"},
+          {"skill": "23-google-ads-campaign-build-plan", "when": "always"}
+        ],
+        "final_state": "proposed",
+        "output": "plano_construcao_manual"
+      }
+    },
+    "auditoria": {
+      "meta": {
+        "steps": [
+          {"skill": "01-client-campaign-intake", "when": "always"},
+          {"skill": "02-meta-account-connection", "when": "source_mode=connected_read"},
+          {"skill": "15-meta-help-center-retrieval", "when": "always"},
+          {"skill": "03-measurement-data-quality", "when": "always"},
+          {"skill": "04-goals-kpis-baseline", "when": "always"},
+          {"skill": "11-performance-diagnosis", "when": "always"}
+        ],
+        "final_state": "analysis_only",
+        "output": "auditoria_conta"
+      },
+      "google_ads": {
+        "steps": [
+          {"skill": "01-client-campaign-intake", "when": "always"},
+          {"skill": "16-google-ads-account-connection", "when": "source_mode=connected_read"},
+          {"skill": "17-google-ads-official-retrieval", "when": "always"},
+          {"skill": "03-measurement-data-quality", "when": "always"},
+          {"skill": "04-goals-kpis-baseline", "when": "always"},
+          {"skill": "24-google-ads-performance-diagnosis", "when": "always"}
+        ],
+        "final_state": "analysis_only",
+        "output": "auditoria_conta"
+      }
+    },
+    "analise": {
+      "meta": {
+        "steps": [
+          {"skill": "01-client-campaign-intake", "when": "always"},
+          {"skill": "02-meta-account-connection", "when": "source_mode=connected_read"},
+          {"skill": "15-meta-help-center-retrieval", "when": "always"},
+          {"skill": "03-measurement-data-quality", "when": "always"},
+          {"skill": "04-goals-kpis-baseline", "when": "always"},
+          {"skill": "11-performance-diagnosis", "when": "always"}
+        ],
+        "final_state": "analysis_only",
+        "output": "relatorio_analise"
+      },
+      "google_ads": {
+        "steps": [
+          {"skill": "01-client-campaign-intake", "when": "always"},
+          {"skill": "16-google-ads-account-connection", "when": "source_mode=connected_read"},
+          {"skill": "17-google-ads-official-retrieval", "when": "always"},
+          {"skill": "03-measurement-data-quality", "when": "always"},
+          {"skill": "04-goals-kpis-baseline", "when": "always"},
+          {"skill": "24-google-ads-performance-diagnosis", "when": "always"}
+        ],
+        "final_state": "analysis_only",
+        "output": "relatorio_analise"
+      }
+    },
+    "otimizacao": {
+      "meta": {
+        "steps": [
+          {"skill": "01-client-campaign-intake", "when": "always"},
+          {"skill": "02-meta-account-connection", "when": "source_mode=connected_read"},
+          {"skill": "15-meta-help-center-retrieval", "when": "always"},
+          {"skill": "03-measurement-data-quality", "when": "always"},
+          {"skill": "04-goals-kpis-baseline", "when": "always"},
+          {"skill": "11-performance-diagnosis", "when": "always"},
+          {"skill": "12-optimization-change-set", "when": "always"}
+        ],
+        "final_state": "proposed",
+        "output": "plano_otimizacao"
+      },
+      "google_ads": {
+        "steps": [
+          {"skill": "01-client-campaign-intake", "when": "always"},
+          {"skill": "16-google-ads-account-connection", "when": "source_mode=connected_read"},
+          {"skill": "17-google-ads-official-retrieval", "when": "always"},
+          {"skill": "03-measurement-data-quality", "when": "always"},
+          {"skill": "04-goals-kpis-baseline", "when": "always"},
+          {"skill": "24-google-ads-performance-diagnosis", "when": "always"},
+          {"skill": "12-optimization-change-set", "when": "always"}
+        ],
+        "final_state": "proposed",
+        "output": "plano_otimizacao_manual"
+      }
+    },
+    "relatorio": {
+      "meta": {
+        "steps": [{"skill": "14-reporting-memory-learning", "when": "always"}],
+        "final_state": "analysis_only",
+        "output": "relatorio_performance"
+      },
+      "google_ads": {
+        "steps": [{"skill": "14-reporting-memory-learning", "when": "always"}],
+        "final_state": "analysis_only",
+        "output": "relatorio_performance"
+      }
+    },
+    "aprovacao": {
+      "meta": {"steps": [], "final_state": "approved", "output": "registro_aprovacao"},
+      "google_ads": {"steps": [], "final_state": "approved", "output": "registro_aprovacao_manual"}
+    },
+    "execucao": {
+      "meta": {
+        "steps": [{"skill": "13-approved-change-executor", "when": "always"}],
+        "final_state": "executed_or_failure",
+        "output": "resultado_execucao"
+      },
+      "google_ads": {
+        "steps": [{"skill": "13-approved-change-executor", "when": "always"}],
+        "final_state": "blocked_manual_only",
+        "output": "instrucao_manual"
+      }
+    },
+    "reversao": {
+      "meta": {
+        "steps": [{"skill": "12-optimization-change-set", "when": "always"}],
+        "final_state": "proposed",
+        "output": "change_set_reversao"
+      },
+      "google_ads": {
+        "steps": [{"skill": "12-optimization-change-set", "when": "always"}],
+        "final_state": "proposed",
+        "output": "change_set_reversao_manual"
+      }
+    }
+  }
+}

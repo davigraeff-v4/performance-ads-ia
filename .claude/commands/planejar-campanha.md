@@ -1,1 +1,1 @@
-Planeje sem executar. Roteie `meta`, `google_ads` ou ambas. Para Meta, rode `01` e `02`–`09` conforme o escopo. Para Google Ads, rode `01`, `03`, `04` e `17`–`22`, incluindo `18` quando keywords/demanda forem pertinentes. Gere dossiê `analysis_only` com ramos separados por plataforma.
+Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `planejamento` e os argumentos do gestor. Planeje sem executar, mantenha ramos multicanal separados e entregue no chat o plano completo; o dossiê termina `analysis_only`.

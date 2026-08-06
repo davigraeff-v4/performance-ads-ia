@@ -19,11 +19,20 @@ class MultichannelStructureTests(unittest.TestCase):
         self.assertIn("23-google-ads-campaign-build-plan", google)
         self.assertIn("24-google-ads-performance-diagnosis", google)
 
-    def test_google_v1_is_read_only(self) -> None:
+    def test_google_write_remains_fail_closed(self) -> None:
         contract = (ROOT / "CONTRATO-OPERACIONAL.md").read_text(encoding="utf-8")
         executor = (ROOT / "skills/13-approved-change-executor/SKILL.md").read_text(encoding="utf-8")
-        self.assertIn("toda mudança Google Ads é `manual_only`", contract)
+        self.assertIn("nenhuma ferramenta de escrita Google Ads é registrada", contract)
         self.assertIn("bloquear toda chamada de escrita", executor)
+
+    def test_google_ads_extended_is_fail_closed(self) -> None:
+        base = ROOT / "integrations" / "google_ads_extended"
+        self.assertTrue((base / "pyproject.toml").is_file())
+        server = (base / "src" / "performance_ads_google_ads_extended" / "server.py").read_text(encoding="utf-8")
+        config = (base / "src" / "performance_ads_google_ads_extended" / "config.py").read_text(encoding="utf-8")
+        self.assertIn("get_extended_capabilities", server)
+        self.assertIn('"write_tools_registered": False', config)
+        self.assertIn('"PERFORMANCE_ADS_GOOGLE_WRITE_MODE", "disabled"', config)
 
     def test_file_based_mode_is_first_class(self) -> None:
         agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
@@ -49,6 +58,8 @@ class MultichannelStructureTests(unittest.TestCase):
             "codex mcp add google_ads",
             "customers_list_accessible_customers",
             "Nunca cole developer token",
+            "Complemento local experimental",
+            "write_tools_registered: false",
         ]
         for marker in required:
             with self.subTest(marker=marker):

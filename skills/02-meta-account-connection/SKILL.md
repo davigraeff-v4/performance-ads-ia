@@ -7,9 +7,9 @@ description: Confirma de forma não destrutiva a conta Meta correta, ativos, moe
 
 ## Pré-requisitos
 
-1. Skill `00` concluída ao menos para leitura.
-2. Skill `01` com cliente e conta esperada.
-3. `CLIENTE.md` e dossiê atual.
+1. Skill `01` com cliente e conta esperada.
+2. `CLIENTE.md` e dossiê atual.
+3. Em `connected_read`, conexão Meta já disponível; executar a skill `00` somente quando estiver ausente ou falhar. Em `file_based` ou `context_only`, esta skill é pulada.
 
 ## Processo
 
@@ -34,4 +34,3 @@ Salvar no dossiê data da consulta, nome, ID mascarado, moeda, timezone, ativos 
 ## Proibição
 
 Não usar uma conta "parecida" para continuar. Não testar escrita criando objeto descartável.
-

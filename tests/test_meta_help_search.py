@@ -16,7 +16,7 @@ SEARCH = ROOT / "scripts" / "search_meta_help.py"
 
 def search(query: str, *options: str) -> dict:
     result = subprocess.run(
-        [sys.executable, str(SEARCH), query, *options, "--json"],
+        [sys.executable, str(SEARCH), query, "--platform", "meta", *options, "--json"],
         cwd=ROOT,
         check=True,
         capture_output=True,
@@ -28,6 +28,8 @@ def search(query: str, *options: str) -> dict:
 class MetaHelpSearchTests(unittest.TestCase):
     def test_exact_title(self) -> None:
         payload = search("Sobre a meta de ROAS", "--title-only", "--limit", "1")
+        self.assertEqual(payload["platform"], "meta")
+        self.assertFalse(payload["out_of_scope"])
         self.assertEqual(payload["article_count"], 151)
         self.assertEqual(payload["results"][0]["match"], "exact")
         self.assertTrue(payload["results"][0]["path"].endswith("sobre-a-meta-de-roas.md"))
@@ -46,6 +48,25 @@ class MetaHelpSearchTests(unittest.TestCase):
     def test_unrelated_query_remains_weak(self) -> None:
         payload = search("qual a capital da frança", "--limit", "1")
         self.assertEqual(payload["results"][0]["match"], "weak")
+
+    def test_google_ads_query_never_returns_meta_articles(self) -> None:
+        result = subprocess.run(
+            [sys.executable, str(SEARCH), "como configurar conversões no Google Ads", "--platform", "google_ads", "--json"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        payload = json.loads(result.stdout)
+        self.assertTrue(payload["out_of_scope"])
+        self.assertEqual(payload["reason"], "platform_not_meta")
+        self.assertEqual(payload["results"], [])
+
+    def test_conflicting_query_is_fail_closed(self) -> None:
+        payload = search("como configurar conversões no Google Ads")
+        self.assertTrue(payload["out_of_scope"])
+        self.assertEqual(payload["reason"], "query_platform_conflict")
+        self.assertEqual(payload["results"], [])
 
 
 if __name__ == "__main__":

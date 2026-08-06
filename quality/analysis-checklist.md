@@ -13,4 +13,9 @@
 - [ ] Hipóteses alternativas foram consideradas.
 - [ ] Correlação não foi tratada como causalidade.
 - [ ] Limitações e confiança aparecem por achado.
+- [ ] Cada achado possui ID, impacto, hipótese principal, alternativa e verificação discriminante.
+- [ ] Cada recomendação informa ação exata/alvo, prioridade, responsável, prazo e janela de avaliação.
+- [ ] Critérios de sucesso e de parada são verificáveis; campo indisponível foi declarado, não omitido.
+- [ ] Skills planejadas, executadas e puladas estão registradas com motivo.
+- [ ] O relatório completo foi entregue no chat; o dossiê é somente memória e auditoria.
 - [ ] Dossiê salvo na pasta correta.

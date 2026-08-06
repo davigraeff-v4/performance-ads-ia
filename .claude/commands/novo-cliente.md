@@ -1,2 +1,1 @@
-Execute `skills/01-client-campaign-intake/SKILL.md`. Crie ou atualize `clients/{slug}/CLIENTE.md` com o template, preserve histórico e gere um dossiê de onboarding. Pergunte em uma rodada apenas pelos campos críticos ausentes.
-
+Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `onboarding` e os argumentos do gestor. Preserve histórico, gere o dossiê e entregue o resumo completo no chat; pergunte em uma rodada apenas pelos campos críticos ausentes.

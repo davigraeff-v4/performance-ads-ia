@@ -10,7 +10,7 @@ No V1:
 
 - Atender Meta Ads e Google Ads em lead generation e e-commerce.
 - Trabalhar com uma plataforma, ambas ou escopo ainda em definição.
-- Usar MCP somente leitura, CSV, XLSX, Google Sheets e informações manuais.
+- Usar o MCP oficial Google Ads somente para leitura, CSV, XLSX, Google Sheets e informações manuais. Um conector local complementar pode ampliar capacidades somente por gates explícitos e homologados.
 - Planejar Google Ads por tipo de campanha e pesquisar palavras-chave quando aplicável.
 - Analisar criativos/assets e produzir briefing; não substituir o agente de copy ou design.
 - Criar change sets; nunca excluir ou arquivar ativos.
@@ -20,6 +20,8 @@ No V1:
 Search Console, Google Trends, GA4, TikTok Ads e outras plataformas ficam fora do V1.
 
 ## 2. Roteamento da demanda
+
+Toda solicitação em linguagem natural ou comando entra pela skill pública `25-performance-ads-router`, descoberta por `.agents/skills/` no Codex e `.claude/skills/` no Claude Code. O roteador resolve a rota em `routing_matrix.json` por meio de `scripts/route_request.py`; skills internas não dependem de acionamento manual pelo gestor.
 
 Antes de acionar skills operacionais, registrar:
 
@@ -32,7 +34,7 @@ Antes de acionar skills operacionais, registrar:
    - `context_only`: briefing e informações manuais.
    - `unavailable`: fonte necessária indisponível.
 
-Executar somente os ramos necessários do `dependency_graph.json`. Em demanda multicanal, compartilhar contexto comercial, mas nunca misturar contas, atribuições, moedas, fontes, populações ou conclusões. Análises podem ser consolidadas; mutações exigem um `operation_id` e uma aprovação por plataforma.
+Executar somente as skills planejadas pela matriz, respeitando as dependências do `dependency_graph.json` e o contrato de saída retornado por ramo. Registrar route ID canônico, contrato de saída, skills planejadas, executadas e puladas com motivo. Em demanda multicanal, compartilhar contexto comercial, mas nunca misturar contas, atribuições, moedas, fontes, populações ou conclusões. Análises podem ser consolidadas; mutações exigem um `operation_id` e uma aprovação por plataforma.
 
 ## 3. Hierarquia das fontes
 
@@ -82,6 +84,8 @@ Toda análise deve declarar:
 
 Classificar afirmações como `[F]` fato, `[C]` cálculo, `[H]` hipótese, `[R]` recomendação ou `[I]` indisponibilidade.
 
+Cada achado deve conter ID rastreável, plataforma/nível, evidência, impacto, confiança, limitação, hipótese principal, hipótese alternativa, verificação discriminante, ação exata, prioridade, responsável, prazo, janela de avaliação e critérios de sucesso e parada. Campo sem base fica explicitamente indisponível; não pode ser omitido para produzir um plano genérico.
+
 Não tratar correlação como causalidade. Não confundir atribuição da plataforma com incrementalidade. Não declarar lucratividade sem custos e margem suficientes.
 
 ## 6. Janelas e suficiência
@@ -108,21 +112,25 @@ Separar compras atribuídas, receita atribuída, CPA, ROAS, ticket, margem e ROA
 - Não ativar recomendações automáticas.
 - Avaliar correspondência, negativas, conversões e Smart Bidding em conjunto.
 - Não inferir disponibilidade de tipo, subtipo, asset ou estratégia de lance sem validar a conta e a fonte oficial atual.
-- No V1, toda mudança Google Ads é `manual_only`; o MCP oficial é usado apenas para leitura.
+- O MCP oficial Google Ads é usado apenas para leitura.
+- O conector local complementar pode expor Keyword Planner somente quando o uso permitido do developer token, a allowlist de customer e o flag local estiverem confirmados. Conexão ou Basic Access isoladamente não satisfazem esse gate.
+- Na etapa V1.1 inicial, nenhuma ferramenta de escrita Google Ads é registrada; toda mudança permanece `manual_only` até existir adapter específico, permissão homologada, testes em conta de teste e nova versão deste contrato.
 
 ## 9. Dossiê obrigatório
 
-Toda auditoria, análise, criação, otimização, execução, reversão ou relatório gera Markdown em `clients/{slug}/` usando `templates/dossie-operacao.md`.
+Toda auditoria, análise, criação, otimização, execução, reversão ou relatório gera Markdown em `clients/{slug}/` usando `templates/dossie-operacao.md`. O agent localiza o dossiê por `operation_id`, cliente, plataforma, escopo, tipo, status e atualização; nunca escolhe apenas o arquivo mais recente quando houver ambiguidade.
 
 Nome: `AAAA-MM-DD-HHMM-{plataforma}-{tipo}-{escopo}.md`.
 
-Estados: `draft`, `proposed`, `approved`, `executing`, `executed`, `partial_failure`, `failed`, `reverted`, `analysis_only`.
+Estados: `draft`, `proposed`, `approved`, `executing`, `executed`, `partial_failure`, `failed`, `reverted`, `analysis_only`, `blocked`.
 
 Análise sem mutação termina como `analysis_only`. Nunca usar `executed` para recomendação não aplicada.
 
+O dossiê é memória estruturada e trilha de auditoria, não a entrega principal. O mesmo resultado estruturado deve alimentar o arquivo e um relatório completo e autossuficiente no chat, com veredito, escopo/fontes, KPIs, achados, hipóteses, plano de ação, riscos, limitações e próxima decisão. Informar status, `operation_id` e caminho do dossiê somente como referência final; nunca exigir que o gestor abra o arquivo para compreender ou decidir.
+
 ## 10. Change set e aprovação
 
-Cada mutação deve registrar plataforma, conta, ID e versão da operação, alvo, antes/depois, evidência, justificativa, impacto esperado, confiança, impacto financeiro, risco, reversão, modo de execução, ordem e dependências.
+Cada mutação deve registrar plataforma, conta, ID e versão da operação, achados de origem, alvo, antes/depois, evidência, justificativa, impacto esperado, confiança, impacto financeiro, risco, reversão, precondições, modo de execução, ordem, dependências, responsável, janela de avaliação e critérios de sucesso e parada.
 
 O hash lógico de aprovação é SHA-256 da representação canônica do ID, versão e lista ordenada de mudanças, sem o bloco de aprovação. Qualquer alteração invalida a aprovação.
 
@@ -149,9 +157,12 @@ Status "conectado" não prova autenticação, conta correta, leitura ou escrita.
 Para Google Ads:
 
 - Usar o servidor oficial local `googleads/google-ads-mcp` quando o gestor decidir instalar.
+- Manter qualquer conector complementar em processo e namespace separados do MCP oficial.
 - Exigir Google Cloud, OAuth/ADC, developer token e `login-customer-id` quando houver manager account.
 - Manter `google-ads.yaml`, JSONs, tokens e configuração real fora do Git.
 - Tratar o servidor como somente leitura no V1.
+- Declarar capacidades locais de forma fail-closed: `reporting` por padrão, Planner desligado, escrita desligada e allowlist de customers vazia.
+- Nunca tratar nível Basic como autorização automática para Planner ou mutação; conferir também o uso permitido registrado no API Center.
 - Oferecer sempre o modo `file_based` ou `context_only`.
 
 ## 13. Aprendizado e Git

@@ -1,2 +1,1 @@
-Execute exclusivamente `skills/13-approved-change-executor/SKILL.md` para o ID informado. Exija aprovação válida, refaça preflight e readback, registre resultado por item e nunca amplie o lote.
-
+Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `execucao` e o ID informado. Exija aprovação válida, preflight e readback, registre cada item e nunca amplie o lote; Google Ads permanece bloqueado como `manual_only` no V1.

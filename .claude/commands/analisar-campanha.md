@@ -1,1 +1,1 @@
-Roteie por plataforma: `11-performance-diagnosis` para Meta e `24-google-ads-performance-diagnosis` para Google Ads. Declare escopo, janela, comparação, atribuição e modo de fonte por plataforma. Cruze dados comerciais sem forçar igualdade. Gere dossiê `analysis_only`.
+Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `analise` e os argumentos do gestor. Siga somente a rota calculada, encerre `analysis_only` e entregue no chat o relatório completo; o dossiê é a memória estruturada.

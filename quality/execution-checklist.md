@@ -5,7 +5,7 @@
 - [ ] Versão e hash conferem.
 - [ ] Aprovação tem responsável, timestamp e declaração.
 - [ ] Plataforma, conta, moeda e timezone conferem.
-- [ ] Integração e permissão de escrita foram validadas; Google Ads V1 está bloqueado para escrita.
+- [ ] Integração e permissão de escrita foram validadas; `google_ads_extended` com escrita ausente ou desabilitada bloqueia execução Google Ads.
 - [ ] Estado atual dos alvos confere com snapshot.
 - [ ] Não há exclusão ou arquivamento.
 - [ ] Todos os budgets mostram impacto financeiro.

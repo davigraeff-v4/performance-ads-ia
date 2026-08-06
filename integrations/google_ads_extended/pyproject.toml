@@ -1,0 +1,20 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "performance-ads-google-ads-extended"
+version = "0.1.0"
+description = "Local, fail-closed Google Ads API extensions for PERFORMANCE ADS IA"
+requires-python = ">=3.11"
+dependencies = [
+  "fastmcp>=3.4,<4",
+  "google-ads>=31.2,<32",
+  "google-auth>=2.40,<3",
+]
+
+[project.scripts]
+performance-ads-google-ads-extended = "performance_ads_google_ads_extended.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/performance_ads_google_ads_extended"]

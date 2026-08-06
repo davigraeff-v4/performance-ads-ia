@@ -29,13 +29,13 @@ Dar ao agente acesso confiável à base local sem carregar os 151 artigos no con
 Execute a partir da raiz do projeto:
 
 ```bash
-python3 scripts/search_meta_help.py "pergunta original do usuário" --limit 3
+python3 scripts/search_meta_help.py "pergunta original do usuário" --platform meta --limit 3
 ```
 
 Para inspecionar somente correspondências de título:
 
 ```bash
-python3 scripts/search_meta_help.py "trecho do título" --title-only --limit 5
+python3 scripts/search_meta_help.py "trecho do título" --platform meta --title-only --limit 5
 ```
 
 Interprete a classificação:
@@ -71,6 +71,7 @@ Interprete a classificação:
 - Não tratar o snapshot local como garantia de regra atual.
 - Não inventar disponibilidade de recurso na conta; confirmar via MCP quando aplicável.
 - Não usar a base para contornar o contrato de aprovação e execução.
+- Não chamar sem `--platform meta`. O buscador falha fechado para `google_ads` e para consulta explicitamente conflitante; nesse caso, rotear para a skill `17`.
 
 ## Exemplos
 
