@@ -2,9 +2,13 @@
 
 Base seletiva em português do Brasil. Iniciada em 2026-08-07 e organizada conforme a navegação oficial da Central de Ajuda.
 
-**Cobertura atual: 52 artigos em 2 categorias.**
+**Cobertura atual: 66 artigos em 3 categorias.**
 
 ## Campanhas
+
+### Campanhas → Apps
+
+- [Sobre as campanhas para apps](01-campanhas/sobre-as-campanhas-para-apps.md) — [fonte original](https://support.google.com/google-ads/answer/6247380?hl=pt-BR)
 
 ### Campanhas → Campanhas de pesquisa
 
@@ -16,6 +20,30 @@ Base seletiva em português do Brasil. Iniciada em 2026-08-07 e organizada confo
 - [Sobre a Inclusão da Rede de Display nas campanhas de pesquisa](01-campanhas/inclusao-da-rede-de-display-nas-campanhas-de-pesquisa.md) — [fonte original](https://support.google.com/google-ads/answer/7193800?hl=pt-BR)
 - [Sobre a rede de pesquisa do Google](01-campanhas/sobre-a-rede-de-pesquisa-do-google.md) — [fonte original](https://support.google.com/google-ads/answer/1722047?hl=pt-BR)
 - [Sobre as configurações de campanha](01-campanhas/sobre-as-configuracoes-de-campanha.md) — [fonte original](https://support.google.com/google-ads/answer/1704395?hl=pt-BR)
+
+### Campanhas → Campanhas inteligentes
+
+- [Sobre os benefícios e recursos das campanhas inteligentes](01-campanhas/sobre-os-beneficios-e-recursos-das-campanhas-inteligentes.md) — [fonte original](https://support.google.com/google-ads/answer/9520605?hl=pt-BR)
+
+### Campanhas → Display
+
+- [Sobre os anúncios de display e a Rede de Display do Google](01-campanhas/sobre-os-anuncios-de-display-e-a-rede-de-display-do-google.md) — [fonte original](https://support.google.com/google-ads/answer/2404190?hl=pt-BR)
+
+### Campanhas → Performance Max
+
+- [Sobre as campanhas Performance Max](01-campanhas/sobre-as-campanhas-performance-max.md) — [fonte original](https://support.google.com/google-ads/answer/10724817?hl=pt-BR)
+
+### Campanhas → Shopping
+
+- [Sobre anúncios do Shopping](01-campanhas/sobre-anuncios-do-shopping.md) — [fonte original](https://support.google.com/google-ads/answer/2454022?hl=pt-BR)
+
+### Campanhas → Tipos de campanha
+
+- [Escolher o tipo certo de campanha](01-campanhas/escolher-o-tipo-certo-de-campanha.md) — [fonte original](https://support.google.com/google-ads/answer/2567043?hl=pt-BR)
+
+### Campanhas → Vídeo
+
+- [Sobre campanhas de vídeo](01-campanhas/sobre-campanhas-de-video.md) — [fonte original](https://support.google.com/google-ads/answer/6340491?hl=pt-BR)
 
 ## Recursos
 
@@ -95,6 +123,33 @@ Base seletiva em português do Brasil. Iniciada em 2026-08-07 e organizada confo
 ### Recursos → Segmentação
 
 - [Sobre os segmentos de afinidade](02-recursos/sobre-os-segmentos-de-afinidade.md) — [fonte original](https://support.google.com/google-ads/answer/13151406?hl=pt-BR)
+
+## Otimizar o desempenho
+
+### Lances → CPA desejado
+
+- [Sobre os lances de CPA desejado](03-otimizacao-desempenho/sobre-os-lances-de-cpa-desejado.md) — [fonte original](https://support.google.com/google-ads/answer/6268632?hl=pt-BR)
+
+### Lances → Fundamentos de lances e leilão
+
+- [Noções básicas sobre lances](03-otimizacao-desempenho/nocoes-basicas-sobre-lances.md) — [fonte original](https://support.google.com/google-ads/answer/2459326?hl=pt-BR)
+
+### Lances → Lances automáticos
+
+- [Sobre os lances automáticos](03-otimizacao-desempenho/sobre-os-lances-automaticos.md) — [fonte original](https://support.google.com/google-ads/answer/2979071?hl=pt-BR)
+
+### Lances → Lances inteligentes
+
+- [Como ter sucesso com o Lances inteligentes](03-otimizacao-desempenho/como-ter-sucesso-com-o-lances-inteligentes.md) — [fonte original](https://support.google.com/google-ads/answer/6167140?hl=pt-BR)
+- [Sobre os Lances Inteligentes](03-otimizacao-desempenho/sobre-os-lances-inteligentes.md) — [fonte original](https://support.google.com/google-ads/answer/7065882?hl=pt-BR)
+
+### Lances → ROAS desejado
+
+- [Sobre os lances de ROAS desejado](03-otimizacao-desempenho/sobre-os-lances-de-roas-desejado.md) — [fonte original](https://support.google.com/google-ads/answer/6268637?hl=pt-BR)
+
+### Leilão → Ad Rank
+
+- [Sobre a classificação do anúncio](03-otimizacao-desempenho/sobre-a-classificacao-do-anuncio.md) — [fonte original](https://support.google.com/google-ads/answer/1722122?hl=pt-BR)
 
 ## Frescor e limites
 
