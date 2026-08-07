@@ -2,7 +2,7 @@
 
 Base seletiva em português do Brasil. Iniciada em 2026-08-07 e organizada conforme a navegação oficial da Central de Ajuda.
 
-**Cobertura atual: 119 artigos em 3 categorias.**
+**Cobertura atual: 130 artigos em 5 categorias.**
 
 ## Campanhas
 
@@ -290,6 +290,51 @@ Base seletiva em português do Brasil. Iniciada em 2026-08-07 e organizada confo
 - [Sobre o relatório de orçamento](03-otimizacao-desempenho/sobre-o-relatorio-de-orcamento.md) — [fonte original](https://support.google.com/google-ads/answer/9962086?hl=pt-BR)
 - [Sobre orçamentos compartilhados](03-otimizacao-desempenho/sobre-orcamentos-compartilhados.md) — [fonte original](https://support.google.com/google-ads/answer/10487241?hl=pt-BR)
 - [Visão geral dos orçamentos](03-otimizacao-desempenho/visao-geral-dos-orcamentos.md) — [fonte original](https://support.google.com/google-ads/answer/10486536?hl=pt-BR)
+
+## Conta e faturamento
+
+### Acesso e gerenciamento de conta → Faturamento
+
+- [Conhecer as opções de faturamento](04-conta-faturamento/conhecer-as-opcoes-de-faturamento.md) — [fonte original](https://support.google.com/google-ads/answer/1704418?hl=pt-BR)
+
+### Acesso e gerenciamento de conta → Gerenciamento de acesso
+
+- [Gerenciar o acesso à conta do Google Ads](04-conta-faturamento/gerenciar-o-acesso-a-conta-do-google-ads.md) — [fonte original](https://support.google.com/google-ads/answer/6372672?hl=pt-BR)
+
+### Acesso e gerenciamento de conta → MCC
+
+- [Contas de administrador (MCC): como vincular contas à sua conta de administrador – introdução](04-conta-faturamento/contas-de-administrador-mcc-como-vincular-contas-a-sua-conta-de-administrador-introducao.md) — [fonte original](https://support.google.com/google-ads/answer/7456530?hl=pt-BR)
+- [Contas de administrador (MCC): gerenciar usuários e níveis de acesso na sua conta de administrador](04-conta-faturamento/contas-de-administrador-mcc-gerenciar-usuarios-e-niveis-de-acesso-na-sua-conta-de-administrador.md) — [fonte original](https://support.google.com/google-ads/answer/7459700?hl=pt-BR)
+
+### Acesso e gerenciamento de conta → Níveis de acesso
+
+- [Sobre os níveis de acesso na sua conta do Google Ads](04-conta-faturamento/sobre-os-niveis-de-acesso-na-sua-conta-do-google-ads.md) — [fonte original](https://support.google.com/google-ads/answer/9978556?hl=pt-BR)
+
+### Faturamento e pagamentos → Configurações de pagamento
+
+- [Sobre as configurações de pagamento no Google Ads](04-conta-faturamento/configuracoes-de-pagamento.md) — [fonte original](https://support.google.com/google-ads/answer/2375432?hl=pt-BR)
+
+### Faturamento e pagamentos → Modalidades de pagamento
+
+- [Fazer um pagamento em contas para pagamentos automáticos ou manuais](04-conta-faturamento/fazer-um-pagamento-em-contas-para-pagamentos-automaticos-ou-manuais.md) — [fonte original](https://support.google.com/google-ads/answer/1704440?hl=pt-BR)
+
+### Faturamento e pagamentos → Problemas de pagamento
+
+- [Resolver problema de pagamento recusado no Google Ads](04-conta-faturamento/resolver-problema-de-pagamento-recusado-no-google-ads.md) — [fonte original](https://support.google.com/google-ads/answer/1723046?hl=pt-BR)
+
+### Faturamento e pagamentos → Suspensões
+
+- [Suspensões por questões de faturamento e pagamento](04-conta-faturamento/suspensoes-por-questoes-de-faturamento-e-pagamento.md) — [fonte original](https://support.google.com/google-ads/answer/13704200?hl=pt-BR)
+
+## Corrigir problemas
+
+### Diagnóstico e troubleshooting → Diagnóstico de campanha
+
+- [Sobre o diagnóstico da campanha](05-correcao-problemas/sobre-o-diagnostico-da-campanha.md) — [fonte original](https://support.google.com/google-ads/answer/12327514?hl=pt-BR)
+
+### Diagnóstico e troubleshooting → Veiculação e tráfego
+
+- [Como corrigir campanhas do Google Ads que não estão em exibição ou têm pouco tráfego](05-correcao-problemas/como-corrigir-campanhas-do-google-ads-que-nao-estao-em-exibicao-ou-tem-pouco-trafego.md) — [fonte original](https://support.google.com/google-ads/answer/12092760?hl=pt-BR)
 
 ## Frescor e limites
 
