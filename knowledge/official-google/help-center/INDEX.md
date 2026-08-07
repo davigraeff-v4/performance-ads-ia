@@ -2,7 +2,7 @@
 
 Base seletiva em português do Brasil. Iniciada em 2026-08-07 e organizada conforme a navegação oficial da Central de Ajuda.
 
-**Cobertura atual: 71 artigos em 3 categorias.**
+**Cobertura atual: 79 artigos em 3 categorias.**
 
 ## Campanhas
 
@@ -143,6 +143,26 @@ Base seletiva em português do Brasil. Iniciada em 2026-08-07 e organizada confo
 ### Recursos → Segmentação
 
 - [Sobre os segmentos de afinidade](02-recursos/sobre-os-segmentos-de-afinidade.md) — [fonte original](https://support.google.com/google-ads/answer/13151406?hl=pt-BR)
+
+### Segmentação → Dispositivos
+
+- [Sobre a segmentação por dispositivo](02-recursos/sobre-a-segmentacao-por-dispositivo.md) — [fonte original](https://support.google.com/google-ads/answer/1722028?hl=pt-BR)
+
+### Segmentação → Locais
+
+- [Segmentar anúncios por localizações geográficas](02-recursos/segmentar-anuncios-por-localizacoes-geograficas.md) — [fonte original](https://support.google.com/google-ads/answer/1722043?hl=pt-BR)
+- [Sobre a medição do desempenho geográfico](02-recursos/sobre-a-medicao-do-desempenho-geografico.md) — [fonte original](https://support.google.com/google-ads/answer/2453994?hl=pt-BR)
+- [Sobre a segmentação de locais geográficos](02-recursos/sobre-a-segmentacao-de-locais-geograficos.md) — [fonte original](https://support.google.com/google-ads/answer/2453995?hl=pt-BR)
+- [Sobre as opções de local avançadas](02-recursos/sobre-as-opcoes-de-local-avancadas.md) — [fonte original](https://support.google.com/google-ads/answer/1722038?hl=pt-BR)
+
+### Segmentação → Programação de anúncios
+
+- [Sobre a programação de anúncios](02-recursos/sobre-a-programacao-de-anuncios.md) — [fonte original](https://support.google.com/google-ads/answer/2404244?hl=pt-BR)
+
+### Segmentação → Públicos-alvo
+
+- [Usar o Criador de público-alvo ao criar uma campanha](02-recursos/usar-o-criador-de-publico-alvo-ao-criar-uma-campanha.md) — [fonte original](https://support.google.com/google-ads/answer/13323469?hl=pt-BR)
+- [Usar segmentos semelhantes para aumentar seu público](02-recursos/usar-segmentos-semelhantes-para-aumentar-seu-publico.md) — [fonte original](https://support.google.com/google-ads/answer/13541369?hl=pt-BR)
 
 ## Otimizar o desempenho
 
