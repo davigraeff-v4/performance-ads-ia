@@ -2,7 +2,7 @@
 
 Base seletiva em português do Brasil. Iniciada em 2026-08-07 e organizada conforme a navegação oficial da Central de Ajuda.
 
-**Cobertura atual: 79 artigos em 3 categorias.**
+**Cobertura atual: 95 artigos em 3 categorias.**
 
 ## Campanhas
 
@@ -66,6 +66,32 @@ Base seletiva em português do Brasil. Iniciada em 2026-08-07 e organizada confo
 - [Sobre campanhas de vídeo](01-campanhas/sobre-campanhas-de-video.md) — [fonte original](https://support.google.com/google-ads/answer/6340491?hl=pt-BR)
 
 ## Recursos
+
+### Medir resultados → Atribuição
+
+- [Sobre a atribuição baseada em dados](02-recursos/sobre-a-atribuicao-baseada-em-dados.md) — [fonte original](https://support.google.com/google-ads/answer/6394265?hl=pt-BR)
+- [Sobre modelos de atribuição](02-recursos/sobre-modelos-de-atribuicao.md) — [fonte original](https://support.google.com/google-ads/answer/6259715?hl=pt-BR)
+
+### Medir resultados → Conversões no site
+
+- [Como o Google Ads acompanha conversões no site](02-recursos/como-o-google-ads-acompanha-conversoes-no-site.md) — [fonte original](https://support.google.com/google-ads/answer/7521212?hl=pt-BR)
+
+### Medir resultados → Conversões off-line
+
+- [Sobre as importações de conversões off-line](02-recursos/sobre-as-importacoes-de-conversoes-off-line.md) — [fonte original](https://support.google.com/google-ads/answer/2998031?hl=pt-BR)
+
+### Medir resultados → Conversões — Primeiros passos
+
+- [Sobre a medição de conversões](02-recursos/sobre-a-medicao-de-conversoes.md) — [fonte original](https://support.google.com/google-ads/answer/1722022?hl=pt-BR)
+- [Sobre as opções de contabilização de conversões](02-recursos/sobre-as-opcoes-de-contabilizacao-de-conversoes.md) — [fonte original](https://support.google.com/google-ads/answer/3438531?hl=pt-BR)
+
+### Medir resultados → Enhanced conversions
+
+- [Sobre as conversões otimizadas](02-recursos/sobre-as-conversoes-otimizadas.md) — [fonte original](https://support.google.com/google-ads/answer/9888656?hl=pt-BR)
+
+### Medir resultados → Tags de conversão
+
+- [Usar a tag do Google para o acompanhamento de conversões do Google Ads](02-recursos/usar-a-tag-do-google-para-o-acompanhamento-de-conversoes-do-google-ads.md) — [fonte original](https://support.google.com/google-ads/answer/7548399?hl=pt-BR)
 
 ### Palavras-chave → Card de resumo na Pesquisa Google
 
@@ -144,6 +170,12 @@ Base seletiva em português do Brasil. Iniciada em 2026-08-07 e organizada confo
 
 - [Sobre os segmentos de afinidade](02-recursos/sobre-os-segmentos-de-afinidade.md) — [fonte original](https://support.google.com/google-ads/answer/13151406?hl=pt-BR)
 
+### Segmentação → Canais e tópicos
+
+- [Sobre a segmentação por canal](02-recursos/sobre-a-segmentacao-por-canal.md) — [fonte original](https://support.google.com/google-ads/answer/2470108?hl=pt-BR)
+- [Sobre a segmentação por tópicos](02-recursos/sobre-a-segmentacao-por-topicos.md) — [fonte original](https://support.google.com/google-ads/answer/2497832?hl=pt-BR)
+- [Sobre o relatório Onde os anúncios foram exibidos](02-recursos/sobre-o-relatorio-onde-os-anuncios-foram-exibidos.md) — [fonte original](https://support.google.com/google-ads/answer/13787926?hl=pt-BR)
+
 ### Segmentação → Dispositivos
 
 - [Sobre a segmentação por dispositivo](02-recursos/sobre-a-segmentacao-por-dispositivo.md) — [fonte original](https://support.google.com/google-ads/answer/1722028?hl=pt-BR)
@@ -161,8 +193,16 @@ Base seletiva em português do Brasil. Iniciada em 2026-08-07 e organizada confo
 
 ### Segmentação → Públicos-alvo
 
+- [Seu guia sobre a Segmentação por lista de clientes](02-recursos/seu-guia-sobre-a-segmentacao-por-lista-de-clientes.md) — [fonte original](https://support.google.com/google-ads/answer/10550383?hl=pt-BR)
+- [Sobre a segmentação demográfica](02-recursos/sobre-a-segmentacao-demografica.md) — [fonte original](https://support.google.com/google-ads/answer/2580383?hl=pt-BR)
+- [Sobre os segmentos combinados](02-recursos/sobre-os-segmentos-combinados.md) — [fonte original](https://support.google.com/google-ads/answer/9066029?hl=pt-BR)
+- [Sobre os segmentos de público-alvo do Gerenciador de públicos-alvo](02-recursos/sobre-os-segmentos-de-publico-alvo-do-gerenciador-de-publicos-alvo.md) — [fonte original](https://support.google.com/google-ads/answer/7558048?hl=pt-BR)
 - [Usar o Criador de público-alvo ao criar uma campanha](02-recursos/usar-o-criador-de-publico-alvo-ao-criar-uma-campanha.md) — [fonte original](https://support.google.com/google-ads/answer/13323469?hl=pt-BR)
 - [Usar segmentos semelhantes para aumentar seu público](02-recursos/usar-segmentos-semelhantes-para-aumentar-seu-publico.md) — [fonte original](https://support.google.com/google-ads/answer/13541369?hl=pt-BR)
+
+### Segmentação → Redes
+
+- [Sobre a segmentação para campanhas de display](02-recursos/sobre-a-segmentacao-para-campanhas-de-display.md) — [fonte original](https://support.google.com/google-ads/answer/2404191?hl=pt-BR)
 
 ## Otimizar o desempenho
 
