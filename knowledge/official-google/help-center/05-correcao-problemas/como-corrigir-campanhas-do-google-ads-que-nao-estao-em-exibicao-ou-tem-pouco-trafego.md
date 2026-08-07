@@ -14,7 +14,7 @@ formato: "sintese-estruturada"
 
 # Como corrigir campanhas do Google Ads que não estão em exibição ou têm pouco tráfego
 
-Guia geral (multiplataforma) sobre por que anúncios não aparecem ou usam pouco do orçamento diário, e como resolver. Existem artigos irmãos específicos por tipo de campanha (display, pesquisa, vídeo, Shopping, Performance Max, apps, Geração de Demanda) — ver "Links relacionados".
+Guia geral que cobre vários tipos de campanha do Google Ads sobre por que anúncios não aparecem ou usam pouco do orçamento diário, e como resolver. Existem artigos irmãos específicos por tipo de campanha (display, pesquisa, vídeo, Shopping, Performance Max, apps, Geração de Demanda) — ver "Links relacionados".
 
 ## Antes de começar: o que esperar quando uma campanha é criada
 

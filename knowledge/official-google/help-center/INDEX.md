@@ -293,10 +293,6 @@ Base seletiva em português do Brasil. Iniciada em 2026-08-07 e organizada confo
 
 ## Conta e faturamento
 
-### Acesso e gerenciamento de conta → Faturamento
-
-- [Conhecer as opções de faturamento](04-conta-faturamento/conhecer-as-opcoes-de-faturamento.md) — [fonte original](https://support.google.com/google-ads/answer/1704418?hl=pt-BR)
-
 ### Acesso e gerenciamento de conta → Gerenciamento de acesso
 
 - [Gerenciar o acesso à conta do Google Ads](04-conta-faturamento/gerenciar-o-acesso-a-conta-do-google-ads.md) — [fonte original](https://support.google.com/google-ads/answer/6372672?hl=pt-BR)
@@ -317,6 +313,10 @@ Base seletiva em português do Brasil. Iniciada em 2026-08-07 e organizada confo
 ### Faturamento e pagamentos → Modalidades de pagamento
 
 - [Fazer um pagamento em contas para pagamentos automáticos ou manuais](04-conta-faturamento/fazer-um-pagamento-em-contas-para-pagamentos-automaticos-ou-manuais.md) — [fonte original](https://support.google.com/google-ads/answer/1704440?hl=pt-BR)
+
+### Faturamento e pagamentos → Opções de faturamento
+
+- [Conhecer as opções de faturamento](04-conta-faturamento/conhecer-as-opcoes-de-faturamento.md) — [fonte original](https://support.google.com/google-ads/answer/1704418?hl=pt-BR)
 
 ### Faturamento e pagamentos → Problemas de pagamento
 
