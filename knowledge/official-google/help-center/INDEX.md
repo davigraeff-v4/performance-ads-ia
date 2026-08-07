@@ -2,7 +2,7 @@
 
 Base seletiva em português do Brasil. Iniciada em 2026-08-07 e organizada conforme a navegação oficial da Central de Ajuda.
 
-**Cobertura atual: 107 artigos em 3 categorias.**
+**Cobertura atual: 119 artigos em 3 categorias.**
 
 ## Campanhas
 
@@ -66,6 +66,48 @@ Base seletiva em português do Brasil. Iniciada em 2026-08-07 e organizada confo
 - [Sobre campanhas de vídeo](01-campanhas/sobre-campanhas-de-video.md) — [fonte original](https://support.google.com/google-ads/answer/6340491?hl=pt-BR)
 
 ## Recursos
+
+### Anúncios, recursos e páginas de destino → Anúncios responsivos de pesquisa
+
+- [Sobre a qualidade dos anúncios responsivos de pesquisa](02-recursos/sobre-a-qualidade-dos-anuncios-responsivos-de-pesquisa.md) — [fonte original](https://support.google.com/google-ads/answer/9921843?hl=pt-BR)
+- [Sobre o relatório de recursos no nível dos anúncios responsivos de pesquisa](02-recursos/sobre-o-relatorio-de-recursos-no-nivel-dos-anuncios-responsivos-de-pesquisa.md) — [fonte original](https://support.google.com/google-ads/answer/9564897?hl=pt-BR)
+- [Sobre os anúncios responsivos de pesquisa](02-recursos/sobre-os-anuncios-responsivos-de-pesquisa.md) — [fonte original](https://support.google.com/google-ads/answer/7684791?hl=pt-BR)
+
+### Anúncios, recursos e páginas de destino → Páginas de destino
+
+- [Página de destino](02-recursos/pagina-de-destino.md) — [fonte original](https://support.google.com/google-ads/answer/14086?hl=pt-BR)
+
+### Anúncios, recursos e páginas de destino → Recursos de formulário de lead
+
+- [Sobre os recursos de formulário de lead](02-recursos/sobre-os-recursos-de-formulario-de-lead.md) — [fonte original](https://support.google.com/google-ads/answer/9423234?hl=pt-BR)
+
+### Anúncios, recursos e páginas de destino → Recursos de frase de destaque
+
+- [Sobre os recursos de frase de destaque](02-recursos/sobre-os-recursos-de-frase-de-destaque.md) — [fonte original](https://support.google.com/google-ads/answer/6079510?hl=pt-BR)
+
+### Anúncios, recursos e páginas de destino → Recursos de imagem
+
+- [Sobre os recursos de imagem para campanhas de pesquisa](02-recursos/sobre-os-recursos-de-imagem-para-campanhas-de-pesquisa.md) — [fonte original](https://support.google.com/google-ads/answer/9566341?hl=pt-BR)
+
+### Anúncios, recursos e páginas de destino → Recursos de ligação
+
+- [Sobre os recursos de ligação](02-recursos/sobre-os-recursos-de-ligacao.md) — [fonte original](https://support.google.com/google-ads/answer/2453991?hl=pt-BR)
+
+### Anúncios, recursos e páginas de destino → Recursos de sitelink
+
+- [Sobre recursos de sitelink](02-recursos/sobre-recursos-de-sitelink.md) — [fonte original](https://support.google.com/google-ads/answer/2375416?hl=pt-BR)
+
+### Anúncios, recursos e páginas de destino → Recursos de snippet estruturado
+
+- [Sobre os recursos de snippet estruturado](02-recursos/sobre-os-recursos-de-snippet-estruturado.md) — [fonte original](https://support.google.com/google-ads/answer/6280012?hl=pt-BR)
+
+### Anúncios, recursos e páginas de destino → Revisão de anúncios
+
+- [Sobre o processo de revisão de anúncios](02-recursos/sobre-o-processo-de-revisao-de-anuncios.md) — [fonte original](https://support.google.com/google-ads/answer/1722120?hl=pt-BR)
+
+### Anúncios, recursos e páginas de destino → URLs finais
+
+- [Conhecer melhor os URLs finais e modelos de acompanhamento](02-recursos/conhecer-melhor-os-urls-finais-e-modelos-de-acompanhamento.md) — [fonte original](https://support.google.com/google-ads/answer/6273460?hl=pt-BR)
 
 ### Medir resultados → Atribuição
 
