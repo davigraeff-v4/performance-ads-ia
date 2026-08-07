@@ -24,7 +24,8 @@ Consulte a política sobre snippets estruturados antes de criar os recursos.
 
 - Os snippets estruturados são exibidos junto com anúncios na Rede de Pesquisa.
 - Podem ser adicionados no nível de grupo de anúncios, campanha ou conta.
-- Recursos criados em nível mais granular impedem a veiculação de recursos de nível superior. Exemplo: se existir um snippet estruturado apenas no nível do grupo de anúncios, o recurso de frase de destaque no nível da campanha não fica qualificado para veiculação naquele grupo.
+- Recursos criados em nível mais granular impedem a veiculação de recursos de snippet estruturado de nível superior (ex.: um snippet no nível do grupo de anúncios impede a veiculação de um snippet no nível da campanha para aquele grupo).
+  > **Nota de auditoria**: a página oficial ilustra essa regra com um exemplo que mistura tipos de recurso — descreve um snippet estruturado no grupo de anúncios impedindo a veiculação de uma *frase de destaque* (recurso diferente) no nível da campanha. A regra documentada de substituição é entre níveis do **mesmo tipo de recurso** (snippet vs. snippet); o exemplo da fonte parece um erro editorial, não uma regra de que um snippet bloqueia uma frase de destaque de outro tipo. Validar ao vivo antes de usar esse comportamento cross-recurso como base de recomendação operacional.
 - Precisam ser criados em um nível que faça sentido para toda a hierarquia da conta abaixo dele:
   - se aplicável a todos os grupos de anúncios de uma conta, deve ser adicionado no nível da conta;
   - se aplicável apenas a um subconjunto de campanhas, deve ser adicionado somente a essas campanhas.

@@ -25,6 +25,8 @@ As frases de destaque (callout assets) podem melhorar anúncios de texto ao prom
 - É possível adicionar frases de destaque no nível da conta, da campanha ou do grupo de anúncios, escolhendo o texto e a programação de exibição.
 - A ordem, o tamanho e o desempenho das frases de destaque determinam quantas são exibidas e se alguma aparece com o anúncio.
 - Recomenda-se apresentar informações gerais da empresa (ex.: "suporte por telefone 24 horas") no nível da conta e da campanha, e detalhes específicos (ex.: "embalagem grátis para presentes") no nível do grupo de anúncios. Se um grupo de anúncios de uma campanha que já tem frases de destaque receber frases próprias, os anúncios do grupo usam as frases do nível do grupo, não as da campanha.
+
+> **Divergência não resolvida na fonte oficial**: a página oficial contém duas afirmações que se contradizem sobre hierarquia. A primeira (acima) diz que frases no nível do grupo de anúncios **substituem** as da campanha quando ambas existem no mesmo grupo. A segunda (seção seguinte) diz que frases de todos os níveis de uma mesma ramificação da hierarquia **podem aparecer juntas**. Essas duas frases coexistem, sem esclarecimento adicional, na mesma versão vigente do artigo (verificado em pt-BR e en). Não há evidência segura para decidir qual comportamento prevalece — **antes de orientar uma alteração de hierarquia de frases de destaque com base nisso, validar o comportamento real na conta/documentação ao vivo**.
 - Observação: adicionar uma frase de destaque não tem custo; a cobrança normal ocorre pelos cliques no anúncio.
 
 ### Recursos no nível da conta, da campanha ou do grupo de anúncios

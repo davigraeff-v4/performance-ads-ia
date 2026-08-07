@@ -24,7 +24,7 @@ Formulários de lead tornam a captação de contatos mais prática, pois os dado
 
 ## Como funciona
 
-1. O formulário de lead é criado no Google Ads e depois adicionado a uma campanha. Pode ser usado em campanhas de **Pesquisa** e **Performance Max**.
+1. O formulário de lead é criado no Google Ads e depois adicionado a uma campanha. **Disponibilidade principal atual**: campanhas de **Pesquisa** (via anúncios responsivos de pesquisa) e **Performance Max** — o artigo de uso mais recente da Central de Ajuda restringe o recurso explicitamente a esses dois casos e afirma que "o recurso está disponível apenas para anúncios responsivos de pesquisa". Menções a Display nesta síntese (abaixo) refletem conteúdo residual/condicional que ainda consta na página-fonte deste artigo, mas não é a via de uso corrente enfatizada pela Central — **validar elegibilidade real na conta antes de orientar uma configuração com base em Display**.
 2. Quando o público-alvo interage com um anúncio que contém o recurso, pode abrir o formulário e enviar dados de contato (e-mail, telefone) para expressar interesse.
 3. Gestão e exportação de leads — opções de entrega:
    - **Download de CSV**: exportação manual. Só é possível baixar leads dos últimos 30 dias (o Google Ads armazena leads por 60 dias — recomenda-se baixar com frequência).
@@ -61,6 +61,7 @@ Argélia, Argentina, Austrália, Áustria, Barein, Bangladesh, Belize, Bélgica,
 
 ## Links relacionados
 
+- [Como usar formulários de lead em campanhas e anúncios responsivos de pesquisa](https://support.google.com/google-ads/answer/17079814?hl=pt-BR)
 - [Usar formulários de lead](https://support.google.com/google-ads/answer/16726829)
 - [Criar recursos de formulário de lead](https://support.google.com/google-ads/answer/16726130)
 - [Baixar leads](https://support.google.com/google-ads/answer/10089020)
