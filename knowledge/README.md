@@ -42,17 +42,24 @@ Cada arquivo inclui `verificado_em`. Verifique a fonte ao vivo se a decisão for
 
 ## Oficial Google Ads
 
-O Google Ads usa uma base leve, não um snapshot integral do Help Center:
+O Google Ads usa uma base seletiva em expansão, sem alegar snapshot integral:
 
-- `official-google/source-catalog.md` — rotas oficiais para leitura ao vivo.
-- `official-google/campaign-types-and-structure.md`.
-- `official-google/keywords-and-search-terms.md`.
-- `official-google/conversions-bidding-and-budget.md`.
-- `official-google/ads-assets-and-landing-pages.md`.
-- `official-google/google-ads-mcp-and-api.md`.
+- `official-google/help-center/INDEX.md` — índice local da Central de Ajuda.
+- `official-google/help-center/{categoria}/{artigo}.md` — sínteses estruturadas com URL e data de extração.
+- `scripts/build_google_ads_help_index.py --write` — regenera o índice a partir dos frontmatters.
+- `scripts/search_google_ads_help.py` — recuperação seletiva com gate de plataforma.
+- `official-google/source-catalog.md` — rotas oficiais ainda dependentes de leitura ao vivo.
+- `official-google/google-ads-mcp-and-api.md` — API e MCP.
+- Os demais resumos em `official-google/` são legados em revisão durante a expansão da base.
 - `skills/17-google-ads-official-retrieval/SKILL.md` — gate seletivo Google Ads.
 
-Para comportamento atual, elegibilidade, política, cobrança, campos da API ou decisão material, abrir a fonte oficial ao vivo. Não atribuir metodologia interna ao Google.
+Para dúvidas de interface/produto, execute primeiro:
+
+```bash
+python3 scripts/search_google_ads_help.py "pergunta original" --platform google_ads --limit 3
+```
+
+Para comportamento atual, elegibilidade, política, cobrança, campos da API ou decisão material, abrir também a fonte oficial ao vivo. Não atribuir metodologia interna ao Google.
 
 ## Metodologia
 

@@ -225,7 +225,7 @@ Na V1.1 inicial:
 ## 12. Conhecimento
 
 - Meta: snapshot seletivo de 151 artigos mais resumos operacionais.
-- Google Ads: catálogo leve, resumos próprios e consulta oficial ao vivo.
+- Google Ads: base seletiva da Central de Ajuda, fontes de API e consulta oficial ao vivo.
 - Metodologia: regras internas separadas das afirmações das plataformas.
 - Aprendizados: somente padrões sanitizados e aprovados.
 

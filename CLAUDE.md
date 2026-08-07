@@ -16,7 +16,7 @@ Para qualquer pergunta sobre funcionamento, configuração, política, faturamen
 
 ### Google Ads
 
-Para qualquer pergunta sobre funcionamento, configuração, política, faturamento, contas, campanhas, palavras-chave, lances, conversões, anúncios, assets, mensuração, otimização ou solução de problemas do Google Ads, leia `skills/17-google-ads-official-retrieval/SKILL.md`. Use o catálogo e os resumos locais para roteamento; para comportamento atual, elegibilidade, política, campos de API ou decisão sensível, leia a fonte oficial ao vivo. Não existe snapshot integral do Help Center Google neste repositório.
+Para qualquer pergunta sobre funcionamento, configuração, política, faturamento, contas, campanhas, palavras-chave, lances, conversões, anúncios, assets, mensuração, otimização ou solução de problemas do Google Ads, leia `skills/17-google-ads-official-retrieval/SKILL.md`. Use a base seletiva em `knowledge/official-google/help-center/`, o catálogo e as fontes de API para roteamento; para comportamento atual, elegibilidade, política, campos de API ou decisão sensível, leia a fonte oficial ao vivo. A base local é parcial e não representa snapshot integral do Help Center Google.
 
 ## Roteamento da demanda
 

@@ -66,7 +66,7 @@ A base `knowledge/meta-help-center/` contém snapshot local de 151 artigos ofici
 
 ### 4.2 Google Ads
 
-O repositório mantém apenas catálogo de fontes e resumos operacionais próprios em `knowledge/official-google/`; não existe cópia integral do Help Center. Usar `skills/17-google-ads-official-retrieval/SKILL.md`. Para comportamento atual, elegibilidade, política, cobrança, campos da API, tipos de campanha e decisões materiais, abrir a fonte oficial ao vivo. Release notes ou metadata do MCP podem complementar, mas não substituir, a página oficial específica.
+O repositório mantém uma base seletiva da Central de Ajuda em `knowledge/official-google/help-center/`, além do catálogo e das fontes de API em `knowledge/official-google/`; não existe cópia integral do Help Center. Usar `skills/17-google-ads-official-retrieval/SKILL.md` e carregar somente os documentos recuperados pelo índice. Para comportamento atual, elegibilidade, política, cobrança, campos da API, tipos de campanha e decisões materiais, abrir a fonte oficial ao vivo. Release notes ou metadata do MCP podem complementar, mas não substituir, a página oficial específica.
 
 ## 5. Contrato analítico
 

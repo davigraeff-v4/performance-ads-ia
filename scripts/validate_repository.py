@@ -12,6 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 META_HELP_BASE = ROOT / "knowledge" / "meta-help-center"
 EXPECTED_META_HELP_ARTICLES = 151
+GOOGLE_HELP_BASE = ROOT / "knowledge" / "official-google" / "help-center"
 EXPECTED_SKILLS = {
     "00-configuracao-mcp",
     "01-client-campaign-intake",
@@ -135,6 +136,68 @@ def validate_meta_help_center(errors: list[str]) -> None:
         fail(errors, "total declarado no índice da Central Meta está divergente")
 
 
+def validate_google_help_center(errors: list[str]) -> None:
+    index = GOOGLE_HELP_BASE / "INDEX.md"
+    if not index.is_file():
+        return fail(errors, "índice da Central Google Ads ausente")
+
+    article_paths = sorted(
+        path for path in GOOGLE_HELP_BASE.glob("**/*.md") if path.name != "INDEX.md"
+    )
+    titles: set[str] = set()
+    urls: set[str] = set()
+    answer_ids: set[str] = set()
+    required_keys = {
+        "title", "url", "answer_id", "categoria", "topico", "subtopico",
+        "fonte", "idioma", "extraido_em", "traducao_por_ia", "formato",
+    }
+    for path in article_paths:
+        text = path.read_text(encoding="utf-8")
+        match = re.match(r"^---\n(.*?)\n---\n", text, re.S)
+        if not match:
+            fail(errors, f"frontmatter Google Ads ausente: {path.relative_to(ROOT)}")
+            continue
+        metadata: dict[str, str] = {}
+        for line in match.group(1).splitlines():
+            key, separator, value = line.partition(":")
+            if separator:
+                metadata[key.strip()] = value.strip().strip('"\'')
+        missing = required_keys - set(metadata)
+        if missing:
+            fail(
+                errors,
+                f"metadados Google Ads ausentes em {path.relative_to(ROOT)}: {sorted(missing)}",
+            )
+
+        title = metadata.get("title", "").casefold()
+        url = metadata.get("url", "")
+        answer_id = metadata.get("answer_id", "")
+        if not title:
+            fail(errors, f"título Google Ads vazio: {path.relative_to(ROOT)}")
+        elif title in titles:
+            fail(errors, f"título Google Ads duplicado: {metadata.get('title', '')}")
+        titles.add(title)
+
+        expected_url_prefix = f"https://support.google.com/google-ads/answer/{answer_id}"
+        if not answer_id.isdigit() or not url.startswith(expected_url_prefix):
+            fail(errors, f"URL/answer_id Google Ads inválido: {path.relative_to(ROOT)}")
+        elif url in urls or answer_id in answer_ids:
+            fail(errors, f"URL ou answer_id Google Ads duplicado: {url}")
+        urls.add(url)
+        answer_ids.add(answer_id)
+
+    index_text = index.read_text(encoding="utf-8")
+    declared_match = re.search(r"Cobertura atual: (\d+) artigos", index_text)
+    if not declared_match:
+        fail(errors, "total ausente no índice da Central Google Ads")
+    elif int(declared_match.group(1)) != len(article_paths):
+        fail(
+            errors,
+            "total declarado no índice da Central Google Ads está divergente: "
+            f"{declared_match.group(1)} declarado, {len(article_paths)} arquivos",
+        )
+
+
 def main() -> int:
     errors: list[str] = []
     required = [
@@ -226,11 +289,15 @@ def main() -> int:
         "scripts/route_request.py",
         "scripts/validate_all.py",
         "tests/test_meta_help_search.py",
+        "tests/test_google_ads_help_search.py",
         "tests/test_multichannel_structure.py",
         "tests/test_routing.py",
         "tests/test_schema_contracts.py",
         "knowledge/official-google/source-catalog.md",
         "knowledge/official-google/google-ads-mcp-and-api.md",
+        "knowledge/official-google/help-center/INDEX.md",
+        "scripts/build_google_ads_help_index.py",
+        "scripts/search_google_ads_help.py",
         "knowledge/google-ads/keyword-research-methodology.md",
         "templates/pesquisa-palavras-chave.md",
         "integrations/google_ads_extended/pyproject.toml",
@@ -244,6 +311,7 @@ def main() -> int:
             fail(errors, f"referência obrigatória ausente: {relative}")
 
     validate_meta_help_center(errors)
+    validate_google_help_center(errors)
 
     schemas: dict[str, dict[str, object]] = {}
     for schema in sorted((ROOT / "schemas").glob("*.json")):
