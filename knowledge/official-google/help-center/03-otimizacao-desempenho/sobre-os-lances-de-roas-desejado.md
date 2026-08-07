@@ -16,7 +16,7 @@ formato: "sintese-estruturada"
 
 > **Nomenclatura**: a partir de jun/2026, "Maximizar o Valor da Conversão com ROAS desejado" passa a se chamar apenas "ROAS desejado" — o comportamento de lances não muda.
 
-Estratégia de Lances Inteligentes que usa IA para prever o valor de uma conversão em potencial a cada pesquisa do usuário e ajustar lances para maximizar o retorno. Pesquisas com alta probabilidade de conversão de valor recebem lances mais altos; pesquisas com baixa probabilidade recebem lances mais baixos. Disponível como estratégia padrão (campanha única) ou de portfólio (múltiplas campanhas) — **exceto** para campanhas Performance Max, de hotel e de viagens, onde a estratégia de portfólio não está disponível.
+Estratégia de Lances Inteligentes que usa IA para prever o valor de uma conversão em potencial a cada pesquisa do usuário e ajustar lances para maximizar o retorno. Pesquisas com alta probabilidade de conversão de valor recebem lances mais altos; pesquisas com baixa probabilidade recebem lances mais baixos. Disponível como estratégia padrão (campanha única) ou de portfólio (múltiplas campanhas) — **exceto** para campanhas **Performance Max, de hotel, de viagens, de apps para instalações, do Shopping e Geração de Demanda**, onde a estratégia de portfólio não está disponível para o ROAS desejado.
 
 ## Pré-requisitos
 
@@ -62,6 +62,7 @@ Como o ROAS desejado otimiza com dados em tempo real, ajustes de lance manuais *
 - **Limites de lance** não são recomendados (atrapalham a otimização por IA); quando definidos, valem só para leilões de rede de pesquisa e apenas em estratégias de portfólio de Pesquisa/Shopping. O CPC máximo real pode ficar abaixo do limite mínimo definido.
 - Configuração "Incluir em Conversões" controla quais ações de conversão alimentam a otimização de CPA/ROAS desejado/ECPC.
 - Metas por grupo de anúncios são possíveis mas não recomendadas — limitam a eficácia dos Lances Inteligentes; estratégias de portfólio tendem a performar melhor.
+- **Observação oficial**: a estratégia de lances de portfólio não se aplica ao ROAS desejado em campanhas de apps para instalações, do Shopping, Geração de Demanda ou de viagens.
 
 ## Aviso de mudança nos sistemas de lances (17/08/2026)
 

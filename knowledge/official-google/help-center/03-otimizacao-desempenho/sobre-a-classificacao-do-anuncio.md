@@ -12,9 +12,9 @@ traducao_por_ia: "possivel"
 formato: "sintese-estruturada"
 ---
 
-# Sobre a classificação do anúncio (Ad Rank)
+# Sobre a classificação do anúncio
 
-A classificação do anúncio determina se um anúncio está qualificado para veiculação e em qual posição aparece em relação a anúncios de outros anunciantes. Cada local da página de resultados (parte superior, outras posições) tem um leilão separado; um anúncio só aparece uma vez por local, mas pode aparecer em locais diferentes ao longo do tempo. Em cada leilão, a classificação é calculada primeiro para decidir se o anúncio pode ser veiculado, e novamente para determinar sua posição frente à concorrência qualificada.
+A classificação do anúncio (também referida como Ad Rank, termo usado na documentação em inglês) determina se um anúncio está qualificado para veiculação e em qual posição aparece em relação a anúncios de outros anunciantes. Cada local da página de resultados (parte superior, outras posições) tem um leilão separado; um anúncio só aparece uma vez por local, mas pode aparecer em locais diferentes ao longo do tempo. Em cada leilão, a classificação é calculada primeiro para decidir se o anúncio pode ser veiculado, e novamente para determinar sua posição frente à concorrência qualificada.
 
 ## Os seis fatores da classificação
 
