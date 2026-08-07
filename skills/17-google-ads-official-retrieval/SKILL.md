@@ -1,15 +1,16 @@
 ---
 name: 17-google-ads-official-retrieval
-description: Localiza e lê seletivamente documentação oficial do Google Ads e da Google Ads API. Use antes de responder sobre funcionamento, configuração, política, faturamento, campanhas, palavras-chave, lances, conversões, anúncios, assets, mensuração, otimização, MCP ou erros Google Ads.
+description: Localiza e lê seletivamente a base local da Central de Ajuda, a documentação oficial do Google Ads e a Google Ads API. Use antes de responder sobre funcionamento, configuração, política, faturamento, campanhas, palavras-chave, lances, conversões, anúncios, assets, mensuração, otimização, MCP ou erros Google Ads.
 ---
 
 # Recuperação Oficial Google Ads
 
 ## Fontes permitidas
 
-1. Ler `knowledge/official-google/source-catalog.md`.
-2. Ler somente os resumos locais diretamente relevantes.
-3. Para informação atual, pesquisar e abrir páginas em:
+1. Pesquisar `knowledge/official-google/help-center/INDEX.md` pela busca seletiva.
+2. Ler integralmente somente os 1–3 documentos locais relevantes.
+3. Para temas fora da cobertura local, ler `knowledge/official-google/source-catalog.md` e os resumos ainda vigentes.
+4. Para informação atual, pesquisar e abrir páginas em:
    - `support.google.com/google-ads/`
    - `developers.google.com/google-ads/api/`
    - `github.com/googleads/google-ads-mcp`
@@ -19,11 +20,17 @@ description: Localiza e lê seletivamente documentação oficial do Google Ads e
 
 1. Preservar a pergunta original.
 2. Identificar se o tema é interface/produto, API/MCP, política ou metodologia.
-3. Abrir somente as 1–3 fontes oficiais mais aderentes.
-4. Ler integralmente a seção necessária; não responder por snippet.
-5. Verificar data, versão da API, elegibilidade e limitações por tipo de campanha.
-6. Separar `Google informa` de `metodologia recomenda`.
-7. Registrar título, URL e data de consulta no dossiê.
+3. Para interface/produto, executar a partir da raiz:
+
+```bash
+python3 scripts/search_google_ads_help.py "pergunta original" --platform google_ads --limit 3
+```
+
+4. Correspondência `exact` ou `strong` exige leitura integral do primeiro documento. Correspondência `related` permite abrir até três candidatos. Resultado `weak` não sustenta resposta sozinho.
+5. Abrir somente as 1–3 fontes mais aderentes e ler integralmente a seção necessária; não responder por snippet.
+6. Verificar data, versão da API, elegibilidade e limitações por tipo de campanha.
+7. Separar `Google informa` de `metodologia recomenda`.
+8. Registrar título, caminho local, URL, data de extração e data de consulta no dossiê.
 
 ## Rotas de configuração
 
@@ -41,6 +48,9 @@ Ao orientar obtenção de credenciais, nunca pedir valores no chat. Explicar ond
 ## Gates
 
 - Política, cobrança, elegibilidade, campos de API e comportamento mutável exigem fonte ao vivo.
+- O snapshot local é seletivo e não representa cobertura integral da Central.
+- Não carregar todos os artigos como prevenção genérica.
+- Não chamar o buscador sem `--platform google_ads`; consultas Meta devem falhar fechadas.
 - Não usar blog, fórum, fornecedor ou MCP comunitário como fonte normativa quando houver fonte oficial.
 - Não afirmar disponibilidade de recurso na conta sem verificar via MCP/interface.
 - Não transformar recomendação do Google em regra universal ou autorização de execução.

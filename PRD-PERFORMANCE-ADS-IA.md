@@ -185,7 +185,7 @@ Gerar no chat um relatório completo e autossuficiente preservando fontes, atrib
 
 ### RF-14 — Conhecimento oficial
 
-Meta usa snapshot seletivo; Google Ads usa catálogo leve, resumos próprios e consulta oficial ao vivo.
+Meta usa snapshot seletivo; Google Ads usa base seletiva em expansão, catálogo de API e consulta oficial ao vivo. Ambas aplicam recuperação por índice, gate de plataforma e validação ao vivo para regras sensíveis ou mutáveis.
 
 ## 11. Google Ads MCP
 
@@ -210,12 +210,13 @@ Complemento V1.1: `integrations/google_ads_extended/`, instalado em ambiente loc
 
 ## 12. Conhecimento Google Ads
 
-Camada intencionalmente leve:
+Camada seletiva e rastreável:
 
-1. Catálogo de URLs oficiais.
-2. Resumos de tipos/estrutura, keywords/termos, conversões/lances, ads/assets e MCP/API.
-3. Metodologia interna de keywords, arquitetura e diagnóstico.
-4. Consulta ao vivo obrigatória para informação mutável ou sensível.
+1. Índice e sínteses estruturadas da Central de Ajuda em `knowledge/official-google/help-center/`.
+2. Catálogo de URLs e documentação oficial da API/MCP.
+3. Resumos legados mantidos somente enquanto não houver cobertura equivalente e revisada.
+4. Metodologia interna de keywords, arquitetura e diagnóstico em pasta separada.
+5. Consulta ao vivo obrigatória para informação mutável ou sensível.
 
 ## 13. Dados e métricas
 
