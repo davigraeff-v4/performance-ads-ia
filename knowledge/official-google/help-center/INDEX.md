@@ -233,6 +233,7 @@ Base seletiva em português do Brasil. Iniciada em 2026-08-07 e organizada confo
 
 ### Orçamento e lances → Lances
 
+- [Avaliar a performance da sua estratégia de lances automática](03-otimizacao-desempenho/avaliar-a-performance-da-sua-estrategia-de-lances-automatica.md) — [fonte original](https://support.google.com/google-ads/answer/10167267?hl=pt-BR)
 - [Como encontrar seus Relatórios de estratégia de lances.](03-otimizacao-desempenho/como-encontrar-seus-relatorios-de-estrategia-de-lances.md) — [fonte original](https://support.google.com/google-ads/answer/7074568?hl=pt-BR)
 - [Criar uma estratégia de lances de portfólio](03-otimizacao-desempenho/criar-uma-estrategia-de-lances-de-portfolio.md) — [fonte original](https://support.google.com/google-ads/answer/6263058?hl=pt-BR)
 - [Sobre a estratégia de lances Maximizar Conversões](03-otimizacao-desempenho/maximizar-conversoes.md) — [fonte original](https://support.google.com/google-ads/answer/7381968?hl=pt-BR)
@@ -242,7 +243,6 @@ Base seletiva em português do Brasil. Iniciada em 2026-08-07 e organizada confo
 
 ### Orçamento e lances → Orçamento
 
-- [Avaliar a performance da sua estratégia de lances automática](03-otimizacao-desempenho/avaliar-a-performance-da-sua-estrategia-de-lances-automatica.md) — [fonte original](https://support.google.com/google-ads/answer/10167267?hl=pt-BR)
 - [Escolher seu lance e orçamento](03-otimizacao-desempenho/escolher-seu-lance-e-orcamento.md) — [fonte original](https://support.google.com/google-ads/answer/2375454?hl=pt-BR)
 - [Sobre o Planejador de performance](03-otimizacao-desempenho/sobre-o-planejador-de-performance.md) — [fonte original](https://support.google.com/google-ads/answer/9230124?hl=pt-BR)
 - [Sobre o relatório de orçamento](03-otimizacao-desempenho/sobre-o-relatorio-de-orcamento.md) — [fonte original](https://support.google.com/google-ads/answer/9962086?hl=pt-BR)
