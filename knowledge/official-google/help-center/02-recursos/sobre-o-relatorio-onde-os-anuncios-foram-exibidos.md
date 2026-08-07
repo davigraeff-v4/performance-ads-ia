@@ -1,5 +1,5 @@
 ---
-title: "Sobre o relatório Onde os anúncios foram exibidos"
+title: "Sobre o relatório “Onde os anúncios foram exibidos”"
 url: "https://support.google.com/google-ads/answer/13787926?hl=pt-BR"
 answer_id: "13787926"
 categoria: "02-recursos"

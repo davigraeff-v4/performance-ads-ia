@@ -40,7 +40,7 @@ Desde o **2º trimestre de 2022**, campanhas que usam Lances inteligentes e segm
 - Mesmo listas pouco relevantes para uma campanha específica são avaliadas: o sistema aprende quais são úteis e otimiza a aplicação em tempo real.
 - Listas de clientes **não são usadas** com estratégias de lances manuais.
 - Associações de segmento por lista de clientes têm **duração máxima de 540 dias**: associações adicionadas/atualizadas há mais tempo deixam de ser qualificadas. Para permanecer qualificada, a lista precisa ter pelo menos **100 membros** adicionados ou atualizados nos últimos 540 dias — recomenda-se atualização regular (sincronização com CRM ou upload manual).
-- A inclusão automática de dados de listas não aplicadas está disponível para YouTube e campanhas de ação em vídeo do YouTube, com expansão prevista para anúncios in-feed e de pesquisa.
+- A inclusão automática de dados de listas não aplicadas está disponível para YouTube e campanhas de ação em vídeo do YouTube. A página oficial ainda descreve isso como "expansão prevista para anúncios in-feed e de pesquisa", mas esse trecho parece desatualizado: o cronograma abaixo, na mesma página, já lista Pesquisa e Geração de Demanda como lançadas em 2023 e Shopping/Gmail em 2024.
 
 ### Cronograma de inclusão automática por tipo de campanha
 

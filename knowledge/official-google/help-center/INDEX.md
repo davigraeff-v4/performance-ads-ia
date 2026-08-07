@@ -80,14 +80,14 @@ Base seletiva em português do Brasil. Iniciada em 2026-08-07 e organizada confo
 
 - [Sobre as importações de conversões off-line](02-recursos/sobre-as-importacoes-de-conversoes-off-line.md) — [fonte original](https://support.google.com/google-ads/answer/2998031?hl=pt-BR)
 
+### Medir resultados → Conversões otimizadas
+
+- [Sobre as conversões otimizadas](02-recursos/sobre-as-conversoes-otimizadas.md) — [fonte original](https://support.google.com/google-ads/answer/9888656?hl=pt-BR)
+
 ### Medir resultados → Conversões — Primeiros passos
 
 - [Sobre a medição de conversões](02-recursos/sobre-a-medicao-de-conversoes.md) — [fonte original](https://support.google.com/google-ads/answer/1722022?hl=pt-BR)
 - [Sobre as opções de contabilização de conversões](02-recursos/sobre-as-opcoes-de-contabilizacao-de-conversoes.md) — [fonte original](https://support.google.com/google-ads/answer/3438531?hl=pt-BR)
-
-### Medir resultados → Enhanced conversions
-
-- [Sobre as conversões otimizadas](02-recursos/sobre-as-conversoes-otimizadas.md) — [fonte original](https://support.google.com/google-ads/answer/9888656?hl=pt-BR)
 
 ### Medir resultados → Tags de conversão
 
@@ -174,7 +174,7 @@ Base seletiva em português do Brasil. Iniciada em 2026-08-07 e organizada confo
 
 - [Sobre a segmentação por canal](02-recursos/sobre-a-segmentacao-por-canal.md) — [fonte original](https://support.google.com/google-ads/answer/2470108?hl=pt-BR)
 - [Sobre a segmentação por tópicos](02-recursos/sobre-a-segmentacao-por-topicos.md) — [fonte original](https://support.google.com/google-ads/answer/2497832?hl=pt-BR)
-- [Sobre o relatório Onde os anúncios foram exibidos](02-recursos/sobre-o-relatorio-onde-os-anuncios-foram-exibidos.md) — [fonte original](https://support.google.com/google-ads/answer/13787926?hl=pt-BR)
+- [Sobre o relatório “Onde os anúncios foram exibidos”](02-recursos/sobre-o-relatorio-onde-os-anuncios-foram-exibidos.md) — [fonte original](https://support.google.com/google-ads/answer/13787926?hl=pt-BR)
 
 ### Segmentação → Dispositivos
 
