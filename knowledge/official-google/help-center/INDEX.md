@@ -2,7 +2,7 @@
 
 Base seletiva em português do Brasil. Iniciada em 2026-08-07 e organizada conforme a navegação oficial da Central de Ajuda.
 
-**Cobertura atual: 95 artigos em 3 categorias.**
+**Cobertura atual: 107 artigos em 3 categorias.**
 
 ## Campanhas
 
@@ -230,6 +230,24 @@ Base seletiva em português do Brasil. Iniciada em 2026-08-07 e organizada confo
 ### Leilão → Ad Rank
 
 - [Sobre a classificação do anúncio](03-otimizacao-desempenho/sobre-a-classificacao-do-anuncio.md) — [fonte original](https://support.google.com/google-ads/answer/1722122?hl=pt-BR)
+
+### Orçamento e lances → Lances
+
+- [Como encontrar seus Relatórios de estratégia de lances.](03-otimizacao-desempenho/como-encontrar-seus-relatorios-de-estrategia-de-lances.md) — [fonte original](https://support.google.com/google-ads/answer/7074568?hl=pt-BR)
+- [Criar uma estratégia de lances de portfólio](03-otimizacao-desempenho/criar-uma-estrategia-de-lances-de-portfolio.md) — [fonte original](https://support.google.com/google-ads/answer/6263058?hl=pt-BR)
+- [Sobre a estratégia de lances Maximizar Conversões](03-otimizacao-desempenho/maximizar-conversoes.md) — [fonte original](https://support.google.com/google-ads/answer/7381968?hl=pt-BR)
+- [Sobre a estratégia de lances Maximizar o Valor de Conversão](03-otimizacao-desempenho/maximizar-o-valor-de-conversao.md) — [fonte original](https://support.google.com/google-ads/answer/7684216?hl=pt-BR)
+- [Sobre os lances de parcela de impressões desejada](03-otimizacao-desempenho/sobre-os-lances-de-parcela-de-impressoes-desejada.md) — [fonte original](https://support.google.com/google-ads/answer/9121108?hl=pt-BR)
+- [Sobre os status da estratégia de lances](03-otimizacao-desempenho/sobre-os-status-da-estrategia-de-lances.md) — [fonte original](https://support.google.com/google-ads/answer/6263057?hl=pt-BR)
+
+### Orçamento e lances → Orçamento
+
+- [Avaliar a performance da sua estratégia de lances automática](03-otimizacao-desempenho/avaliar-a-performance-da-sua-estrategia-de-lances-automatica.md) — [fonte original](https://support.google.com/google-ads/answer/10167267?hl=pt-BR)
+- [Escolher seu lance e orçamento](03-otimizacao-desempenho/escolher-seu-lance-e-orcamento.md) — [fonte original](https://support.google.com/google-ads/answer/2375454?hl=pt-BR)
+- [Sobre o Planejador de performance](03-otimizacao-desempenho/sobre-o-planejador-de-performance.md) — [fonte original](https://support.google.com/google-ads/answer/9230124?hl=pt-BR)
+- [Sobre o relatório de orçamento](03-otimizacao-desempenho/sobre-o-relatorio-de-orcamento.md) — [fonte original](https://support.google.com/google-ads/answer/9962086?hl=pt-BR)
+- [Sobre orçamentos compartilhados](03-otimizacao-desempenho/sobre-orcamentos-compartilhados.md) — [fonte original](https://support.google.com/google-ads/answer/10487241?hl=pt-BR)
+- [Visão geral dos orçamentos](03-otimizacao-desempenho/visao-geral-dos-orcamentos.md) — [fonte original](https://support.google.com/google-ads/answer/10486536?hl=pt-BR)
 
 ## Frescor e limites
 
