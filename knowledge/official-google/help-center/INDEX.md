@@ -2,7 +2,7 @@
 
 Base seletiva em português do Brasil. Iniciada em 2026-08-07 e organizada conforme a navegação oficial da Central de Ajuda.
 
-**Cobertura atual: 66 artigos em 3 categorias.**
+**Cobertura atual: 71 artigos em 3 categorias.**
 
 ## Campanhas
 
@@ -25,9 +25,29 @@ Base seletiva em português do Brasil. Iniciada em 2026-08-07 e organizada confo
 
 - [Sobre os benefícios e recursos das campanhas inteligentes](01-campanhas/sobre-os-beneficios-e-recursos-das-campanhas-inteligentes.md) — [fonte original](https://support.google.com/google-ads/answer/9520605?hl=pt-BR)
 
+### Campanhas → Chamada
+
+- [Sobre as campanhas de chamadas](01-campanhas/sobre-as-campanhas-de-chamadas.md) — [fonte original](https://support.google.com/google-ads/answer/7159344?hl=pt-BR)
+
 ### Campanhas → Display
 
 - [Sobre os anúncios de display e a Rede de Display do Google](01-campanhas/sobre-os-anuncios-de-display-e-a-rede-de-display-do-google.md) — [fonte original](https://support.google.com/google-ads/answer/2404190?hl=pt-BR)
+
+### Campanhas → Geração de Demanda
+
+- [Sobre as campanhas Geração de Demanda](01-campanhas/sobre-as-campanhas-geracao-de-demanda.md) — [fonte original](https://support.google.com/google-ads/answer/13695777?hl=pt-BR)
+
+### Campanhas → Hotel
+
+- [Criar uma campanha de hotel](01-campanhas/criar-uma-campanha-de-hotel.md) — [fonte original](https://support.google.com/google-ads/answer/9243943?hl=pt-BR)
+
+### Campanhas → IA Max para campanhas de pesquisa
+
+- [Sobre a IA Max para campanhas de pesquisa](01-campanhas/sobre-a-ia-max-para-campanhas-de-pesquisa.md) — [fonte original](https://support.google.com/google-ads/answer/15910366?hl=pt-BR)
+
+### Campanhas → IA Max para campanhas do Shopping
+
+- [Sobre a IA Max para campanhas do Shopping (Beta)](01-campanhas/sobre-a-ia-max-para-campanhas-do-shopping.md) — [fonte original](https://support.google.com/google-ads/answer/17091277?hl=pt-BR)
 
 ### Campanhas → Performance Max
 
