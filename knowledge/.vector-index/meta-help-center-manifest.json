@@ -1,10 +1,12 @@
 {
   "platform": "meta",
   "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "fastembed_version": "0.8.0",
+  "embedding_dim": 384,
   "article_count": 151,
   "chunk_count": 606,
-  "source_hash": "c2bc130fecd9dc5ce1466ba96103539fcc8c3c4ffd6775b530d68c6815cd7faf",
-  "built_at": "2026-08-09T17:17:14",
+  "source_hash": "3562323f3f7926b8e697fa625a7c1b2d8250ee2c724aaeae14021d6f1844c610",
+  "built_at": "2026-08-09T17:44:33",
   "words_per_chunk": 180,
   "overlap_words": 27,
   "overlap_ratio": 0.15

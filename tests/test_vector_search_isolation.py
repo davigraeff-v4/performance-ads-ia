@@ -158,6 +158,42 @@ class VectorFallbackTests(unittest.TestCase):
         self.assertFalse(payload["vector_used"])
         self.assertEqual(payload["results"][0]["signal"], "lexical")
 
+    @unittest.skipUnless(_index_files_present(), "índice vetorial não construído localmente")
+    def test_title_only_never_engages_vector_even_on_weak_title(self) -> None:
+        # Mesma query parafraseada que engaja o vetor em modo hybrid normal;
+        # com --title-only, o vetor nunca deve rodar, independente do modo.
+        payload = run_search(
+            META_SEARCH,
+            "meu pixel esta contando o mesmo evento duas vezes quando uso capi e o pixel do site juntos",
+            "--platform",
+            "meta",
+            "--title-only",
+        )
+        self.assertFalse(payload["vector_used"])
+        self.assertTrue(all(result["signal"] == "lexical" for result in payload["results"]))
+
+    @unittest.skipUnless(_index_files_present(), "índice vetorial não construído localmente")
+    def test_vector_gate_uses_raw_title_score_not_body_boosted_score(self) -> None:
+        # Regressão: o gate do vetor precisa decidir com base no score de
+        # título puro, não no score já somado ao body_signal — senão um
+        # falso positivo de substring no corpo pode impedir o vetor de
+        # rodar mesmo quando o título sozinho estava fraco.
+        title_only = run_search(
+            META_SEARCH,
+            "meu pixel esta contando o mesmo evento duas vezes quando uso capi e o pixel do site juntos",
+            "--platform",
+            "meta",
+            "--title-only",
+        )
+        hybrid = run_search(
+            META_SEARCH,
+            "meu pixel esta contando o mesmo evento duas vezes quando uso capi e o pixel do site juntos",
+            "--platform",
+            "meta",
+        )
+        self.assertLess(title_only["results"][0]["score"], 75)
+        self.assertTrue(hybrid["vector_used"])
+
 
 if __name__ == "__main__":
     unittest.main()

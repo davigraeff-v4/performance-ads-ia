@@ -2,4 +2,9 @@ jsonschema>=4.23,<5
 
 # Índice vetorial local (knowledge/.vector-index/) — motor de embedding
 # leve, sem PyTorch. Ver RAG-PLAN.md para as decisões de arquitetura.
-fastembed>=0.8,<1
+# Versão fixa de propósito: o índice versionado no Git foi gerado com esta
+# versão exata; fastembed já mudou comportamento de pooling entre versões
+# (mean pooling vs CLS), e uma versão diferente geraria embeddings de query
+# incompatíveis com os vetores já commitados. validate_repository.py
+# confere isso contra o manifest de cada plataforma.
+fastembed==0.8.0

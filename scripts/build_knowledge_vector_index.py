@@ -25,7 +25,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from _help_index_common import Article, load_articles  # noqa: E402
+from _help_index_common import (  # noqa: E402
+    Article,
+    load_articles,
+    read_frontmatter_field_from_text,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 INDEX_DIR = ROOT / "knowledge" / ".vector-index"
@@ -111,6 +115,10 @@ def chunk_section_text(text: str) -> list[str]:
 
 def build_chunks_for_article(article: Article, platform: str) -> list[dict]:
     raw_text = article.path.read_text(encoding="utf-8")
+    # Data por artigo (frontmatter individual) é mais precisa que a data
+    # global capturada do cabeçalho do INDEX.md; cai pro valor global só se
+    # o campo individual estiver ausente por algum motivo.
+    extracted_at = read_frontmatter_field_from_text(raw_text, "extraido_em") or article.extracted_at
     body = strip_frontmatter_and_title(raw_text)
     sections = split_into_sections(body)
 
@@ -130,7 +138,7 @@ def build_chunks_for_article(article: Article, platform: str) -> list[dict]:
                     "section": heading,
                     "category": article.category,
                     "url": article.url,
-                    "extracted_at": article.extracted_at,
+                    "extracted_at": extracted_at,
                     "path": str(article.path.relative_to(ROOT)),
                     "platform": platform,
                     "chunk_index": chunk_index,
@@ -141,9 +149,13 @@ def build_chunks_for_article(article: Article, platform: str) -> list[dict]:
 
 
 def source_hash(articles: list[Article]) -> str:
+    """Hash baseado em caminho RELATIVO à raiz do repositório — precisa dar
+    o mesmo resultado em qualquer máquina/pasta de clone, senão o índice
+    versionado é acusado de desatualizado sem nenhuma mudança real."""
     digest = hashlib.sha256()
-    for article in sorted(articles, key=lambda item: str(item.path)):
-        digest.update(str(article.path).encode("utf-8"))
+    for article in sorted(articles, key=lambda item: str(item.path.relative_to(ROOT))):
+        relative = str(article.path.relative_to(ROOT))
+        digest.update(relative.encode("utf-8"))
         digest.update(article.path.read_bytes())
     return digest.hexdigest()
 
@@ -175,6 +187,7 @@ def build_index(platform: str, *, force: bool) -> None:
 
     print(f"[{platform}] {len(articles)} artigos → {len(all_chunks)} chunks. Carregando modelo de embedding...")
 
+    import fastembed
     import numpy as np
     from fastembed import TextEmbedding
 
@@ -196,6 +209,8 @@ def build_index(platform: str, *, force: bool) -> None:
             {
                 "platform": platform,
                 "model": EMBEDDING_MODEL,
+                "fastembed_version": fastembed.__version__,
+                "embedding_dim": int(vectors.shape[1]),
                 "article_count": len(articles),
                 "chunk_count": len(all_chunks),
                 "source_hash": current_hash,

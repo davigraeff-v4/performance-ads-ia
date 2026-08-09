@@ -215,7 +215,11 @@ def validate_vector_index(errors: list[str]) -> None:
 
     sys.path.insert(0, str(ROOT / "scripts"))
     from _help_index_common import load_articles as _load_articles  # noqa: PLC0415
-    from build_knowledge_vector_index import PLATFORM_CONFIGS, source_hash  # noqa: PLC0415
+    from build_knowledge_vector_index import (  # noqa: PLC0415
+        EMBEDDING_MODEL,
+        PLATFORM_CONFIGS,
+        source_hash,
+    )
 
     for platform, (slug, base) in VECTOR_INDEX_PLATFORMS.items():
         meta_path = VECTOR_INDEX_DIR / f"{slug}-meta.json"
@@ -227,6 +231,7 @@ def validate_vector_index(errors: list[str]) -> None:
             fail(errors, f"índice vetorial incompleto para {platform}: vetores e metadados devem existir juntos")
             continue
 
+        manifest: dict[str, object] = {}
         if manifest_path.is_file():
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
             config = PLATFORM_CONFIGS[platform]
@@ -242,6 +247,27 @@ def validate_vector_index(errors: list[str]) -> None:
                     f"índice vetorial {platform} desatualizado em relação aos artigos fonte "
                     f"(rode: python3 scripts/build_knowledge_vector_index.py --platform {platform} --force)",
                 )
+            if manifest.get("model") != EMBEDDING_MODEL:
+                fail(
+                    errors,
+                    f"índice vetorial {platform} foi gerado com um modelo diferente do configurado "
+                    f"({manifest.get('model')!r} vs {EMBEDDING_MODEL!r})",
+                )
+            manifest_fastembed_version = manifest.get("fastembed_version")
+            if manifest_fastembed_version:
+                try:
+                    import fastembed  # noqa: PLC0415
+
+                    installed_version = fastembed.__version__
+                except ImportError:
+                    installed_version = None
+                if installed_version and installed_version != manifest_fastembed_version:
+                    fail(
+                        errors,
+                        f"fastembed instalado ({installed_version}) diverge da versão que gerou o índice "
+                        f"{platform} ({manifest_fastembed_version}); reinstale a versão fixada em "
+                        "requirements-dev.txt ou reconstrua o índice com --force",
+                    )
         else:
             fail(errors, f"manifest ausente para o índice vetorial {platform}")
 
@@ -285,6 +311,13 @@ def validate_vector_index(errors: list[str]) -> None:
                 errors,
                 f"contagem de vetores ({vectors.shape[0]}) diverge da contagem de metadados "
                 f"({len(chunks)}) para {platform}",
+            )
+        manifest_dim = manifest.get("embedding_dim")
+        if manifest_dim is not None and vectors.shape[1] != manifest_dim:
+            fail(
+                errors,
+                f"dimensão dos vetores ({vectors.shape[1]}) diverge da dimensão declarada no "
+                f"manifest ({manifest_dim}) para {platform}",
             )
 
 

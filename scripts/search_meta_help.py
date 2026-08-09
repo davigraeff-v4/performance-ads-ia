@@ -17,6 +17,7 @@ from _help_index_common import (  # noqa: E402
     load_articles as _load_articles,
     make_tokenizer,
     normalize,
+    read_frontmatter_field,
     score_article as _score_article,
 )
 from _vector_search import vector_candidates  # noqa: E402
@@ -109,6 +110,12 @@ def main() -> int:
 
     ranked = [(score_article(query, article), article) for article in articles]
     ranked.sort(key=lambda item: (-item[0], normalize(item[1].title)))
+    # Score de título puro, capturado ANTES do fallback de corpo — é isso
+    # que decide se o vetor é consultado, não o score já inflado pelo
+    # fallback (que é uma heurística de substring mais fraca que o
+    # semântico e pode mascarar um caso que o vetor acertaria melhor).
+    top_title_score = ranked[0][0] if ranked else 0.0
+
     used_body_fallback = False
     if not args.title_only and ranked and ranked[0][0] < 75:
         used_body_fallback = True
@@ -122,8 +129,7 @@ def main() -> int:
     combined: list[tuple[float, object, str, str | None]] = [
         (score, article, "lexical", None) for score, article in ranked
     ]
-    top_lexical = ranked[0][0] if ranked else 0.0
-    if args.mode != "lexical" and (args.mode == "vector" or top_lexical < 75):
+    if not args.title_only and args.mode != "lexical" and (args.mode == "vector" or top_title_score < 75):
         candidates = vector_candidates(query, "meta")
         if candidates is None:
             print("aviso: índice vetorial indisponível para meta; usando busca lexical apenas.", file=sys.stderr)
@@ -154,7 +160,7 @@ def main() -> int:
             "category": article.category,
             "path": str(article.path.relative_to(ROOT)),
             "url": article.url,
-            "extracted_at": article.extracted_at,
+            "extracted_at": read_frontmatter_field(article.path, "extraido_em") or article.extracted_at,
             "signal": signal,
             "matched_section": section,
         }

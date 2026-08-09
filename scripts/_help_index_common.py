@@ -130,6 +130,27 @@ def body_signal(
     return min(32.0, 32.0 * hits / max(len(expanded), 1))
 
 
+FRONTMATTER_BLOCK_PATTERN = re.compile(r"^---\n(.*?)\n---\n", re.DOTALL)
+
+
+def read_frontmatter_field_from_text(text: str, field: str) -> str:
+    match = FRONTMATTER_BLOCK_PATTERN.match(text)
+    if not match:
+        return ""
+    for line in match.group(1).splitlines():
+        key, separator, value = line.partition(":")
+        if separator and key.strip() == field:
+            return value.strip().strip("\"'")
+    return ""
+
+
+def read_frontmatter_field(path: Path, field: str) -> str:
+    """Lê um campo do frontmatter de um artigo individual (ex: extraido_em) —
+    mais preciso que uma data global capturada do cabeçalho do INDEX.md."""
+    text = path.read_text(encoding="utf-8", errors="ignore")
+    return read_frontmatter_field_from_text(text, field)
+
+
 def label_for(score: float) -> str:
     if score == 100:
         return "exact"
