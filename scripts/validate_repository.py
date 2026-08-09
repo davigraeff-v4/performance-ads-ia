@@ -204,21 +204,46 @@ def validate_google_help_center(errors: list[str]) -> None:
 
 
 def validate_vector_index(errors: list[str]) -> None:
-    """Índice vetorial é artefato derivado e gitignored — ausência total não
-    é falha (repositório funciona em modo lexical-only). Se existir, precisa
-    ser consistente: sem chunk órfão, sem artigo esquecido, sem vazamento de
-    plataforma e sem indexar clients/."""
+    """Índice vetorial é versionado (artefato pequeno, ~2.6MB) para o time
+    já receber o RAG pronto no clone/pull. Ausência total não é falha (o
+    repositório funciona em modo lexical-only via fallback gracioso). Se
+    existir, precisa ser consistente: sem chunk órfão, sem artigo esquecido,
+    sem vazamento de plataforma, sem indexar clients/, e sem desatualização
+    silenciosa em relação aos .md fonte (hash do manifest)."""
     if not VECTOR_INDEX_DIR.is_dir():
         return
+
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from _help_index_common import load_articles as _load_articles  # noqa: PLC0415
+    from build_knowledge_vector_index import PLATFORM_CONFIGS, source_hash  # noqa: PLC0415
 
     for platform, (slug, base) in VECTOR_INDEX_PLATFORMS.items():
         meta_path = VECTOR_INDEX_DIR / f"{slug}-meta.json"
         vectors_path = VECTOR_INDEX_DIR / f"{slug}.npz"
+        manifest_path = VECTOR_INDEX_DIR / f"{slug}-manifest.json"
         if not meta_path.is_file() and not vectors_path.is_file():
             continue
         if meta_path.is_file() != vectors_path.is_file():
             fail(errors, f"índice vetorial incompleto para {platform}: vetores e metadados devem existir juntos")
             continue
+
+        if manifest_path.is_file():
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            config = PLATFORM_CONFIGS[platform]
+            current_articles = _load_articles(
+                root=ROOT,
+                base=config["base"],
+                link_pattern=config["link_pattern"],
+                date_pattern=config["date_pattern"],
+            )
+            if source_hash(current_articles) != manifest.get("source_hash"):
+                fail(
+                    errors,
+                    f"índice vetorial {platform} desatualizado em relação aos artigos fonte "
+                    f"(rode: python3 scripts/build_knowledge_vector_index.py --platform {platform} --force)",
+                )
+        else:
+            fail(errors, f"manifest ausente para o índice vetorial {platform}")
 
         chunks = json.loads(meta_path.read_text(encoding="utf-8"))
         if not chunks:

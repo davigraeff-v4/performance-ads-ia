@@ -6,8 +6,11 @@ artigo em chunks por seção H2 (com overlap quando uma seção é longa), gera
 embeddings locais com fastembed e persiste tudo em
 knowledge/.vector-index/{plataforma}.npz + {plataforma}-meta.json.
 
-Este índice é um artefato derivado (não versionado — ver .gitignore) e pode
-ser regenerado a qualquer momento. Não indexa nada em clients/.
+Este índice é um artefato derivado, mas versionado no Git (pequeno, ~2.6MB,
+só conhecimento público) para o time receber o RAG pronto no clone/pull.
+Pode ser regenerado a qualquer momento; scripts/validate_repository.py
+detecta desatualização comparando o hash do manifest com os .md fonte.
+Não indexa nada em clients/.
 """
 
 from __future__ import annotations

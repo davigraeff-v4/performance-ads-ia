@@ -46,7 +46,3 @@ HANDOFF-*
 
 # Documentos de planejamento interno, não normativos
 RAG-PLAN.md
-
-# Índice vetorial local (artefato derivado, regenerável via
-# scripts/build_knowledge_vector_index.py)
-knowledge/.vector-index/

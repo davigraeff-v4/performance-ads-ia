@@ -1,0 +1,11 @@
+{
+  "platform": "google_ads",
+  "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "article_count": 130,
+  "chunk_count": 879,
+  "source_hash": "94d9f2c75e1930babbd3be4b08752cf1f1430079ea76a1868cecddceb57c7790",
+  "built_at": "2026-08-08T20:52:23",
+  "words_per_chunk": 180,
+  "overlap_words": 27,
+  "overlap_ratio": 0.15
+}

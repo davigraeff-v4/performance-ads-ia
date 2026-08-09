@@ -228,9 +228,9 @@ Na V1.1 inicial:
 - Google Ads: base seletiva da Central de Ajuda, fontes de API e consulta oficial ao vivo.
 - Metodologia: regras internas separadas das afirmações das plataformas.
 - Aprendizados: somente padrões sanitizados e aprovados.
-- Busca híbrida (V1.2): a recuperação sobre as duas bases de Central de Ajuda combina busca lexical por título (padrão, determinística) com um sinal semântico local (embeddings via `fastembed`, sem PyTorch, sem chamada externa) que entra em ação só quando o título não bater — cobre perguntas parafraseadas sem perder a garantia de leitura integral em match forte. Índice em `knowledge/.vector-index/` (não versionado, regenerável, isolado por plataforma, nunca indexa `clients/`).
+- Busca híbrida (V1.2): a recuperação sobre as duas bases de Central de Ajuda combina busca lexical por título (padrão, determinística) com um sinal semântico local (embeddings via `fastembed`, sem PyTorch, sem chamada externa) que entra em ação só quando o título não bater — cobre perguntas parafraseadas sem perder a garantia de leitura integral em match forte. Índice em `knowledge/.vector-index/` (versionado no Git — ~2.6MB, o time recebe o RAG pronto no clone/pull — regenerável, isolado por plataforma, nunca indexa `clients/`; `scripts/validate_repository.py` detecta se ficou desatualizado em relação aos `.md` fonte).
 
-Para (re)construir o índice vetorial localmente:
+Para (re)construir o índice vetorial localmente (só necessário depois de editar artigos, ou se `validate_repository.py` acusar desatualização):
 
 ```text
 python3 scripts/build_knowledge_vector_index.py --platform all
