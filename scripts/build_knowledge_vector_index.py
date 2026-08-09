@@ -188,7 +188,7 @@ def build_index(platform: str, *, force: bool) -> None:
 
     np.savez_compressed(vectors_path, vectors=vectors)
     meta_path.write_text(
-        json.dumps([{k: v for k, v in chunk.items() if k != "text"} for chunk in all_chunks], ensure_ascii=False, indent=2),
+        json.dumps(all_chunks, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
     manifest_path.write_text(
