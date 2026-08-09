@@ -10,6 +10,7 @@ description: Transforma diagnóstico Meta Ads ou Google Ads em lote versionado d
 1. Skill `11` para Meta Ads ou `24` para Google Ads, com diagnóstico e fontes. Em um build plan, `10` ou `23` pode originar o lote, mantendo a mesma evidência e os mesmos gates. Em reversão, o dossiê executado e o snapshot anterior substituem o diagnóstico somente para restaurar valores conhecidos.
 2. Dossiê atual com uma única plataforma de mutação.
 3. Estado atual dos alvos.
+4. Se algum item do lote depender de entender um mecanismo específico da plataforma (ex: como um tipo de orçamento, lance ou elegibilidade de recurso funciona) que o diagnóstico de origem ainda não esclareceu, consultar a skill `15` (Meta) ou `17` (Google Ads) antes de escrever a justificativa do item — não assumir funcionamento de memória.
 
 ## Processo
 

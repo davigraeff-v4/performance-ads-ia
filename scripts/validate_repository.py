@@ -13,6 +13,11 @@ ROOT = Path(__file__).resolve().parents[1]
 META_HELP_BASE = ROOT / "knowledge" / "meta-help-center"
 EXPECTED_META_HELP_ARTICLES = 151
 GOOGLE_HELP_BASE = ROOT / "knowledge" / "official-google" / "help-center"
+VECTOR_INDEX_DIR = ROOT / "knowledge" / ".vector-index"
+VECTOR_INDEX_PLATFORMS = {
+    "meta": ("meta-help-center", META_HELP_BASE),
+    "google_ads": ("google-ads-help-center", GOOGLE_HELP_BASE),
+}
 EXPECTED_SKILLS = {
     "00-configuracao-mcp",
     "01-client-campaign-intake",
@@ -198,6 +203,66 @@ def validate_google_help_center(errors: list[str]) -> None:
         )
 
 
+def validate_vector_index(errors: list[str]) -> None:
+    """Índice vetorial é artefato derivado e gitignored — ausência total não
+    é falha (repositório funciona em modo lexical-only). Se existir, precisa
+    ser consistente: sem chunk órfão, sem artigo esquecido, sem vazamento de
+    plataforma e sem indexar clients/."""
+    if not VECTOR_INDEX_DIR.is_dir():
+        return
+
+    for platform, (slug, base) in VECTOR_INDEX_PLATFORMS.items():
+        meta_path = VECTOR_INDEX_DIR / f"{slug}-meta.json"
+        vectors_path = VECTOR_INDEX_DIR / f"{slug}.npz"
+        if not meta_path.is_file() and not vectors_path.is_file():
+            continue
+        if meta_path.is_file() != vectors_path.is_file():
+            fail(errors, f"índice vetorial incompleto para {platform}: vetores e metadados devem existir juntos")
+            continue
+
+        chunks = json.loads(meta_path.read_text(encoding="utf-8"))
+        if not chunks:
+            fail(errors, f"índice vetorial vazio para {platform}")
+            continue
+
+        articles_on_disk = {
+            str(path.relative_to(ROOT)) for path in base.glob("**/*.md") if path.name != "INDEX.md"
+        }
+        chunk_paths: set[str] = set()
+        for chunk in chunks:
+            if chunk.get("platform") != platform:
+                fail(errors, f"chunk com plataforma divergente no índice {platform}: {chunk.get('path')}")
+            path = chunk.get("path", "")
+            if not path.startswith(f"knowledge/{'meta-help-center' if platform == 'meta' else 'official-google/help-center'}/"):
+                fail(errors, f"chunk fora da base esperada de {platform}: {path}")
+            if path.startswith("clients/"):
+                fail(errors, f"índice vetorial indexou dado de cliente (proibido): {path}")
+            if path not in articles_on_disk:
+                fail(errors, f"chunk órfão no índice vetorial {platform} (artigo inexistente): {path}")
+            chunk_paths.add(path)
+
+        missing_articles = sorted(articles_on_disk - chunk_paths)
+        if missing_articles:
+            shown = missing_articles[:5]
+            extra = len(missing_articles) - len(shown)
+            suffix = f" (+{extra} outros)" if extra > 0 else ""
+            fail(errors, f"artigos sem nenhum chunk no índice vetorial {platform}: {shown}{suffix}")
+
+        try:
+            import numpy as np
+
+            vectors = np.load(vectors_path)["vectors"]
+        except Exception as exc:  # noqa: BLE001
+            fail(errors, f"índice vetorial {platform} corrompido: {exc}")
+            continue
+        if vectors.shape[0] != len(chunks):
+            fail(
+                errors,
+                f"contagem de vetores ({vectors.shape[0]}) diverge da contagem de metadados "
+                f"({len(chunks)}) para {platform}",
+            )
+
+
 def main() -> int:
     errors: list[str] = []
     required = [
@@ -298,6 +363,10 @@ def main() -> int:
         "knowledge/official-google/help-center/INDEX.md",
         "scripts/build_google_ads_help_index.py",
         "scripts/search_google_ads_help.py",
+        "scripts/_help_index_common.py",
+        "scripts/_vector_search.py",
+        "scripts/build_knowledge_vector_index.py",
+        "tests/test_vector_search_isolation.py",
         "knowledge/google-ads/keyword-research-methodology.md",
         "templates/pesquisa-palavras-chave.md",
         "integrations/google_ads_extended/pyproject.toml",
@@ -312,6 +381,7 @@ def main() -> int:
 
     validate_meta_help_center(errors)
     validate_google_help_center(errors)
+    validate_vector_index(errors)
 
     schemas: dict[str, dict[str, object]] = {}
     for schema in sorted((ROOT / "schemas").glob("*.json")):

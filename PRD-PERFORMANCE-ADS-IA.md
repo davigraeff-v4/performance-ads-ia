@@ -1,10 +1,10 @@
 # PRD — PERFORMANCE ADS IA
 
-**Versão:** 1.3.0-local
-**Data:** 2026-08-06
+**Versão:** 1.4.0-local
+**Data:** 2026-08-08
 **Responsável:** Davi
 **Ambientes:** Claude Code e Codex
-**Estado:** V1 de roteamento automático e entrega chat-first homologado localmente; MCP oficial validado e complemento local fail-closed instalado
+**Estado:** V1.2 — roteamento automático e entrega chat-first homologados localmente; MCP oficial validado; complemento local fail-closed instalado; busca híbrida (lexical + vetorial local) sobre a Central de Ajuda Meta e Google Ads
 
 ## 1. Visão geral
 
@@ -64,7 +64,7 @@ Cada operação possui uma representação estruturada persistida no dossiê e p
 - Aplicação automática de recomendações.
 - Exclusão ou arquivamento de ativos.
 - Otimização autônoma sem aprovação.
-- Dashboard web, banco de dados ou RAG vetorial.
+- Dashboard web ou banco de dados externo (o índice vetorial local descrito na seção 12 não é um banco de dados hospedado; é um artefato numpy local, regenerável, restrito a `knowledge/`).
 - Garantia causal a partir de atribuição observacional.
 
 ## 7. Arquitetura
@@ -187,6 +187,8 @@ Gerar no chat um relatório completo e autossuficiente preservando fontes, atrib
 
 Meta usa snapshot seletivo; Google Ads usa base seletiva em expansão, catálogo de API e consulta oficial ao vivo. Ambas aplicam recuperação por índice, gate de plataforma e validação ao vivo para regras sensíveis ou mutáveis.
 
+A recuperação sobre `knowledge/meta-help-center/` e `knowledge/official-google/help-center/` é híbrida (V1.2): busca lexical por título primeiro (comportamento determinístico original, sem custo de modelo); um sinal semântico local complementa apenas quando o título ficar `related`/`weak`, cobrindo perguntas parafraseadas que não batem nenhum título. Ver seção 12 para a arquitetura do índice vetorial. Nenhum gate de leitura integral, isolamento de plataforma ou validação ao vivo é alterado pela adição do sinal semântico.
+
 ## 11. Google Ads MCP
 
 Servidor oficial: `googleads/google-ads-mcp`, executado localmente com `pipx`.
@@ -217,6 +219,17 @@ Camada seletiva e rastreável:
 3. Resumos legados mantidos somente enquanto não houver cobertura equivalente e revisada.
 4. Metodologia interna de keywords, arquitetura e diagnóstico em pasta separada.
 5. Consulta ao vivo obrigatória para informação mutável ou sensível.
+
+### Índice vetorial local (V1.2)
+
+Complementa a busca lexical de `knowledge/meta-help-center/` e `knowledge/official-google/help-center/` com um sinal semântico, sem substituí-la:
+
+- **Escopo**: só a documentação pública dessas duas bases. Nunca indexa `clients/` — dado real de cliente permanece fora de qualquer pipeline de embeddings, sem exceção.
+- **Chunking**: por seção `##` de cada artigo, com sobreposição de 15% do tamanho do chunk quando uma seção precisa ser subdividida (janela deslizante por palavras, faixa de referência 10–20%).
+- **Embeddings**: modelo local `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` (384 dimensões, ~225MB), executado via motor `fastembed` (ONNX Runtime, sem PyTorch). Sem chamada externa, sem custo recorrente, sem dado saindo da máquina local.
+- **Armazenamento**: matrizes numpy locais em `knowledge/.vector-index/` — não é um banco de dados hospedado nem um serviço externo. Artefato derivado, regenerável a partir dos `.md` fonte via `scripts/build_knowledge_vector_index.py`, e por isso não versionado no Git.
+- **Isolamento**: cada plataforma tem seu próprio arquivo de índice (`meta-help-center.npz`, `google-ads-help-center.npz`), fisicamente separado — o mesmo gate de plataforma que protege a busca lexical (`--platform`) também protege o sinal vetorial.
+- **Fallback**: ausência do índice ou do motor local faz o buscador cair automaticamente para o modo lexical original, sem quebrar a skill.
 
 ## 13. Dados e métricas
 
@@ -256,6 +269,8 @@ Quando aplicável: termos, keywords, match type, negativas, parcela de impressõ
 - 100% das entregas analíticas compreensíveis e decidíveis diretamente no chat.
 - 100% dos achados sintéticos com ação, responsável, janela e critérios de sucesso/parada.
 - Nenhum segredo ou dado real no Git.
+- Índice vetorial local nunca indexa `clients/`; isolamento por plataforma vale igualmente para o sinal lexical e o vetorial.
+- Busca híbrida funciona em modo lexical puro quando o índice vetorial ou o motor de embedding estiverem ausentes.
 
 ## 16. Testes de aceite
 
@@ -275,12 +290,13 @@ Quando aplicável: termos, keywords, match type, negativas, parcela de impressõ
 14. Bloquear recuperação Meta para consultas Google Ads e impedir vazamento entre ramos.
 15. Rejeitar por schema achados rasos, mudanças sem evidência e dossiês sem trilha de rota.
 16. Executar uma homologação única incluindo os testes do complemento Google Ads com `PYTHONPATH` correto.
+17. Confirmar que o índice vetorial local (quando construído) não indexa `clients/`, não mistura chunk de uma plataforma no índice da outra, e que a busca híbrida cai para lexical puro quando o índice ou o motor de embedding estiverem ausentes.
 
 ## 17. Roadmap
 
-### V1.1 atual
+### V1.2 atual
 
-Motor multicanal, roteador público automático, Google Ads consultivo, MCP oficial validado, complemento local fail-closed, modo por arquivos, keywords, schemas acionáveis, entrega chat-first e regressões de rota/RAG.
+Motor multicanal, roteador público automático, Google Ads consultivo, MCP oficial validado, complemento local fail-closed, modo por arquivos, keywords, schemas acionáveis, entrega chat-first, regressões de rota/RAG e busca híbrida (lexical + vetorial local) sobre a Central de Ajuda Meta e Google Ads.
 
 ### Homologação seguinte
 

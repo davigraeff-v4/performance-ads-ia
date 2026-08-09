@@ -38,10 +38,12 @@ Para inspecionar somente correspondências de título:
 python3 scripts/search_meta_help.py "trecho do título" --platform meta --title-only --limit 5
 ```
 
+A busca roda em modo híbrido por padrão (`--mode hybrid`): primeiro tenta correspondência de título; só quando o título ficar `related`/`weak` ela também considera um sinal semântico local (índice vetorial em `knowledge/.vector-index/`, gerado por `scripts/build_knowledge_vector_index.py`) para achar candidatos que uma pergunta parafraseada não bateu por título nenhum. Cada resultado vem marcado com `signal`: `lexical` (achou por título/corpo), `vector` (só achou pelo sentido) ou `hybrid` (os dois sinais concordaram). Se o índice vetorial não estiver construído localmente, o buscador cai automaticamente para o modo lexical de sempre, sem quebrar — use `--mode lexical` para forçar esse comportamento manualmente.
+
 Interprete a classificação:
 
 - `exact`: título normalizado idêntico à consulta.
-- `strong`: correspondência forte; leitura obrigatória do primeiro resultado.
+- `strong`: correspondência forte; leitura obrigatória do primeiro resultado, independente do `signal`.
 - `related`: candidato temático; valide o título e leia até três resultados.
 - `weak`: não sustenta resposta sozinho; refine ou consulte o índice.
 
@@ -71,7 +73,8 @@ Interprete a classificação:
 - Não tratar o snapshot local como garantia de regra atual.
 - Não inventar disponibilidade de recurso na conta; confirmar via MCP quando aplicável.
 - Não usar a base para contornar o contrato de aprovação e execução.
-- Não chamar sem `--platform meta`. O buscador falha fechado para `google_ads` e para consulta explicitamente conflitante; nesse caso, rotear para a skill `17`.
+- Não chamar sem `--platform meta`. O buscador falha fechado para `google_ads` e para consulta explicitamente conflitante; nesse caso, rotear para a skill `17`. O gate de plataforma vale igualmente para o sinal lexical e o vetorial — cada plataforma tem seu próprio índice vetorial, fisicamente separado, então não há como um sinal semântico vazar de uma base para a outra.
+- Não afirmar que leu um artigo apenas porque o sinal vetorial encontrou similaridade; abrir e ler o arquivo indicado antes de responder, igual já vale para o sinal lexical.
 
 ## Exemplos
 
@@ -80,6 +83,9 @@ Interprete a classificação:
 
 **Pergunta:** “Meu pixel está duplicando eventos.”  
 **Ação:** buscar por título e tópico; ler os artigos mais aderentes de mensuração/deduplicação; cruzar com a skill `03-measurement-data-quality`.
+
+**Pergunta (parafraseada, sem bater título nenhum):** “meu pixel está contando o mesmo evento duas vezes quando uso CAPI e o pixel do site juntos”  
+**Ação:** o título não bate com nenhum artigo (`related`/`weak` no sinal lexical); o sinal vetorial complementa e traz “Sobre o Pixel da Meta” e “Sobre a API de Conversões” como candidatos por sentido. Ler os artigos indicados antes de responder, exatamente como faria com um match por título.
 
 **Pergunta:** “Devo reduzir o orçamento desta campanha em 20%?”  
 **Ação:** usar a base para funcionamento de orçamento/aprendizado, mas decidir com dados, baseline e metodologia; não converter documentação oficial em regra universal.

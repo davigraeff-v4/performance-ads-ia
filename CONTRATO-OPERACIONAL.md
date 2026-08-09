@@ -60,6 +60,8 @@ Antes de analisar ou propor mudanças:
 
 Conteúdo oficial explica funcionamento e política da plataforma. Metodologia interna explica como a equipe decide. Nunca atribuir uma heurística interna à Meta ou ao Google.
 
+A busca sobre `knowledge/meta-help-center/` e `knowledge/official-google/help-center/` é híbrida (lexical por título + sinal semântico local, complementar, ativado só quando o título não bater). Isso não altera nenhuma regra deste contrato: leitura integral continua obrigatória em correspondência forte/exata, o gate de plataforma continua fail-closed para os dois sinais, e o índice vetorial (artefato local em `knowledge/.vector-index/`, não versionado) nunca indexa `clients/`.
+
 ### 4.1 Meta Ads
 
 A base `knowledge/meta-help-center/` contém snapshot local de 151 artigos oficiais. Usar `skills/15-meta-help-center-retrieval/SKILL.md` por recuperação seletiva, nunca por carregamento integral. Correspondência exata ou forte com título exige leitura integral; correspondência temática permite abrir somente os 1–3 melhores candidatos. Política, segurança, elegibilidade, cobrança, restrição ou decisão material exigem validação atual da URL oficial.

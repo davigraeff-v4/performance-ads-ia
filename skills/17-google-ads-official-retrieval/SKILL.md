@@ -26,7 +26,7 @@ description: Localiza e lê seletivamente a base local da Central de Ajuda, a do
 python3 scripts/search_google_ads_help.py "pergunta original" --platform google_ads --limit 3
 ```
 
-4. Correspondência `exact` ou `strong` exige leitura integral do primeiro documento. Correspondência `related` permite abrir até três candidatos. Resultado `weak` não sustenta resposta sozinho.
+4. O buscador roda em modo híbrido por padrão: primeiro tenta correspondência de título; só quando o título for `related`/`weak` ele também considera um sinal semântico local (índice vetorial em `knowledge/.vector-index/`) para achar candidatos que a pergunta parafraseada não bateu por título. Correspondência `exact` ou `strong` exige leitura integral do primeiro documento, seja o sinal `lexical`, `vector` ou `hybrid`. Correspondência `related` permite abrir até três candidatos. Resultado `weak` não sustenta resposta sozinho. Se o índice vetorial não estiver construído localmente, o buscador cai automaticamente para o modo lexical de sempre, sem quebrar.
 5. Abrir somente as 1–3 fontes mais aderentes e ler integralmente a seção necessária; não responder por snippet.
 6. Verificar data, versão da API, elegibilidade e limitações por tipo de campanha.
 7. Separar `Google informa` de `metodologia recomenda`.
@@ -50,7 +50,8 @@ Ao orientar obtenção de credenciais, nunca pedir valores no chat. Explicar ond
 - Política, cobrança, elegibilidade, campos de API e comportamento mutável exigem fonte ao vivo.
 - O snapshot local é seletivo e não representa cobertura integral da Central.
 - Não carregar todos os artigos como prevenção genérica.
-- Não chamar o buscador sem `--platform google_ads`; consultas Meta devem falhar fechadas.
+- Não chamar o buscador sem `--platform google_ads`; consultas Meta devem falhar fechadas — o gate de plataforma vale igualmente para o sinal lexical e o vetorial, cada um com índice fisicamente separado por plataforma.
+- Não afirmar que leu um artigo apenas porque o sinal vetorial encontrou similaridade; abrir e ler o arquivo indicado antes de responder.
 - Não usar blog, fórum, fornecedor ou MCP comunitário como fonte normativa quando houver fonte oficial.
 - Não afirmar disponibilidade de recurso na conta sem verificar via MCP/interface.
 - Não transformar recomendação do Google em regra universal ou autorização de execução.

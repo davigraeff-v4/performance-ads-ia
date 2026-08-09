@@ -4,7 +4,7 @@ Agente especialista em Meta Ads e Google Ads para planejar, analisar e otimizar 
 
 O agent roda em **Claude Code** e **Codex**, entende solicitações em linguagem natural, seleciona e executa automaticamente somente as skills necessárias e registra auditorias, análises e mudanças em dossiês Markdown locais.
 
-> Estado: V1.1 homologado localmente com roteamento automático e entrega chat-first. O MCP oficial Google Ads continua somente leitura; o complemento `google_ads_extended` prepara Keyword Planner com gates fail-closed e ainda não registra escrita. Search Console, Google Trends e GA4 ficam para fases futuras. Dados, credenciais, MCPs locais e dossiês reais permanecem fora do Git.
+> Estado: V1.2 homologado localmente com roteamento automático, entrega chat-first e busca híbrida (lexical + vetorial local) sobre a Central de Ajuda. O MCP oficial Google Ads continua somente leitura; o complemento `google_ads_extended` prepara Keyword Planner com gates fail-closed e ainda não registra escrita. Search Console, Google Trends e GA4 ficam para fases futuras. Dados, credenciais, MCPs locais e dossiês reais permanecem fora do Git.
 
 ## 1. O que o agent faz
 
@@ -228,6 +228,15 @@ Na V1.1 inicial:
 - Google Ads: base seletiva da Central de Ajuda, fontes de API e consulta oficial ao vivo.
 - Metodologia: regras internas separadas das afirmações das plataformas.
 - Aprendizados: somente padrões sanitizados e aprovados.
+- Busca híbrida (V1.2): a recuperação sobre as duas bases de Central de Ajuda combina busca lexical por título (padrão, determinística) com um sinal semântico local (embeddings via `fastembed`, sem PyTorch, sem chamada externa) que entra em ação só quando o título não bater — cobre perguntas parafraseadas sem perder a garantia de leitura integral em match forte. Índice em `knowledge/.vector-index/` (não versionado, regenerável, isolado por plataforma, nunca indexa `clients/`).
+
+Para (re)construir o índice vetorial localmente:
+
+```text
+python3 scripts/build_knowledge_vector_index.py --platform all
+```
+
+Sem esse passo, a busca cai automaticamente para o modo lexical original — não é obrigatório para o agent funcionar.
 
 ## 13. Validação local
 
@@ -236,7 +245,7 @@ python3 -m pip install -r requirements-dev.txt
 python3 scripts/validate_all.py
 ```
 
-O comando único verifica 25 módulos mais o roteador, descoberta nas duas plataformas, matriz e grafo, schemas acionáveis, isolamento do RAG lexical, rotas sintéticas, base Meta e o conector Google Ads fail-closed no runtime `pipx` instalado quando disponível. Não realiza mutações externas.
+O comando único verifica 25 módulos mais o roteador, descoberta nas duas plataformas, matriz e grafo, schemas acionáveis, isolamento do RAG lexical e vetorial, rotas sintéticas, base Meta e o conector Google Ads fail-closed no runtime `pipx` instalado quando disponível. Não realiza mutações externas.
 
 ## 14. Segurança e Git
 

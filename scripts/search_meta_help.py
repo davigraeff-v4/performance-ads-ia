@@ -4,125 +4,63 @@
 from __future__ import annotations
 
 import argparse
-from difflib import SequenceMatcher
 import json
 import re
 import sys
-import unicodedata
-from dataclasses import dataclass
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from _help_index_common import (  # noqa: E402
+    body_signal as _body_signal,
+    label_for,
+    load_articles as _load_articles,
+    make_tokenizer,
+    normalize,
+    score_article as _score_article,
+)
+from _vector_search import vector_candidates  # noqa: E402
 
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = ROOT / "knowledge" / "meta-help-center"
-STOPWORDS = {
+STOPWORDS = frozenset({
     "a", "ao", "aos", "as", "com", "como", "da", "das", "de", "do", "dos",
     "e", "em", "na", "nas", "no", "nos", "o", "os", "para", "por", "que",
     "esta", "estou", "meta", "meu", "minha", "qual", "quais", "se", "seu",
     "sua", "sobre", "um", "uma",
-}
+})
+tokens = make_tokenizer(STOPWORDS)
+
+LINK_PATTERN = re.compile(
+    r"^- \[(?P<title>.+?)\]\((?P<path>[^)]+\.md)\) — "
+    r"\[fonte original\]\((?P<url>https://www\.facebook\.com/business/help/[^)]+)\)$"
+)
+DATE_PATTERN = re.compile(r"Gerado em (\d{4}-\d{2}-\d{2})")
 
 
-@dataclass(frozen=True)
-class Article:
-    title: str
-    url: str
-    category: str
-    extracted_at: str
-    path: Path
-
-
-def normalize(value: str) -> str:
-    decomposed = unicodedata.normalize("NFKD", value)
-    ascii_text = "".join(char for char in decomposed if not unicodedata.combining(char))
-    return re.sub(r"[^a-z0-9]+", " ", ascii_text.lower()).strip()
-
-
-def tokens(value: str) -> set[str]:
-    return {token for token in normalize(value).split() if len(token) > 1 and token not in STOPWORDS}
-
-
-def load_articles() -> list[Article]:
-    """Carrega somente o INDEX.md; os corpos permanecem fechados nesta etapa."""
-    index_path = BASE / "INDEX.md"
-    if not index_path.is_file():
-        raise FileNotFoundError(f"índice ausente: {index_path.relative_to(ROOT)}")
-    text = index_path.read_text(encoding="utf-8")
-    date_match = re.search(r"Gerado em (\d{4}-\d{2}-\d{2})", text)
-    extracted_at = date_match.group(1) if date_match else ""
-    link_pattern = re.compile(
-        r"^- \[(?P<title>.+?)\]\((?P<path>[^)]+\.md)\) — "
-        r"\[fonte original\]\((?P<url>https://www\.facebook\.com/business/help/[^)]+)\)$"
+def load_articles():
+    return _load_articles(
+        root=ROOT,
+        base=BASE,
+        link_pattern=LINK_PATTERN,
+        date_pattern=DATE_PATTERN,
     )
-    articles: list[Article] = []
-    for line in text.splitlines():
-        match = link_pattern.match(line)
-        if not match:
-            continue
-        relative_path = Path(match.group("path"))
-        articles.append(
-            Article(
-                title=match.group("title"),
-                url=match.group("url"),
-                category=relative_path.parent.name,
-                extracted_at=extracted_at,
-                path=BASE / relative_path,
-            )
-        )
-    if not articles:
-        raise ValueError(f"nenhum artigo encontrado em {index_path.relative_to(ROOT)}")
-    return articles
 
 
-def score_article(query: str, article: Article) -> float:
-    normalized_query = normalize(query)
-    normalized_title = normalize(article.title)
-    query_tokens = tokens(query)
-    title_tokens = tokens(article.title)
-
-    if normalized_query == normalized_title:
-        return 100.0
-
-    intersection = query_tokens & title_tokens
-    query_coverage = len(intersection) / max(len(query_tokens), 1)
-    title_coverage = len(intersection) / max(len(title_tokens), 1)
-    union = query_tokens | title_tokens
-    jaccard = len(intersection) / max(len(union), 1)
-    score = 55 * query_coverage + 20 * title_coverage + 15 * jaccard
-    score += 18 * SequenceMatcher(None, normalized_query, normalized_title).ratio()
-
-    if normalized_query and normalized_query in normalized_title:
-        score = max(score, 84 + 10 * query_coverage)
-    elif normalized_title and normalized_title in normalized_query:
-        score = max(score, 78 + 10 * title_coverage)
-
-    category_overlap = query_tokens & tokens(article.category)
-    score += min(6.0, 3.0 * len(category_overlap))
-
-    return min(round(score, 2), 99.0)
+def score_article(query, article):
+    return _score_article(query, article, tokens=tokens, category_bonus=True)
 
 
-def body_signal(query: str, article: Article) -> float:
-    """Sinal secundário usado somente quando o índice não dá resultado forte."""
-    query_tokens = tokens(query)
-    if not query_tokens:
-        return 0.0
-    text = normalize(article.path.read_text(encoding="utf-8", errors="ignore"))
+def _expand_dedup(query_tokens: set[str]) -> set[str]:
     expanded = set(query_tokens)
     if any(token.startswith("duplic") or token.startswith("deduplic") for token in query_tokens):
         expanded.update({"duplicacao", "desduplicacao", "deduplicacao"})
-    hits = sum(1 for token in expanded if token in text)
-    return min(32.0, 32.0 * hits / max(len(expanded), 1))
+    return expanded
 
 
-def label_for(score: float) -> str:
-    if score == 100:
-        return "exact"
-    if score >= 75:
-        return "strong"
-    if score >= 35:
-        return "related"
-    return "weak"
+def body_signal(query, article):
+    return _body_signal(query, article, tokens=tokens, expand=_expand_dedup)
 
 
 def main() -> int:
@@ -131,6 +69,12 @@ def main() -> int:
     parser.add_argument("--platform", required=True, choices=["meta", "google_ads"], help="plataforma já resolvida pelo roteador")
     parser.add_argument("--limit", type=int, default=3, help="quantidade de resultados (padrão: 3)")
     parser.add_argument("--title-only", action="store_true", help="não usa o corpo como sinal secundário")
+    parser.add_argument(
+        "--mode",
+        choices=["lexical", "vector", "hybrid"],
+        default="hybrid",
+        help="lexical: só título/corpo (comportamento original). vector: força o sinal semântico. hybrid (padrão): lexical primeiro, vetorial só quando o título for fraco.",
+    )
     parser.add_argument("--json", action="store_true", dest="as_json", help="retorna JSON")
     args = parser.parse_args()
 
@@ -173,7 +117,34 @@ def main() -> int:
             for score, article in ranked
         ]
         ranked.sort(key=lambda item: (-item[0], normalize(item[1].title)))
-    selected = ranked[: args.limit]
+
+    vector_used = False
+    combined: list[tuple[float, object, str, str | None]] = [
+        (score, article, "lexical", None) for score, article in ranked
+    ]
+    top_lexical = ranked[0][0] if ranked else 0.0
+    if args.mode != "lexical" and (args.mode == "vector" or top_lexical < 75):
+        candidates = vector_candidates(query, "meta")
+        if candidates is None:
+            print("aviso: índice vetorial indisponível para meta; usando busca lexical apenas.", file=sys.stderr)
+        else:
+            vector_used = True
+            combined = []
+            for score, article in ranked:
+                path_key = str(article.path.relative_to(ROOT))
+                match = candidates.get(path_key)
+                vector_score = match["score"] if match else 0.0
+                final_score = max(score, vector_score)
+                if vector_score <= 0:
+                    signal = "lexical"
+                elif score < 35:
+                    signal = "vector"
+                else:
+                    signal = "hybrid"
+                combined.append((final_score, article, signal, match["section"] if match else None))
+            combined.sort(key=lambda item: (-item[0], normalize(item[1].title)))
+
+    selected = combined[: args.limit]
 
     payload = [
         {
@@ -184,21 +155,30 @@ def main() -> int:
             "path": str(article.path.relative_to(ROOT)),
             "url": article.url,
             "extracted_at": article.extracted_at,
+            "signal": signal,
+            "matched_section": section,
         }
-        for score, article in selected
+        for score, article, signal, section in selected
     ]
 
     if args.as_json:
-        print(json.dumps({"query": query, "platform": "meta", "out_of_scope": False, "article_count": len(articles), "body_fallback": used_body_fallback, "results": payload}, ensure_ascii=False, indent=2))
+        print(json.dumps({"query": query, "platform": "meta", "out_of_scope": False, "article_count": len(articles), "body_fallback": used_body_fallback, "vector_used": vector_used, "results": payload}, ensure_ascii=False, indent=2))
         return 0
 
     print(f"Consulta Meta: {query}")
-    stage = "índice + fallback de conteúdo" if used_body_fallback else "somente índice"
+    stage_parts = ["índice"]
+    if used_body_fallback:
+        stage_parts.append("fallback de conteúdo")
+    if vector_used:
+        stage_parts.append("sinal vetorial")
+    stage = " + ".join(stage_parts) if len(stage_parts) > 1 else "somente índice"
     print(f"Base: {len(articles)} artigos | Busca: {stage} | Resultados: {len(payload)}")
     for index, item in enumerate(payload, start=1):
-        print(f"\n{index}. [{item['match']}] {item['score']:.2f} — {item['title']}")
+        print(f"\n{index}. [{item['match']}|{item['signal']}] {item['score']:.2f} — {item['title']}")
         print(f"   Caminho: {item['path']}")
         print(f"   Categoria: {item['category']} | Extraído em: {item['extracted_at']}")
+        if item["matched_section"]:
+            print(f"   Seção correspondente: {item['matched_section']}")
         print(f"   URL: {item['url']}")
     return 0
 

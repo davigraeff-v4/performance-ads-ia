@@ -11,6 +11,7 @@ description: Analisa performance Google Ads por conta, campanha, grupo, keyword,
 2. `knowledge/methodology/windows-and-comparisons.md`.
 3. Trilha de negócio e gate da skill `03`.
 4. `quality/analysis-checklist.md`.
+5. Quando uma hipótese ou ação depender de entender um mecanismo específico do Google Ads que os arquivos acima não cobrem (ex: como um tipo de campanha, estratégia de lance, correspondência ou elegibilidade funciona), consultar `skills/17-google-ads-official-retrieval/SKILL.md` — não assumir funcionamento de memória.
 
 ## Fontes
 
@@ -28,7 +29,8 @@ description: Analisa performance Google Ads por conta, campanha, grupo, keyword,
 6. Para campanhas automatizadas, separar controles fornecidos, sinais e resultados observáveis sem inventar causalidade interna.
 7. Cruzar dados comerciais sem forçar igualdade.
 8. Consultar `change_event` quando disponível para testar hipóteses de queda.
-9. Priorizar por impacto, confiança, esforço e reversibilidade.
+9. Para cada hipótese ou ação recomendada que dependa de um mecanismo específico da plataforma (não de dado da conta), consultar a skill `17` (busca híbrida sobre a Central de Ajuda) antes de registrar o achado; citar título e URL da fonte usada no achado.
+10. Priorizar por impacto, confiança, esforço e reversibilidade.
 
 ## Saída
 

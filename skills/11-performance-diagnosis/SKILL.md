@@ -11,6 +11,7 @@ description: Analisa performance Meta Ads por conta, campanha, conjunto, anúnci
 2. `knowledge/methodology/windows-and-comparisons.md`.
 3. Trilha de negócio e gate da skill `03`.
 4. `quality/analysis-checklist.md`.
+5. Quando uma hipótese ou ação depender de entender um mecanismo específico do Meta Ads que os arquivos acima não cobrem (ex: como um recurso, orçamento, lance ou elegibilidade funciona), consultar `skills/15-meta-help-center-retrieval/SKILL.md` — não assumir funcionamento de memória.
 
 ## Processo
 
@@ -20,7 +21,8 @@ description: Analisa performance Meta Ads por conta, campanha, conjunto, anúnci
 4. Analisar nos níveis necessários sem misturar denominadores.
 5. Cruzar Meta e fonte comercial; preservar divergências.
 6. Formular diagnósticos alternativos e evidência que os distingue.
-7. Priorizar por impacto, confiança, esforço e reversibilidade.
+7. Para cada hipótese ou ação recomendada que dependa de um mecanismo específico da plataforma (não de dado da conta), consultar a skill `15` (busca híbrida sobre a Central de Ajuda) antes de registrar o achado; citar título e URL da fonte usada no achado.
+8. Priorizar por impacto, confiança, esforço e reversibilidade.
 
 ## Saída
 

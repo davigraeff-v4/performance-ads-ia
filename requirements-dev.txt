@@ -1,1 +1,5 @@
 jsonschema>=4.23,<5
+
+# Índice vetorial local (knowledge/.vector-index/) — motor de embedding
+# leve, sem PyTorch. Ver RAG-PLAN.md para as decisões de arquitetura.
+fastembed>=0.8,<1
