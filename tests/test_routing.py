@@ -92,6 +92,29 @@ class RoutingTests(unittest.TestCase):
         self.assertNotIn("18-google-ads-keyword-research", without["branches"][0]["planned_skills"])
         self.assertIn("18-google-ads-keyword-research", with_keywords["branches"][0]["planned_skills"])
 
+    def test_onboarding_alone_never_covers_platform_knowledge_questions(self) -> None:
+        # Documenta a garantia por trás da regra de "mensagens compostas": a
+        # rota onboarding é estreita de propósito e não inclui o gate de
+        # conhecimento — por isso uma segunda intenção (ex: planejamento)
+        # embutida na mesma mensagem do gestor precisa da própria rota,
+        # nunca deve ser respondida usando só o que o onboarding carregou.
+        for platform, knowledge_skill in [("meta", "15-meta-help-center-retrieval"), ("google_ads", "17-google-ads-official-retrieval")]:
+            with self.subTest(platform=platform):
+                payload = route("--intent", "onboarding", "--platform", platform, "--source-mode", "context_only")
+                skills = payload["branches"][0]["planned_skills"]
+                self.assertNotIn(knowledge_skill, skills)
+
+    def test_planning_route_always_includes_platform_knowledge_gate(self) -> None:
+        # Contraparte do teste acima: uma vez que a segunda intenção (ex:
+        # planejamento) é corretamente identificada e roteada, o gate de
+        # conhecimento vem garantido como passo "always" — não depende do
+        # gestor lembrar de pedir explicitamente.
+        for platform, knowledge_skill in [("meta", "15-meta-help-center-retrieval"), ("google_ads", "17-google-ads-official-retrieval")]:
+            with self.subTest(platform=platform):
+                payload = route("--intent", "planejamento", "--platform", platform, "--source-mode", "context_only")
+                skills = payload["branches"][0]["planned_skills"]
+                self.assertIn(knowledge_skill, skills)
+
     def test_google_execution_is_fail_closed(self) -> None:
         payload = route("--intent", "execucao", "--platform", "google_ads", "--source-mode", "connected_read", expected_code=3)
         self.assertEqual(payload["status"], "blocked")

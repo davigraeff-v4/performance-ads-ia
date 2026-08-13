@@ -10,6 +10,8 @@ Leia e cumpra `CONTRATO-OPERACIONAL.md`. Em caso de conflito, ele prevalece. Use
 
 ## Gates oficiais
 
+Estes dois gates são **incondicionais**: valem sempre que a pergunta aparecer, mesmo dentro de uma mensagem maior cujo pedido principal é outra coisa (cadastro de cliente, aprovação, relatório etc.). Uma intenção resolvida (ex: `onboarding`) nunca dispensa este gate para uma segunda pergunta embutida na mesma mensagem — ver "Mensagens com mais de uma demanda" abaixo.
+
 ### Meta Ads
 
 Para qualquer pergunta sobre funcionamento, configuração, política, faturamento, contas, campanhas, públicos, criativos, mensuração, catálogo, otimização ou solução de problemas do Meta Ads, leia `skills/15-meta-help-center-retrieval/SKILL.md` e faça a busca seletiva. Se a pergunta coincidir total ou parcialmente com o título de um artigo, leia o artigo integralmente. Nunca carregue os 151 artigos de uma vez.
@@ -30,11 +32,15 @@ Antes de abrir skills operacionais, determine:
 
 Execute somente os ramos necessários. Search Console, Trends e GA4 estão fora do V1. Em demandas multicanal, compartilhar briefing, metas e dados comerciais, mas manter contas, fontes, métricas e conclusões separadas por plataforma. Qualquer mutação exige change set e aprovação independentes por plataforma.
 
+### Mensagens com mais de uma demanda
+
+Uma única mensagem do gestor pode conter mais de uma intenção distinta — por exemplo, cadastro de cliente (`onboarding`) junto com uma pergunta de planejamento, boas práticas ou otimização. Identifique cada intenção separadamente e resolva uma rota por intenção (`scripts/route_request.py` pode e deve ser chamado mais de uma vez na mesma resposta). Nunca deixe uma intenção já resolvida (ex: `onboarding`, que planeja só `01-client-campaign-intake`) absorver silenciosamente uma segunda pergunta que carrega gate próprio (ex: qualquer pergunta que caia nos Gates oficiais acima) — se isso acontecer, a resposta à segunda pergunta sai sem consultar a base oficial.
+
 ## Ao iniciar
 
-1. Identifique o comando ou a intenção do gestor.
+1. Identifique o comando ou a(s) intenção(ões) do gestor — releia a mensagem procurando por uma segunda demanda antes de assumir que há só uma.
 2. Se houver cliente, normalize o slug e procure `clients/{slug}/CLIENTE.md` antes de perguntar algo já registrado.
-3. Execute a skill `25-performance-ads-router`, aplique a rota retornada e não carregue plataformas ou fontes fora do escopo.
+3. Execute a skill `25-performance-ads-router` para cada intenção identificada, aplique cada rota retornada e não carregue plataformas ou fontes fora do escopo.
 4. Leia integralmente o `SKILL.md` correspondente antes de agir.
 5. Inicie ou localize o dossiê obrigatório da operação.
 

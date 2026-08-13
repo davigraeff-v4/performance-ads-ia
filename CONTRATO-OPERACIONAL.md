@@ -36,6 +36,8 @@ Antes de acionar skills operacionais, registrar:
 
 Executar somente as skills planejadas pela matriz, respeitando as dependências do `dependency_graph.json` e o contrato de saída retornado por ramo. Registrar route ID canônico, contrato de saída, skills planejadas, executadas e puladas com motivo. Em demanda multicanal, compartilhar contexto comercial, mas nunca misturar contas, atribuições, moedas, fontes, populações ou conclusões. Análises podem ser consolidadas; mutações exigem um `operation_id` e uma aprovação por plataforma.
 
+Uma mensagem pode conter mais de uma intenção (ex: cadastro de cliente e uma pergunta de planejamento/boas práticas na mesma mensagem). Resolver e executar uma rota por intenção identificada; uma intenção estreita (`onboarding`, `configuracao`) nunca dispensa o Knowledge Gate da seção 4 para uma segunda pergunta embutida na mesma mensagem que o exija.
+
 ## 3. Hierarquia das fontes
 
 1. Dados comerciais confirmados do cliente, com definição e período.

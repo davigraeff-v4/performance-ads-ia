@@ -10,13 +10,19 @@ Atuar como única entrada implícita do agent. Selecionar e executar as skills i
 ## 1. Preparar o contexto
 
 1. Ler `CONTRATO-OPERACIONAL.md` e `routing_matrix.json`.
-2. Identificar a intenção normalizada: `configuracao`, `onboarding`, `pesquisa_palavras_chave`, `planejamento`, `criacao`, `auditoria`, `analise`, `otimizacao`, `relatorio`, `aprovacao`, `execucao` ou `reversao`.
+2. Identificar **todas** as intenções normalizadas presentes na mensagem — pode haver mais de uma: `configuracao`, `onboarding`, `pesquisa_palavras_chave`, `planejamento`, `criacao`, `auditoria`, `analise`, `otimizacao`, `relatorio`, `aprovacao`, `execucao` ou `reversao`.
 3. Identificar `requested_platforms`, `active_platforms` e `source_mode` por plataforma.
 4. Se houver cliente, ler `clients/{slug}/CLIENTE.md` antes de perguntar informação já registrada.
 5. Localizar o dossiê por `operation_id`, cliente, plataforma, escopo, tipo, status e atualização. Nunca escolher apenas o arquivo mais recente quando houver mais de um candidato plausível.
 6. Tratar dossiê sem `schema_version` ou `route` como legado: preservar o histórico e acrescentar os campos V1 ao atualizar.
 
 Perguntar em uma única rodada somente quando cliente, plataforma, conta, objetivo ou operação permanecerem materialmente ambíguos.
+
+### Mensagens compostas (mais de uma intenção)
+
+`onboarding` e `configuracao` são intenções estreitas — planejam pouquíssimas skills (ex: `onboarding` só planeja `01-client-campaign-intake`) e **não** incluem a skill 15/17 de recuperação de conhecimento. Se a mesma mensagem também contiver uma pergunta de funcionamento, boas práticas, estratégia ou otimização, essa segunda parte é uma intenção separada (tipicamente `planejamento`, `analise` ou `otimizacao`) que **tem** a skill 15/17 como passo `always` — e precisa da sua própria chamada ao `route_request.py` e da sua própria execução de skills. Nunca responder a segunda pergunta usando só o que a primeira intenção carregou.
+
+Exemplo real que já aconteceu: gestor manda "tenho um novo cliente X, aqui está a conta... qual a melhor forma de rodar campanha de visitas ao local e quais as boas práticas?" numa mensagem só. Isso é `onboarding:meta` **e** `planejamento:meta` — resolver e executar as duas rotas, não só a primeira.
 
 ## 2. Resolver a rota
 
