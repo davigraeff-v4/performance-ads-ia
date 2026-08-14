@@ -47,6 +47,21 @@ O agent não percorre um fluxo fixo. A skill pública `25-performance-ads-router
 
 ## 4. Primeiro uso
 
+### 4.1 Instalar (clonar o repositório)
+
+Para outro gestor usar o agent, clone o repositório numa pasta local da máquina dele:
+
+```bash
+git clone https://github.com/davigraeff-v4/performance-ads-ia.git
+cd performance-ads-ia
+```
+
+Pré-requisitos: `git` instalado e Claude Code ou Codex configurado na máquina. Não é necessário instalar nenhum pacote Python pra uso básico — `pip install -r requirements-dev.txt` só é necessário para quem for rodar a validação local (seção 13) ou reconstruir o índice vetorial (seção 12).
+
+Cada gestor deve manter seu próprio clone local, já que `clients/`, dossiês e credenciais reais nunca são versionados (seção 14) — eles ficam só na máquina de quem os criou, nunca sincronizados automaticamente entre clones.
+
+### 4.2 Abrir o projeto
+
 Abra a raiz do projeto no Claude Code ou Codex e confirme a presença de:
 
 - `AGENTS.md` ou `CLAUDE.md`.
