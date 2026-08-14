@@ -4,7 +4,7 @@ Agente especialista em Meta Ads e Google Ads para planejar, analisar e otimizar 
 
 O agent roda em **Claude Code** e **Codex**, entende solicitações em linguagem natural, seleciona e executa automaticamente somente as skills necessárias e registra auditorias, análises e mudanças em dossiês Markdown locais.
 
-> Estado: V1.2 homologado localmente com roteamento automático, entrega chat-first e busca híbrida (lexical + vetorial local) sobre a Central de Ajuda. O MCP oficial Google Ads continua somente leitura; o complemento `google_ads_extended` prepara Keyword Planner com gates fail-closed e ainda não registra escrita. Search Console, Google Trends e GA4 ficam para fases futuras. Dados, credenciais, MCPs locais e dossiês reais permanecem fora do Git.
+> Estado: V1.3 homologado localmente com roteamento automático, entrega chat-first e busca híbrida (lexical + vetorial local) sobre a Central de Ajuda. O MCP oficial Google Ads continua somente leitura; o complemento `google_ads_extended` prepara Keyword Planner com gates fail-closed e ainda não registra escrita. Novo em V1.3: auditoria e correção de tracking via API do Google Tag Manager (leitura sempre liberada; criação/edição só com allowlist local; publicação de versão fora de escopo, sempre manual). Search Console, Google Trends e GA4 ficam para fases futuras. Dados, credenciais, MCPs/API locais e dossiês reais permanecem fora do Git.
 
 ## 1. O que o agent faz
 
@@ -13,7 +13,7 @@ O agent roda em **Claude Code** e **Codex**, entende solicitações em linguagem
 - Cadastra cliente, contas, metas, restrições e fontes.
 - Planeja campanhas de lead generation e e-commerce.
 - Pesquisa e organiza palavras-chave Google Ads quando aplicável.
-- Audita tracking, estrutura, termos, públicos, assets e performance.
+- Audita tracking, estrutura, termos, públicos, assets e performance; quando o cliente rastreia via Google Tag Manager, audita e corrige tags/triggers/variáveis diretamente pela API do GTM (sem publicar).
 - Propõe otimizações em lotes versionados.
 - Executa somente mudanças suportadas, aprovadas e revalidadas.
 - Registra antes, aprovação, execução e depois no mesmo dossiê.
@@ -42,6 +42,7 @@ O agent não percorre um fluxo fixo. A skill pública `25-performance-ads-router
 - Python 3 e `pipx` somente para quem optar pelo MCP oficial Google Ads.
 - Acesso autorizado à plataforma usada.
 - Para a conexão opcional ao Google Ads: Google Cloud project, Google Ads API habilitada, developer token e OAuth/ADC.
+- Para a conexão opcional ao Google Tag Manager: Google Cloud project com Tag Manager API habilitada e OAuth Client (Desktop app) — ver [apêndice de instalação](#16-apêndice-opcional--google-tag-manager-gtm).
 - Para modo por arquivos: exports com período, timezone, definições e escopo.
 
 ## 4. Primeiro uso
@@ -558,3 +559,102 @@ codex mcp remove google_ads
 ```
 
 Não apague credenciais ou revogue acessos automaticamente. Confirme o alvo e a necessidade antes de qualquer ação destrutiva.
+
+## 16. Apêndice opcional — Google Tag Manager (GTM)
+
+### 16.1 Como funciona
+
+Diferente do Google Ads, o GTM **não usa servidor MCP**. É um cliente Python local (`integrations/gtm/`) que fala diretamente com a API oficial (`tagmanager.googleapis.com`) via OAuth. A skill `26-gtm-tracking-audit-fix` chama dois scripts:
+
+- `scripts/gtm_audit.py` — somente leitura: lista contas, containers e tira um snapshot de tags/triggers/variáveis de um workspace.
+- `scripts/gtm_edit.py` — cria/edita tag, trigger ou variável **em rascunho de workspace**, só depois de um change set aprovado (`/aprovar-operacao` → `/executar-operacao`).
+
+Garantias fixas no código, não apenas em configuração:
+
+- **Nunca publica.** O escopo OAuth solicitado nunca inclui `tagmanager.publish` e não existe função de publish/versão em `integrations/gtm/src/performance_ads_gtm/` — testado em `integrations/gtm/tests/test_no_publish.py`. Levar uma mudança ao ar continua sendo um passo manual do gestor/responsável técnico na UI do GTM.
+- **Leitura por padrão, escrita fail-closed.** `reporting` funciona sem nenhuma allowlist. Criar/editar exige três coisas ao mesmo tempo: `PERFORMANCE_ADS_GTM_WRITE_MODE != disabled`, a capability `tag_management` declarada e o `container_id` alvo na allowlist local. Faltando qualquer uma, o item vira `manual_only`.
+- **Credenciais nunca no Git.** Client secret OAuth e token cacheado ficam em `credentials/` (ignorado pelo `.gitignore`); toda configuração fica em `.env` local (também ignorado). Só `.env.example`, sem valores, é versionado.
+
+### 16.2 O que será necessário
+
+| Item | Onde obter | Obrigatório |
+|---|---|---|
+| Google Cloud project | Google Cloud Console | Sim |
+| Tag Manager API habilitada | API Library do projeto | Sim |
+| OAuth Client (tipo Desktop app) | Google Cloud Console → Credentials | Sim |
+| Acesso de usuário aos containers GTM do cliente | Admin do container/conta GTM | Sim |
+| Python 3.11+ | Sistema operacional | Sim |
+
+### 16.3 Criar o projeto, habilitar a API e o OAuth Client
+
+1. Acesse o [Google Cloud Console](https://console.cloud.google.com/) e crie ou selecione um projeto.
+2. Na API Library, procure `Tag Manager API` e habilite.
+3. Configure a tela de consentimento OAuth do projeto (modo de teste é suficiente para uso interno; adicione como test user o e-mail que acessa os containers GTM).
+4. Em **Credentials → Create Credentials → OAuth client ID**, escolha o tipo **Desktop app**.
+5. Baixe o JSON do client secret.
+
+### 16.4 Instalar o cliente local
+
+Peça ao agent para instalar, ou rode manualmente:
+
+```bash
+python3 -m venv .venv-gtm
+.venv-gtm/bin/pip install -e integrations/gtm
+```
+
+### 16.5 Configurar as credenciais (nunca no repositório)
+
+1. Salve o JSON baixado em `credentials/gtm-oauth-client-secret.json` (a pasta `credentials/` já está no `.gitignore`).
+2. Copie `.env.example` para `.env` e preencha:
+
+```text
+PERFORMANCE_ADS_GTM_CREDENTIALS_PATH=credentials/gtm-oauth-client-secret.json
+PERFORMANCE_ADS_GTM_TOKEN_CACHE_PATH=credentials/gtm-oauth-token.json
+PERFORMANCE_ADS_GTM_DECLARED_CAPABILITIES=reporting
+PERFORMANCE_ADS_GTM_WRITE_MODE=disabled
+PERFORMANCE_ADS_GTM_ALLOWED_CONTAINER_IDS=
+```
+
+Nunca cole client secret, JSON de credencial ou token em chats, issues ou commits. Se o agent ajudar na instalação, ele deve informar somente caminhos e nomes de variável, sem imprimir valores.
+
+### 16.6 Primeiro teste (leitura)
+
+```bash
+set -a && source .env && set +a
+.venv-gtm/bin/python scripts/gtm_audit.py --list-accounts
+```
+
+A primeira chamada abre o navegador para o consentimento OAuth e cacheia o token em `PERFORMANCE_ADS_GTM_TOKEN_CACHE_PATH`. O resultado esperado é a lista de contas GTM às quais o e-mail autorizado tem acesso — sem nenhuma mutação.
+
+Para inspecionar um container específico:
+
+```bash
+.venv-gtm/bin/python scripts/gtm_audit.py --list-containers --account-path accounts/SEU_ACCOUNT_ID
+.venv-gtm/bin/python scripts/gtm_audit.py --snapshot --container-path accounts/SEU_ACCOUNT_ID/containers/SEU_CONTAINER_ID
+```
+
+### 16.7 Habilitar criação/edição
+
+Escrita continua bloqueada até você preencher a allowlist local. No `.env`:
+
+```text
+PERFORMANCE_ADS_GTM_DECLARED_CAPABILITIES=reporting,tag_management
+PERFORMANCE_ADS_GTM_WRITE_MODE=execute
+PERFORMANCE_ADS_GTM_ALLOWED_CONTAINER_IDS=SEU_CONTAINER_ID,OUTRO_CONTAINER_ID
+```
+
+Com isso, um change set aprovado envolvendo tag/trigger/variável desses containers pode ser aplicado por `/executar-operacao` via `scripts/gtm_edit.py` — sempre em rascunho de workspace, nunca publicado.
+
+### 16.8 Erros comuns
+
+| Erro | Verificação segura |
+|---|---|
+| `PERFORMANCE_ADS_GTM_CREDENTIALS_PATH nao configurado` | Confirmar se `.env` foi carregado no shell atual. |
+| `arquivo de credencial OAuth nao encontrado` | Conferir o caminho do JSON salvo em `credentials/`. |
+| `escrita requer allowlist de containers configurada` | Preencher `PERFORMANCE_ADS_GTM_ALLOWED_CONTAINER_IDS` com o `container_id` numérico. |
+| `container_id fora da allowlist local` | O container do alvo não está na lista; adicionar ou confirmar o ID correto. |
+| Pedido de novo login no navegador após mudar `WRITE_MODE` | Esperado — o token antigo não tinha o escopo de edição; o cache é renovado automaticamente. |
+
+### 16.9 Rotação ou remoção
+
+Para trocar de client secret (ex: após um valor ter sido exposto), gere um novo em Google Cloud Console → Credentials, revogue o antigo, substitua o arquivo em `credentials/` e apague `credentials/gtm-oauth-token.json` para forçar novo consentimento. Para remover a integração, apague `.env`, a pasta `credentials/` e desinstale o pacote do ambiente local — nada disso afeta o restante do agent.

@@ -19,7 +19,7 @@ description: Revalida e executa somente change set de plataforma explicitamente 
 2. Reler cada alvo e comparar com o snapshot.
 3. Invalidar aprovação diante de drift material.
 4. Confirmar ferramenta, permissão, parâmetros e ordem.
-5. Remover da fila itens `manual_only`, `blocked`, exclusão ou arquivamento. Se o lote for Google Ads e `write_tools_registered` não estiver homologado como verdadeiro, bloquear toda chamada de escrita.
+5. Remover da fila itens `manual_only`, `blocked`, exclusão ou arquivamento. Se o lote for Google Ads e `write_tools_registered` não estiver homologado como verdadeiro, bloquear toda chamada de escrita. Se o lote incluir item originado em `26-gtm-tracking-audit-fix`, bloquear a chamada a menos que `write_mode` esteja `execute`/`validate_only` e o `container_id` do alvo esteja na allowlist local (`PERFORMANCE_ADS_GTM_ALLOWED_CONTAINER_IDS`).
 
 ## Execução
 
@@ -39,4 +39,4 @@ description: Revalida e executa somente change set de plataforma explicitamente 
 
 ## Proibições
 
-Não executar por frases genéricas. Não ampliar o lote. Não esconder falha. Não declarar sucesso antes do readback. Não usar browser como fallback.
+Não executar por frases genéricas. Não ampliar o lote. Não esconder falha. Não declarar sucesso antes do readback. Não usar browser como fallback. Não publicar versão do GTM sob nenhuma circunstância — a integração não suporta e não deve simular esse passo; itens que dependem de publicação terminam com instrução manual explícita.

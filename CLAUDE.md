@@ -26,6 +26,10 @@ Toda solicitação em linguagem natural ou comando deve entrar por `skills/25-pe
 
 Antes de abrir skills operacionais, determine intenção, plataformas solicitadas (`meta`, `google_ads`, ambas ou indefinidas) e modo de fonte por plataforma (`connected_read`, `file_based`, `context_only` ou `unavailable`). Execute somente os ramos necessários. Search Console, Trends e GA4 estão fora do V1. Em demandas multicanal, compartilhar briefing, metas e dados comerciais, mas manter contas, fontes, métricas e conclusões separadas por plataforma. Qualquer mutação exige change set e aprovação independentes por plataforma.
 
+### Google Tag Manager (GTM)
+
+Quando o tracking do cliente passa por um container GTM e a demanda for auditoria ou otimização, acione a skill `26-gtm-tracking-audit-fix` (via rota `auditoria`/`otimizacao` com `requires_gtm_audit=true`) além da skill 03. GTM não é uma plataforma de mídia: achados e change sets originados nela são rotulados com a plataforma que a tag serve (`meta` ou `google_ads`). Leitura de containers não exige aprovação; criar/editar tag, trigger ou variável em rascunho de workspace exige change set aprovado como qualquer outra mutação. Esta integração nunca publica uma versão do GTM — ver `CONTRATO-OPERACIONAL.md §12.1`. Se o gestor pedir ajuda para instalar/configurar a API do GTM, siga o passo a passo de `README.md §16`; nunca peça para colar client secret, JSON de credencial ou token no chat.
+
 ### Mensagens com mais de uma demanda
 
 Uma única mensagem do gestor pode conter mais de uma intenção distinta — por exemplo, cadastro de cliente (`onboarding`) junto com uma pergunta de planejamento, boas práticas ou otimização. Identifique cada intenção separadamente e resolva uma rota por intenção (`scripts/route_request.py` pode e deve ser chamado mais de uma vez na mesma resposta). Nunca deixe uma intenção já resolvida (ex: `onboarding`, que planeja só `01-client-campaign-intake`) absorver silenciosamente uma segunda pergunta que carrega gate próprio (ex: qualquer pergunta que caia nos Gates oficiais acima) — se isso acontecer, a resposta à segunda pergunta sai sem consultar a base oficial.

@@ -116,6 +116,7 @@
           {"skill": "02-meta-account-connection", "when": "source_mode=connected_read"},
           {"skill": "15-meta-help-center-retrieval", "when": "always"},
           {"skill": "03-measurement-data-quality", "when": "always"},
+          {"skill": "26-gtm-tracking-audit-fix", "when": "requires_gtm_audit=true"},
           {"skill": "04-goals-kpis-baseline", "when": "always"},
           {"skill": "11-performance-diagnosis", "when": "always"}
         ],
@@ -128,6 +129,7 @@
           {"skill": "16-google-ads-account-connection", "when": "source_mode=connected_read"},
           {"skill": "17-google-ads-official-retrieval", "when": "always"},
           {"skill": "03-measurement-data-quality", "when": "always"},
+          {"skill": "26-gtm-tracking-audit-fix", "when": "requires_gtm_audit=true"},
           {"skill": "04-goals-kpis-baseline", "when": "always"},
           {"skill": "24-google-ads-performance-diagnosis", "when": "always"}
         ],
@@ -168,6 +170,7 @@
           {"skill": "02-meta-account-connection", "when": "source_mode=connected_read"},
           {"skill": "15-meta-help-center-retrieval", "when": "always"},
           {"skill": "03-measurement-data-quality", "when": "always"},
+          {"skill": "26-gtm-tracking-audit-fix", "when": "requires_gtm_audit=true"},
           {"skill": "04-goals-kpis-baseline", "when": "always"},
           {"skill": "11-performance-diagnosis", "when": "always"},
           {"skill": "12-optimization-change-set", "when": "always"}
@@ -181,6 +184,7 @@
           {"skill": "16-google-ads-account-connection", "when": "source_mode=connected_read"},
           {"skill": "17-google-ads-official-retrieval", "when": "always"},
           {"skill": "03-measurement-data-quality", "when": "always"},
+          {"skill": "26-gtm-tracking-audit-fix", "when": "requires_gtm_audit=true"},
           {"skill": "04-goals-kpis-baseline", "when": "always"},
           {"skill": "24-google-ads-performance-diagnosis", "when": "always"},
           {"skill": "12-optimization-change-set", "when": "always"}

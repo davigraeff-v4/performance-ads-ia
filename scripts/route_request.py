@@ -17,13 +17,21 @@ def load_matrix() -> dict[str, object]:
     return json.loads(MATRIX_PATH.read_text(encoding="utf-8"))
 
 
-def condition_matches(condition: str, *, source_mode: str, requires_keywords: bool) -> bool:
+def condition_matches(
+    condition: str,
+    *,
+    source_mode: str,
+    requires_keywords: bool,
+    requires_gtm_audit: bool,
+) -> bool:
     if condition == "always":
         return True
     if condition.startswith("source_mode="):
         return source_mode == condition.partition("=")[2]
     if condition == "requires_keywords=true":
         return requires_keywords
+    if condition == "requires_gtm_audit=true":
+        return requires_gtm_audit
     raise ValueError(f"condicao de rota desconhecida: {condition}")
 
 
@@ -34,6 +42,7 @@ def resolve_branch(
     platform: str,
     source_mode: str,
     requires_keywords: bool,
+    requires_gtm_audit: bool = False,
 ) -> dict[str, object]:
     intents = matrix["intents"]
     assert isinstance(intents, dict)
@@ -62,6 +71,7 @@ def resolve_branch(
             condition,
             source_mode=source_mode,
             requires_keywords=requires_keywords,
+            requires_gtm_audit=requires_gtm_audit,
         ):
             if skill not in planned:
                 planned.append(skill)
@@ -108,6 +118,7 @@ def parser() -> argparse.ArgumentParser:
     route_parser.add_argument("--meta-source-mode")
     route_parser.add_argument("--google-source-mode")
     route_parser.add_argument("--requires-keywords", action="store_true")
+    route_parser.add_argument("--requires-gtm-audit", action="store_true")
     route_parser.add_argument("--json", action="store_true", dest="as_json")
     return route_parser
 
@@ -151,6 +162,7 @@ def main() -> int:
                     platform=platform,
                     source_mode=source_mode,
                     requires_keywords=args.requires_keywords,
+                    requires_gtm_audit=args.requires_gtm_audit,
                 )
             )
         status = "ready" if all(branch["status"] == "ready" for branch in branches) else "blocked"

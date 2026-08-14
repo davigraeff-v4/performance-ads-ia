@@ -65,6 +65,25 @@ class MultichannelStructureTests(unittest.TestCase):
             with self.subTest(marker=marker):
                 self.assertIn(marker, readme)
 
+    def test_gtm_api_installation_is_documented_and_never_publishes(self) -> None:
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        contract = (ROOT / "CONTRATO-OPERACIONAL.md").read_text(encoding="utf-8")
+        skill = (ROOT / "skills/26-gtm-tracking-audit-fix/SKILL.md").read_text(encoding="utf-8")
+        required_in_readme = [
+            "## 16. Apêndice opcional — Google Tag Manager (GTM)",
+            "Tag Manager API",
+            "OAuth Client (tipo Desktop app)",
+            "credentials/gtm-oauth-client-secret.json",
+            "PERFORMANCE_ADS_GTM_ALLOWED_CONTAINER_IDS",
+            "Nunca cole client secret",
+            "Nunca publica",
+        ]
+        for marker in required_in_readme:
+            with self.subTest(marker=marker):
+                self.assertIn(marker, readme)
+        self.assertIn("A integração nunca publica uma versão do GTM", contract)
+        self.assertIn("README.md §16", skill)
+
     def test_google_ads_mcp_skill_protects_credentials_and_validates_reads(self) -> None:
         skill = (ROOT / "skills/00-configuracao-mcp/SKILL.md").read_text(encoding="utf-8")
         required = [

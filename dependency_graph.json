@@ -24,5 +24,6 @@
   "22-google-ads-creative-assets-landing-page": ["19-google-ads-campaign-strategy", "20-google-ads-campaign-architecture"],
   "23-google-ads-campaign-build-plan": ["20-google-ads-campaign-architecture", "21-google-ads-budget-bidding-conversions", "22-google-ads-creative-assets-landing-page"],
   "24-google-ads-performance-diagnosis": ["03-measurement-data-quality", "04-goals-kpis-baseline", "17-google-ads-official-retrieval"],
-  "25-performance-ads-router": []
+  "25-performance-ads-router": [],
+  "26-gtm-tracking-audit-fix": ["01-client-campaign-intake", "03-measurement-data-quality"]
 }

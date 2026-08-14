@@ -129,6 +129,30 @@ class RoutingTests(unittest.TestCase):
         payload = route("--intent", "pesquisa_palavras_chave", "--platform", "meta", "--source-mode", "context_only", expected_code=3)
         self.assertIn("intent_platform_not_supported", payload["gates"])
 
+    def test_gtm_audit_is_conditional_and_never_auto_included(self) -> None:
+        for intent in ("auditoria", "otimizacao"):
+            for platform in ("meta", "google_ads"):
+                with self.subTest(intent=intent, platform=platform):
+                    without = route("--intent", intent, "--platform", platform, "--source-mode", "context_only")
+                    self.assertNotIn("26-gtm-tracking-audit-fix", without["branches"][0]["planned_skills"])
+                    with_audit = route(
+                        "--intent", intent, "--platform", platform,
+                        "--source-mode", "context_only", "--requires-gtm-audit",
+                    )
+                    skills = with_audit["branches"][0]["planned_skills"]
+                    self.assertIn("26-gtm-tracking-audit-fix", skills)
+                    self.assertLess(
+                        skills.index("03-measurement-data-quality"),
+                        skills.index("26-gtm-tracking-audit-fix"),
+                    )
+
+    def test_gtm_audit_is_not_offered_outside_auditoria_and_otimizacao(self) -> None:
+        payload = route(
+            "--intent", "planejamento", "--platform", "meta",
+            "--source-mode", "context_only", "--requires-gtm-audit",
+        )
+        self.assertNotIn("26-gtm-tracking-audit-fix", payload["branches"][0]["planned_skills"])
+
 
 if __name__ == "__main__":
     unittest.main()

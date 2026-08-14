@@ -16,6 +16,7 @@ No V1:
 - Criar change sets; nunca excluir ou arquivar ativos.
 - Manter dados e credenciais reais somente em locais ignorados pelo Git.
 - Falhar de forma segura quando plataforma, conta, permissão ou evidência forem insuficientes.
+- Auditar e corrigir tracking em containers do Google Tag Manager (tags, triggers, variáveis) como camada de mensuração de apoio a Meta Ads e Google Ads, nunca como plataforma de mídia própria, conforme seção 12.1. A integração nunca publica uma versão do GTM.
 
 Search Console, Google Trends, GA4, TikTok Ads e outras plataformas ficam fora do V1.
 
@@ -168,6 +169,17 @@ Para Google Ads:
 - Declarar capacidades locais de forma fail-closed: `reporting` por padrão, Planner desligado, escrita desligada e allowlist de customers vazia.
 - Nunca tratar nível Basic como autorização automática para Planner ou mutação; conferir também o uso permitido registrado no API Center.
 - Oferecer sempre o modo `file_based` ou `context_only`.
+
+### 12.1 Google Tag Manager (GTM)
+
+O GTM não é uma plataforma de mídia paga: é camada de mensuração de apoio, acionada por `skills/26-gtm-tracking-audit-fix/SKILL.md` quando o tracking do cliente passa por um container GTM. Um achado ou change set originado no GTM sempre é rotulado com a plataforma de mídia que a tag serve (`meta` ou `google_ads`), nunca como plataforma própria.
+
+- Conexão via API do Google Tag Manager (`tagmanager.googleapis.com`) diretamente pelo Google Cloud Console, sem servidor MCP: pacote local em `integrations/gtm/`.
+- Client secret OAuth, token cacheado e qualquer credencial ficam somente em `credentials/` e variáveis `PERFORMANCE_ADS_GTM_*` de um `.env` local — nunca no Git (ver `.gitignore`).
+- Leitura (`reporting`) é a capability padrão e não exige allowlist. Ler um container não exige aprovação; propor uma correção, sim.
+- Escrita (`tag_management`: criar/editar tag, trigger ou variável em rascunho de workspace) exige `PERFORMANCE_ADS_GTM_WRITE_MODE != disabled`, a capability declarada e o `container_id` alvo na allowlist local (`PERFORMANCE_ADS_GTM_ALLOWED_CONTAINER_IDS`). Sem isso, o item permanece `manual_only`, na mesma lógica da escrita Google Ads.
+- **Publicação está permanentemente fora de escopo desta integração.** O escopo OAuth solicitado nunca inclui `tagmanager.publish` e não existe função de publish/versão no código (`integrations/gtm/src/performance_ads_gtm/`, garantido por teste em `integrations/gtm/tests/test_no_publish.py`). Levar uma mudança ao ar continua sendo um passo humano manual na UI do GTM, mesmo depois de `/executar-operacao` aplicar a criação/edição em rascunho.
+- Qualquer mudança de escopo (ex: permitir publicação) exige nova capability declarada, novo gate explícito e nova versão deste contrato — não pode ser habilitada só por variável de ambiente.
 
 ## 13. Aprendizado e Git
 
