@@ -3,32 +3,16 @@
   "title": "PerformanceAdsAnalysis",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "schema_version",
-    "platform",
-    "active_platforms",
-    "source_modes",
-    "scope",
-    "extracted_at",
-    "timezones",
-    "currencies",
-    "window",
-    "comparison_window",
-    "attribution",
-    "measurement_gate",
-    "sources",
-    "findings",
-    "limitations"
-  ],
+  "required": ["schema_version", "diagnostic_id", "diagnostic_version", "depth_mode", "focus", "platform", "active_platforms", "campaign_types", "source_modes", "scope", "extracted_at", "timezones", "currencies", "window", "comparison_window", "attribution", "measurement_gate", "sources", "executive_verdict", "coverage", "evidence", "findings", "actions", "limitations"],
   "properties": {
-    "schema_version": {"const": "1.0"},
+    "schema_version": {"const": "1.1"},
+    "diagnostic_id": {"type": "string", "pattern": "^diag-[a-z0-9-]+$"},
+    "diagnostic_version": {"type": "integer", "minimum": 1},
+    "depth_mode": {"enum": ["full", "focused"]},
+    "focus": {"type": ["string", "null"]},
     "platform": {"enum": ["meta", "google_ads", "cross_channel"]},
-    "active_platforms": {
-      "type": "array",
-      "items": {"enum": ["meta", "google_ads"]},
-      "minItems": 1,
-      "uniqueItems": true
-    },
+    "active_platforms": {"type": "array", "items": {"enum": ["meta", "google_ads"]}, "minItems": 1, "uniqueItems": true},
+    "campaign_types": {"$ref": "#/definitions/platformArrayMap"},
     "source_modes": {"$ref": "#/definitions/platformStringMap"},
     "scope": {"type": "string", "minLength": 1},
     "extracted_at": {"type": "string", "format": "date-time"},
@@ -38,86 +22,107 @@
     "comparison_window": {"oneOf": [{"$ref": "#/definitions/window"}, {"type": "null"}]},
     "attribution": {"type": ["string", "null"]},
     "measurement_gate": {"enum": ["confiavel", "utilizavel_com_ressalvas", "insuficiente"]},
-    "sources": {"type": "array", "items": {"type": "string"}},
-    "metrics": {"type": "object", "additionalProperties": {"type": ["number", "string", "null"]}},
-    "findings": {
-      "type": "array",
-      "items": {"$ref": "#/definitions/finding"}
-    },
+    "sources": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "executive_verdict": {"type": "string", "minLength": 1},
+    "coverage": {"type": "array", "items": {"$ref": "#/definitions/coverage"}, "minItems": 1},
+    "evidence": {"type": "array", "items": {"$ref": "#/definitions/evidence"}, "minItems": 1},
+    "findings": {"type": "array", "items": {"$ref": "#/definitions/finding"}, "minItems": 1},
+    "actions": {"type": "array", "items": {"$ref": "#/definitions/action"}, "minItems": 1},
     "limitations": {"type": "array", "items": {"type": "string"}}
   },
   "definitions": {
     "platformStringMap": {
-      "type": "object",
-      "additionalProperties": false,
+      "type": "object", "additionalProperties": false,
       "properties": {
         "meta": {"enum": ["connected_read", "file_based", "context_only", "unavailable"]},
         "google_ads": {"enum": ["connected_read", "file_based", "context_only", "unavailable"]}
       },
       "minProperties": 1
     },
-    "platformNullableStringMap": {
-      "type": "object",
-      "additionalProperties": false,
+    "platformArrayMap": {
+      "type": "object", "additionalProperties": false,
       "properties": {
-        "meta": {"type": ["string", "null"]},
-        "google_ads": {"type": ["string", "null"]}
+        "meta": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
+        "google_ads": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true}
       },
       "minProperties": 1
     },
+    "platformNullableStringMap": {
+      "type": "object", "additionalProperties": false,
+      "properties": {"meta": {"type": ["string", "null"]}, "google_ads": {"type": ["string", "null"]}},
+      "minProperties": 1
+    },
     "window": {
-      "type": "object",
-      "required": ["start", "end"],
+      "type": "object", "required": ["start", "end"], "additionalProperties": false,
+      "properties": {"start": {"type": "string", "format": "date"}, "end": {"type": "string", "format": "date"}}
+    },
+    "coverage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["coverage_id", "platform", "layer", "status", "reason", "source_refs", "entity_count", "spend_coverage_pct", "conversion_coverage_pct"],
       "properties": {
-        "start": {"type": "string", "format": "date"},
-        "end": {"type": "string", "format": "date"}
-      },
-      "additionalProperties": false
+        "coverage_id": {"type": "string", "pattern": "^cov-[a-z0-9-]+$"},
+        "platform": {"enum": ["meta", "google_ads", "commercial", "cross_channel"]},
+        "layer": {"type": "string", "minLength": 1},
+        "status": {"enum": ["analyzed", "unavailable", "insufficient", "not_applicable"]},
+        "reason": {"type": ["string", "null"]},
+        "source_refs": {"type": "array", "items": {"type": "string"}},
+        "entity_count": {"type": ["integer", "null"], "minimum": 0},
+        "spend_coverage_pct": {"type": ["number", "null"], "minimum": 0, "maximum": 100},
+        "conversion_coverage_pct": {"type": ["number", "null"], "minimum": 0, "maximum": 100}
+      }
+    },
+    "metric": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "unit", "definition", "denominator", "current", "comparison", "delta_absolute", "delta_percent", "unavailable_reason"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1}, "unit": {"type": "string", "minLength": 1},
+        "definition": {"type": "string", "minLength": 1}, "denominator": {"type": ["string", "null"]},
+        "current": {"type": ["number", "string", "null"]}, "comparison": {"type": ["number", "string", "null"]},
+        "delta_absolute": {"type": ["number", "string", "null"]}, "delta_percent": {"type": ["number", "null"]},
+        "unavailable_reason": {"type": ["string", "null"]}
+      }
+    },
+    "evidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["evidence_id", "platform", "level", "statement", "source_ref", "window", "comparison_window", "metrics", "limitation"],
+      "properties": {
+        "evidence_id": {"type": "string", "pattern": "^evd-[a-z0-9-]+$"},
+        "platform": {"enum": ["meta", "google_ads", "commercial", "cross_channel"]},
+        "level": {"type": "string", "minLength": 1}, "statement": {"type": "string", "minLength": 1},
+        "source_ref": {"type": "string", "minLength": 1}, "window": {"$ref": "#/definitions/window"},
+        "comparison_window": {"oneOf": [{"$ref": "#/definitions/window"}, {"type": "null"}]},
+        "metrics": {"type": "array", "items": {"$ref": "#/definitions/metric"}, "minItems": 1},
+        "limitation": {"type": ["string", "null"]}
+      }
     },
     "finding": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "finding_id",
-        "classification",
-        "platform",
-        "level",
-        "statement",
-        "evidence",
-        "impact",
-        "confidence",
-        "limitation",
-        "primary_hypothesis",
-        "alternative_hypothesis",
-        "discriminating_check",
-        "next_action",
-        "priority",
-        "owner",
-        "deadline",
-        "evaluation_window",
-        "success_criteria",
-        "stop_criteria"
-      ],
+      "type": "object", "additionalProperties": false,
+      "required": ["finding_id", "classification", "platform", "level", "statement", "evidence_ids", "impact", "confidence", "limitation", "primary_hypothesis", "alternative_hypothesis", "discriminating_check"],
       "properties": {
-        "finding_id": {"type": "string", "pattern": "^fnd-[a-z0-9-]+$"},
-        "classification": {"enum": ["F", "C", "H", "R", "I"]},
-        "platform": {"enum": ["meta", "google_ads", "commercial", "cross_channel"]},
-        "level": {"type": "string", "minLength": 1},
+        "finding_id": {"type": "string", "pattern": "^fnd-[a-z0-9-]+$"}, "classification": {"enum": ["F", "C", "H", "R", "I"]},
+        "platform": {"enum": ["meta", "google_ads", "commercial", "cross_channel"]}, "level": {"type": "string", "minLength": 1},
         "statement": {"type": "string", "minLength": 1},
-        "evidence": {"type": "array", "items": {"type": "string"}, "minItems": 1},
-        "impact": {"type": "string", "minLength": 1},
-        "confidence": {"enum": ["alta", "media", "baixa"]},
-        "limitation": {"type": ["string", "null"]},
-        "primary_hypothesis": {"type": ["string", "null"]},
-        "alternative_hypothesis": {"type": ["string", "null"]},
-        "discriminating_check": {"type": ["string", "null"]},
-        "next_action": {"type": "string", "minLength": 1},
-        "priority": {"enum": ["P0", "P1", "P2", "P3"]},
-        "owner": {"type": ["string", "null"]},
-        "deadline": {"type": ["string", "null"]},
+        "evidence_ids": {"type": "array", "items": {"type": "string", "pattern": "^evd-[a-z0-9-]+$"}, "minItems": 1, "uniqueItems": true},
+        "impact": {"type": "string", "minLength": 1}, "confidence": {"enum": ["alta", "media", "baixa"]},
+        "limitation": {"type": ["string", "null"]}, "primary_hypothesis": {"type": ["string", "null"]},
+        "alternative_hypothesis": {"type": ["string", "null"]}, "discriminating_check": {"type": ["string", "null"]}
+      }
+    },
+    "action": {
+      "type": "object", "additionalProperties": false,
+      "required": ["action_id", "finding_ids", "type", "target", "exact_action", "baseline", "expected_result", "priority", "confidence", "owner", "deadline", "evaluation_window", "success_criteria", "stop_criteria", "dependencies", "risk"],
+      "properties": {
+        "action_id": {"type": "string", "pattern": "^act-[a-z0-9-]+$"},
+        "finding_ids": {"type": "array", "items": {"type": "string", "pattern": "^fnd-[a-z0-9-]+$"}, "minItems": 1, "uniqueItems": true},
+        "type": {"enum": ["investigation", "test", "recommendation", "change_candidate"]},
+        "target": {"type": "string", "minLength": 1}, "exact_action": {"type": "string", "minLength": 1},
+        "baseline": {"type": ["string", "null"]}, "expected_result": {"type": "string", "minLength": 1},
+        "priority": {"enum": ["P0", "P1", "P2", "P3"]}, "confidence": {"enum": ["alta", "media", "baixa"]},
+        "owner": {"type": ["string", "null"]}, "deadline": {"type": ["string", "null"]},
         "evaluation_window": {"type": ["string", "null"]},
         "success_criteria": {"type": "array", "items": {"type": "string"}, "minItems": 1},
-        "stop_criteria": {"type": "array", "items": {"type": "string"}, "minItems": 1}
+        "stop_criteria": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+        "dependencies": {"type": "array", "items": {"type": "string"}}, "risk": {"type": "string", "minLength": 1}
       }
     }
   }

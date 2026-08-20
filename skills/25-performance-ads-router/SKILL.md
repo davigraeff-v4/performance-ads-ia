@@ -1,6 +1,6 @@
 ---
 name: 25-performance-ads-router
-description: Roteia e executa solicitações de Meta Ads ou Google Ads escolhendo automaticamente intenção, plataforma, modo de fonte, dossiê e sequência de skills. Use para configurar, cadastrar cliente, pesquisar palavras-chave, planejar, criar, auditar, analisar, otimizar, relatar, aprovar, executar ou reverter operações de mídia paga, inclusive quando o usuário não mencionar comandos ou skills. Não use para SEO, GA4, Search Console, Google Trends ou plataformas fora do contrato V1.
+description: Roteia solicitações de Meta Ads ou Google Ads, executa as skills necessárias e entrega uma versão completa no chat antes de persistir um dossiê aprovado. Use para configurar, cadastrar cliente, pesquisar palavras-chave, planejar, criar, auditar, analisar, otimizar, relatar, aprovar, executar ou reverter operações de mídia paga. Não use para SEO, GA4, Search Console, Google Trends ou plataformas fora do contrato V1.
 ---
 
 # Roteador PERFORMANCE ADS IA
@@ -13,8 +13,14 @@ Atuar como única entrada implícita do agent. Selecionar e executar as skills i
 2. Identificar **todas** as intenções normalizadas presentes na mensagem — pode haver mais de uma: `configuracao`, `onboarding`, `pesquisa_palavras_chave`, `planejamento`, `criacao`, `auditoria`, `analise`, `otimizacao`, `relatorio`, `aprovacao`, `execucao` ou `reversao`.
 3. Identificar `requested_platforms`, `active_platforms` e `source_mode` por plataforma.
 4. Se houver cliente, ler `clients/{slug}/CLIENTE.md` antes de perguntar informação já registrada.
-5. Localizar o dossiê por `operation_id`, cliente, plataforma, escopo, tipo, status e atualização. Nunca escolher apenas o arquivo mais recente quando houver mais de um candidato plausível.
-6. Tratar dossiê sem `schema_version` ou `route` como legado: preservar o histórico e acrescentar os campos V1 ao atualizar.
+5. Localizar no contexto uma versão candidata ainda não persistida. Localizar dossiê somente quando já houve aprovação editorial ou a demanda continua uma operação registrada.
+6. Em dossiê existente, buscar por `operation_id`, cliente, plataforma, escopo, tipo, status e atualização. Tratar arquivo sem `schema_version` ou `route` como legado.
+
+### Aprovação editorial versus operacional
+
+- Se existe candidata `awaiting_record_approval` e o gestor diz “aprovado”, “pode registrar” ou equivalente sem `/aprovar-operacao <id>`, interpretar como aprovação editorial e criar o dossiê exato daquela versão.
+- Somente `/aprovar-operacao <id>` ou autorização operacional explícita com operação, versão e hash entra na intenção `aprovacao`.
+- Aprovação editorial não aprova nem executa change set.
 
 Perguntar em uma única rodada somente quando cliente, plataforma, conta, objetivo ou operação permanecerem materialmente ambíguos.
 
@@ -59,38 +65,41 @@ Se a rota retornar `blocked`, parar antes das skills operacionais e apresentar o
 4. Não executar `00-configuracao-mcp` apenas porque a fonte é por arquivo ou contexto.
 5. Em `connected_read`, validar a conta por `02` ou `16`; voltar à `00` somente se a conexão estiver ausente ou falhar.
 6. Para otimização, exigir diagnóstico `11` no Meta ou `24` no Google Ads antes da `12`.
-7. Atualizar o dossiê ao longo do fluxo, sem interromper o gestor entre skills que podem rodar silenciosamente.
+7. Para `auditoria`, `analise` e `otimizacao`, usar `depth_mode=full` salvo restrição explícita do gestor.
+8. Manter a representação estruturada em memória; não criar ou atualizar dossiê novo antes da aprovação editorial.
 
-## 4. Registrar a trilha
+## 4. Montar a versão candidata
 
-Salvar no dossiê:
+Manter na candidata:
 
 - `router_version`, `route_id`/`route_ids` canônicos (`intencao:plataforma:source_mode`) e `output_contracts` por plataforma.
 - Intenção, plataformas e modos de fonte.
 - Skills planejadas, executadas e puladas com motivo.
 - Gates encontrados e decisão tomada.
-- Estado final correto.
+- Matriz de cobertura, pacote de evidências, achados, ações e estado persistido esperado.
 
-O dossiê é a fonte estruturada e a trilha de auditoria. Ele não deve ser a única entrega ao gestor.
+Skill planejada deve aparecer como executada ou pulada com motivo. Uma skill obrigatória silenciosamente ausente bloqueia a candidata final.
 
 ## 5. Entregar no chat
 
-Depois de persistir o resultado, apresentar no chat um relatório autossuficiente contendo, conforme a demanda:
+Antes de persistir, apresentar no chat um relatório autossuficiente contendo, conforme a demanda:
 
 1. Veredito executivo e confiança.
 2. Escopo, conta, fonte, janela, comparação e atribuição.
-3. Resultado de negócio e KPIs com denominadores.
-4. Achados com evidência, impacto, hipótese principal, alternativa e limitação.
-5. Plano de ação com alvo, prioridade, responsável, prazo, janela e critérios de sucesso/parada.
-6. Testes, riscos, indisponibilidades e próxima decisão.
-7. Status, `operation_id` e caminho do dossiê apenas como referência final.
+3. Matriz de cobertura por nível e cobertura de investimento/conversões.
+4. Resultado de negócio, KPIs, comparações, unidades e denominadores.
+5. Pacote de evidências identificadas.
+6. Achados com evidência, impacto, hipótese principal, alternativa e limitação.
+7. Plano de ação ligado aos achados, com baseline, alvo, prioridade, responsável, prazo, janela, sucesso/parada, dependência e risco.
+8. Testes, riscos, indisponibilidades e próxima decisão.
 
-Não exigir que o gestor abra o arquivo para compreender o diagnóstico ou decidir. O chat não precisa reproduzir logs, JSON, GAQL ou respostas brutas.
+Marcar a entrega como candidata e solicitar aprovação editorial para registrar. Após aprovação, persistir exatamente a mesma versão e informar status, `operation_id` e caminho. O chat não precisa reproduzir logs, JSON, GAQL ou respostas brutas, mas deve mostrar todos os dados decisórios.
 
 ## 6. Gates de mutação
 
-- `planejamento`, `auditoria`, `analise` e `relatorio` terminam `analysis_only` quando não houver mudança proposta.
-- `criacao`, `otimizacao` e `reversao` podem terminar `proposed`; nunca executar no mesmo comando.
+- Antes da aprovação editorial, demandas novas terminam `awaiting_record_approval` no chat e não têm dossiê.
+- Após aprovação editorial, `planejamento`, `auditoria`, `analise` e `relatorio` persistem `analysis_only` quando não houver mutação.
+- Após aprovação editorial, `criacao`, `otimizacao` e `reversao` podem persistir `proposed`; nunca executar no mesmo comando.
 - `aprovacao` registra a versão/hash e termina `approved`; não executa.
 - `execucao` exige comando explícito, aprovação válida e skill `13`.
 - Google Ads permanece `manual_only` enquanto `write_tools_registered` não estiver homologado.

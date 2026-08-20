@@ -55,7 +55,7 @@ Interprete a classificação:
 4. Abrir integralmente somente os artigos necessários.
 5. Separar o que a fonte oficial informa do que a metodologia recomenda.
 6. Verificar `extraido_em` e a URL original no frontmatter.
-7. Quando a consulta fizer parte de uma operação, registrar no dossiê título, caminho local, URL, data de extração e data da consulta.
+7. Quando a consulta fizer parte de uma operação, registrar na candidata título, caminho local, URL, data de extração e data da consulta; persistir no dossiê somente após aprovação editorial.
 8. Responder por paráfrase; não reproduzir extensamente o artigo.
 
 ## Saída

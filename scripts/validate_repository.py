@@ -45,6 +45,7 @@ EXPECTED_SKILLS = {
     "23-google-ads-campaign-build-plan",
     "24-google-ads-performance-diagnosis",
     "25-performance-ads-router",
+    "26-gtm-tracking-audit-fix",
 }
 EXPECTED_COMMANDS = {
     "configuracao-mcp.md",
@@ -375,12 +376,15 @@ def main() -> int:
         visit(name)
 
     matrix = json.loads((ROOT / "routing_matrix.json").read_text(encoding="utf-8"))
-    if matrix.get("version") != "1.0.0":
+    if matrix.get("version") != "1.1.0":
         fail(errors, "versão inesperada da matriz de roteamento")
     declared_platforms = set(matrix.get("platforms", []))
     if declared_platforms != {"meta", "google_ads"}:
         fail(errors, f"plataformas declaradas na matriz são inválidas: {sorted(declared_platforms)}")
-    supported_conditions = {"always", "source_mode=connected_read", "requires_keywords=true"}
+    policy = matrix.get("dossier_policy", {})
+    if policy.get("candidate_state") != "awaiting_record_approval" or policy.get("persistence") != "after_editorial_approval":
+        fail(errors, "política chat-first/dossiê aprovado ausente ou inválida")
+    supported_conditions = {"always", "source_mode=connected_read", "requires_keywords=true", "requires_gtm_audit=true"}
     for intent, platforms in matrix.get("intents", {}).items():
         for platform, route in platforms.items():
             if platform not in declared_platforms:
@@ -404,12 +408,14 @@ def main() -> int:
 
     required_references = [
         "knowledge/README.md",
+        "knowledge/methodology/diagnostic-coverage-contract.md",
         "templates/dossie-operacao.md",
         "quality/analysis-checklist.md",
         "quality/execution-checklist.md",
         "examples/synthetic/operation-approved.json",
         "examples/synthetic/analysis-actionable.json",
         "scripts/route_request.py",
+        "scripts/validate_dossier.py",
         "scripts/validate_all.py",
         "tests/test_meta_help_search.py",
         "tests/test_google_ads_help_search.py",
@@ -487,7 +493,7 @@ def main() -> int:
             print(f"- {error}")
         return 1
     print(
-        f"VALIDATION OK: {len(EXPECTED_SKILLS)} skills (25 módulos + roteador), "
+        f"VALIDATION OK: {len(EXPECTED_SKILLS)} skills (26 módulos + roteador), "
         f"{EXPECTED_META_HELP_ARTICLES} artigos Meta, base Google Ads e schemas JSON válidos"
     )
     return 0

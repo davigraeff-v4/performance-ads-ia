@@ -1,0 +1,4 @@
+interface:
+  display_name: "Auditoria de Tracking GTM"
+  short_description: "Audita GTM e propõe correções rastreáveis"
+  default_prompt: "Use $26-gtm-tracking-audit-fix para auditar tracking no GTM e propor correções sem publicar."

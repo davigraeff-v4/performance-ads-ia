@@ -51,6 +51,28 @@ class RoutingTests(unittest.TestCase):
         branch = payload["branches"][0]
         self.assertEqual(branch["route_id"], "analise:meta:file_based")
         self.assertEqual(branch["output"], "relatorio_analise")
+        self.assertEqual(branch["delivery_state"], "awaiting_record_approval")
+        self.assertEqual(branch["dossier_persistence"], "after_editorial_approval")
+        self.assertEqual(branch["dossier_state_after_approval"], "analysis_only")
+
+    def test_new_analysis_never_persists_before_editorial_approval(self) -> None:
+        for intent in ("auditoria", "analise", "otimizacao", "relatorio"):
+            for platform in ("meta", "google_ads"):
+                with self.subTest(intent=intent, platform=platform):
+                    payload = route(
+                        "--intent", intent,
+                        "--platform", platform,
+                        "--source-mode", "file_based",
+                    )
+                    branch = payload["branches"][0]
+                    self.assertEqual(branch["delivery_state"], "awaiting_record_approval")
+                    self.assertEqual(branch["dossier_persistence"], "after_editorial_approval")
+
+    def test_operational_approval_uses_existing_dossier(self) -> None:
+        payload = route("--intent", "aprovacao", "--platform", "meta", "--source-mode", "connected_read")
+        branch = payload["branches"][0]
+        self.assertEqual(branch["delivery_state"], "approved")
+        self.assertEqual(branch["dossier_persistence"], "existing_dossier_required")
 
     def test_meta_optimization_is_deep_and_never_loads_google(self) -> None:
         payload = route("--intent", "otimizacao", "--platform", "meta", "--source-mode", "connected_read")

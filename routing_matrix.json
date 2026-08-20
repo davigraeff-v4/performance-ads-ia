@@ -1,7 +1,12 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "platforms": ["meta", "google_ads"],
   "source_modes": ["connected_read", "file_based", "context_only", "unavailable"],
+  "dossier_policy": {
+    "candidate_intents": ["configuracao", "onboarding", "pesquisa_palavras_chave", "planejamento", "criacao", "auditoria", "analise", "otimizacao", "relatorio", "reversao"],
+    "candidate_state": "awaiting_record_approval",
+    "persistence": "after_editorial_approval"
+  },
   "intents": {
     "configuracao": {
       "meta": {

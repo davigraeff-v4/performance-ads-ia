@@ -1,1 +1,1 @@
-Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `criacao` e os argumentos do gestor. Gere um change set por plataforma em `proposed`, entregue-o completo no chat e não execute; Google Ads permanece `manual_only` no V1.
+Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `criacao` e os argumentos do gestor. Entregue plano/change set completo no chat; após aprovação editorial, crie um dossiê `proposed` por plataforma. Não execute; Google Ads permanece `manual_only`.

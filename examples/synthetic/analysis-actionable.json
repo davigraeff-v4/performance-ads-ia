@@ -1,7 +1,12 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
+  "diagnostic_id": "diag-20260806-empresa-search",
+  "diagnostic_version": 1,
+  "depth_mode": "full",
+  "focus": null,
   "platform": "google_ads",
   "active_platforms": ["google_ads"],
+  "campaign_types": {"google_ads": ["search"]},
   "source_modes": {"google_ads": "file_based"},
   "scope": "Campanha Search sintética",
   "extracted_at": "2026-08-06T12:00:00-03:00",
@@ -11,29 +16,89 @@
   "comparison_window": {"start": "2026-06-01", "end": "2026-06-30"},
   "attribution": "conforme export sintético",
   "measurement_gate": "utilizavel_com_ressalvas",
-  "sources": ["Export sintético Google Ads"],
-  "metrics": {"spend": 1000, "conversions": 10, "cpa": 100},
+  "sources": ["src-google-export", "src-crm-unavailable"],
+  "executive_verdict": "O CPA subiu por concentração de gasto em termos genéricos; qualidade comercial permanece indisponível.",
+  "coverage": [
+    {"coverage_id": "cov-google-account", "platform": "google_ads", "layer": "account", "status": "analyzed", "reason": null, "source_refs": ["src-google-export"], "entity_count": 1, "spend_coverage_pct": 100, "conversion_coverage_pct": 100},
+    {"coverage_id": "cov-google-campaign", "platform": "google_ads", "layer": "campaign", "status": "analyzed", "reason": null, "source_refs": ["src-google-export"], "entity_count": 1, "spend_coverage_pct": 100, "conversion_coverage_pct": 100},
+    {"coverage_id": "cov-google-ad-group", "platform": "google_ads", "layer": "ad_group", "status": "analyzed", "reason": null, "source_refs": ["src-google-export"], "entity_count": 2, "spend_coverage_pct": 100, "conversion_coverage_pct": 100},
+    {"coverage_id": "cov-google-ad-asset", "platform": "google_ads", "layer": "ad_or_asset", "status": "analyzed", "reason": null, "source_refs": ["src-google-export"], "entity_count": 3, "spend_coverage_pct": 95, "conversion_coverage_pct": 100},
+    {"coverage_id": "cov-google-conversion", "platform": "google_ads", "layer": "conversion", "status": "analyzed", "reason": null, "source_refs": ["src-google-export"], "entity_count": 1, "spend_coverage_pct": 100, "conversion_coverage_pct": 100},
+    {"coverage_id": "cov-google-device", "platform": "google_ads", "layer": "device", "status": "analyzed", "reason": null, "source_refs": ["src-google-export"], "entity_count": 3, "spend_coverage_pct": 100, "conversion_coverage_pct": 100},
+    {"coverage_id": "cov-google-geography", "platform": "google_ads", "layer": "geography", "status": "analyzed", "reason": null, "source_refs": ["src-google-export"], "entity_count": 2, "spend_coverage_pct": 100, "conversion_coverage_pct": 100},
+    {"coverage_id": "cov-google-time", "platform": "google_ads", "layer": "time", "status": "analyzed", "reason": null, "source_refs": ["src-google-export"], "entity_count": 31, "spend_coverage_pct": 100, "conversion_coverage_pct": 100},
+    {"coverage_id": "cov-google-measurement", "platform": "google_ads", "layer": "measurement", "status": "analyzed", "reason": null, "source_refs": ["src-google-export"], "entity_count": 1, "spend_coverage_pct": null, "conversion_coverage_pct": 100},
+    {"coverage_id": "cov-google-business", "platform": "google_ads", "layer": "business", "status": "unavailable", "reason": "CRM sintético não fornecido", "source_refs": ["src-crm-unavailable"], "entity_count": null, "spend_coverage_pct": null, "conversion_coverage_pct": null},
+    {"coverage_id": "cov-google-changes", "platform": "google_ads", "layer": "change_history", "status": "analyzed", "reason": null, "source_refs": ["src-google-export"], "entity_count": 2, "spend_coverage_pct": null, "conversion_coverage_pct": null},
+    {"coverage_id": "cov-google-budget-rank", "platform": "google_ads", "layer": "budget_and_rank", "status": "analyzed", "reason": null, "source_refs": ["src-google-export"], "entity_count": 1, "spend_coverage_pct": 100, "conversion_coverage_pct": 100},
+    {"coverage_id": "cov-google-keyword", "platform": "google_ads", "layer": "keyword", "status": "analyzed", "reason": null, "source_refs": ["src-google-export"], "entity_count": 12, "spend_coverage_pct": 94, "conversion_coverage_pct": 100},
+    {"coverage_id": "cov-google-search-term", "platform": "google_ads", "layer": "search_term", "status": "analyzed", "reason": null, "source_refs": ["src-google-export"], "entity_count": 40, "spend_coverage_pct": 92, "conversion_coverage_pct": 100},
+    {"coverage_id": "cov-google-network", "platform": "google_ads", "layer": "network", "status": "analyzed", "reason": null, "source_refs": ["src-google-export"], "entity_count": 2, "spend_coverage_pct": 100, "conversion_coverage_pct": 100}
+  ],
+  "evidence": [
+    {
+      "evidence_id": "evd-search-account-cpa",
+      "platform": "google_ads",
+      "level": "account",
+      "statement": "O CPA aumentou 25% no período atual.",
+      "source_ref": "src-google-export",
+      "window": {"start": "2026-07-01", "end": "2026-07-31"},
+      "comparison_window": {"start": "2026-06-01", "end": "2026-06-30"},
+      "metrics": [
+        {"name": "spend", "unit": "BRL", "definition": "Investimento Google Ads", "denominator": null, "current": 1000, "comparison": 800, "delta_absolute": 200, "delta_percent": 25, "unavailable_reason": null},
+        {"name": "conversions", "unit": "lead_atribuido", "definition": "Conversões primárias", "denominator": null, "current": 10, "comparison": 10, "delta_absolute": 0, "delta_percent": 0, "unavailable_reason": null},
+        {"name": "cpa", "unit": "BRL_por_lead", "definition": "Investimento dividido por conversões primárias", "denominator": "conversões primárias", "current": 100, "comparison": 80, "delta_absolute": 20, "delta_percent": 25, "unavailable_reason": null}
+      ],
+      "limitation": "Qualidade comercial não disponível."
+    },
+    {
+      "evidence_id": "evd-search-generic-terms",
+      "platform": "google_ads",
+      "level": "search_term",
+      "statement": "Termos genéricos concentraram gasto sem conversão.",
+      "source_ref": "src-google-export",
+      "window": {"start": "2026-07-01", "end": "2026-07-31"},
+      "comparison_window": {"start": "2026-06-01", "end": "2026-06-30"},
+      "metrics": [
+        {"name": "non_converting_generic_spend", "unit": "BRL", "definition": "Gasto em termos genéricos sem conversão", "denominator": "gasto total", "current": 300, "comparison": 100, "delta_absolute": 200, "delta_percent": 200, "unavailable_reason": null}
+      ],
+      "limitation": null
+    }
+  ],
   "findings": [
     {
-      "finding_id": "fnd-search-001",
+      "finding_id": "fnd-search-generic-waste",
       "classification": "H",
       "platform": "google_ads",
       "level": "search_term",
-      "statement": "Termos pouco aderentes podem estar elevando o CPA.",
-      "evidence": ["Export sintético mostra gasto sem conversão em termos genéricos"],
-      "impact": "Possível desperdício de verba e menor volume qualificado.",
+      "statement": "Termos pouco aderentes provavelmente elevaram o CPA.",
+      "evidence_ids": ["evd-search-account-cpa", "evd-search-generic-terms"],
+      "impact": "Desperdício de verba e menor volume potencialmente qualificado.",
       "confidence": "media",
       "limitation": "Qualidade comercial por termo não disponível.",
       "primary_hypothesis": "Correspondência ampla capturou intenção fraca.",
       "alternative_hypothesis": "A página converte mal mesmo em termos aderentes.",
-      "discriminating_check": "Cruzar termos com conversões qualificadas e taxa da página por grupo.",
-      "next_action": "Revisar termos com gasto e zero conversões e propor negativas sem aplicar automaticamente.",
+      "discriminating_check": "Cruzar termos com leads qualificados e taxa da página por grupo."
+    }
+  ],
+  "actions": [
+    {
+      "action_id": "act-review-search-terms",
+      "finding_ids": ["fnd-search-generic-waste"],
+      "type": "change_candidate",
+      "target": "termos de pesquisa genéricos sem conversão",
+      "exact_action": "Propor negativas específicas sem aplicar automaticamente.",
+      "baseline": "R$300 de gasto sem conversão em termos genéricos",
+      "expected_result": "Reduzir desperdício mantendo conversões qualificadas.",
       "priority": "P1",
+      "confidence": "media",
       "owner": "gestor de tráfego",
       "deadline": "próximo ciclo de otimização",
       "evaluation_window": "14 dias após o lote aprovado",
-      "success_criteria": ["Redução de gasto em termos irrelevantes sem perda de conversões qualificadas"],
-      "stop_criteria": ["Queda de conversões qualificadas acima do limite acordado"]
+      "success_criteria": ["Redução do gasto em termos irrelevantes sem perda de leads qualificados"],
+      "stop_criteria": ["Queda de leads qualificados acima do limite acordado"],
+      "dependencies": ["validar termos com o CRM"],
+      "risk": "Negativa ampla demais pode bloquear demanda válida."
     }
   ],
   "limitations": ["Exemplo sintético; não representa conta real"]

@@ -8,7 +8,7 @@ description: Confirma de forma não destrutiva a conta Meta correta, ativos, moe
 ## Pré-requisitos
 
 1. Skill `01` com cliente e conta esperada.
-2. `CLIENTE.md` e dossiê atual.
+2. `CLIENTE.md` e representação candidata; usar dossiê somente em continuação de operação já persistida.
 3. Em `connected_read`, conexão Meta já disponível; executar a skill `00` somente quando estiver ausente ou falhar. Em `file_based` ou `context_only`, esta skill é pulada.
 
 ## Processo
@@ -29,7 +29,7 @@ description: Confirma de forma não destrutiva a conta Meta correta, ativos, moe
 
 ## Registro
 
-Salvar no dossiê data da consulta, nome, ID mascarado, moeda, timezone, ativos e capacidades. ID integral só pode existir em estado local estritamente necessário; nunca em conhecimento ou exemplo.
+Acrescentar à candidata data da consulta, nome, ID mascarado, moeda, timezone, ativos e capacidades. Persistir isso no dossiê somente após aprovação editorial. ID integral só pode existir em estado local estritamente necessário; nunca em conhecimento ou exemplo.
 
 ## Proibição
 

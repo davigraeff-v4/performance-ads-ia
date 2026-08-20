@@ -14,13 +14,15 @@ description: Gera relatórios Meta Ads, Google Ads ou multicanal, atualiza a mem
 
 ## Processo
 
-1. Confirmar período, comparação, atribuição e status dos dossiês.
+1. Confirmar período, comparação, atribuição e status das candidatas/dossiês existentes.
 2. Consolidar fatos sem misturar plataformas, atribuições, populações ou denominadores.
-3. Gerar uma única representação estruturada do resultado e projetá-la em dois destinos: dossiê local e relatório completo no chat.
-4. Apresentar no chat sumário executivo, escopo/fontes, resultado de negócio, diagnóstico, hipóteses, plano de ação, decisões, mudanças, impacto, riscos, limitações e próximo passo.
+3. Gerar uma única representação estruturada e projetá-la primeiro no chat.
+4. Apresentar no chat sumário executivo, cobertura, escopo/fontes, KPIs comparativos, evidências, diagnóstico, hipóteses, plano de ação, decisões, mudanças, impacto, riscos, limitações e próximo passo.
 5. Separar resultado observado de impacto causal.
-6. Atualizar `CLIENTE.md` acrescentando histórico; nunca apagar aprendizado anterior.
-7. Gerar proposta de aprendizado sanitizado quando houver padrão reutilizável.
+6. Iterar até existir versão final candidata e pedir aprovação editorial.
+7. Somente depois da aprovação criar/atualizar o dossiê com o conteúdo idêntico.
+8. Atualizar `CLIENTE.md` acrescentando histórico; nunca apagar aprendizado anterior.
+9. Gerar proposta de aprendizado sanitizado quando houver padrão reutilizável.
 
 ## Governança do aprendizado
 
@@ -29,10 +31,10 @@ Remover nome, ID, valores, oferta, criativo e qualquer identificador. Declarar n
 ## Saída
 
 - Relatório completo e autossuficiente no chat; o gestor não precisa abrir o dossiê para compreender ou decidir.
-- Dossiê encerrado ou atualizado.
+- Dossiê criado/atualizado somente após aprovação editorial.
 - Ficha do cliente atualizada.
 - Proposta sanitizada separada, se aplicável.
 
-Informar `operation_id`, status e caminho do dossiê somente como referência ao final. Não despejar JSON, logs ou respostas brutas no chat.
+Antes da aprovação, informar `diagnostic_id` e versão candidata. Depois da persistência, informar `operation_id`, status e caminho como referência. Não despejar JSON, logs ou respostas brutas no chat.
 
 Não confundir aprovação do gestor com melhora medida de performance.

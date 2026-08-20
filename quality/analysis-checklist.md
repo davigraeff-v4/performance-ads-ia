@@ -5,8 +5,13 @@
 - [ ] Janela e comparação equivalentes e justificadas.
 - [ ] Atribuição declarada.
 - [ ] Gate de mensuração registrado.
+- [ ] `depth_mode` declarado; `focused` possui foco solicitado explicitamente.
+- [ ] Matriz de cobertura inclui todas as camadas aplicáveis por plataforma/tipo.
+- [ ] Nenhuma camada ficou silenciosamente sem verificação.
+- [ ] Cobertura de investimento e conversões foi quantificada ou declarada indisponível.
 - [ ] Fontes Meta, Google Ads e externas separadas.
 - [ ] KPIs possuem definição e denominador.
+- [ ] KPIs decisórios mostram atual, comparação, delta absoluto, delta percentual e unidade.
 - [ ] Ausência não foi convertida em zero.
 - [ ] Plataformas e comercial não foram reconciliados silenciosamente.
 - [ ] Fatos, cálculos, hipóteses, recomendações e indisponibilidades estão rotulados.
@@ -14,8 +19,13 @@
 - [ ] Correlação não foi tratada como causalidade.
 - [ ] Limitações e confiança aparecem por achado.
 - [ ] Cada achado possui ID, impacto, hipótese principal, alternativa e verificação discriminante.
+- [ ] Cada achado referencia `evidence_ids` existentes.
 - [ ] Cada recomendação informa ação exata/alvo, prioridade, responsável, prazo e janela de avaliação.
+- [ ] Cada ação possui `action_id`, `finding_ids`, baseline, resultado esperado, dependência e risco.
+- [ ] Cada change set referencia ações, achados e evidências no nível do alvo.
 - [ ] Critérios de sucesso e de parada são verificáveis; campo indisponível foi declarado, não omitido.
-- [ ] Skills planejadas, executadas e puladas estão registradas com motivo.
-- [ ] O relatório completo foi entregue no chat; o dossiê é somente memória e auditoria.
-- [ ] Dossiê salvo na pasta correta.
+- [ ] Todas as skills planejadas foram executadas ou puladas com motivo válido.
+- [ ] O relatório completo foi entregue e iterado no chat antes de qualquer dossiê novo.
+- [ ] Aprovação editorial literal e hash correspondem à versão persistida.
+- [ ] Dossiê só foi criado após aprovação editorial e está na pasta correta.
+- [ ] Aprovação editorial não foi tratada como aprovação operacional ou execução.

@@ -2,9 +2,9 @@
 
 Agente especialista em Meta Ads e Google Ads para planejar, analisar e otimizar campanhas com decisões rastreáveis, dados comerciais e aprovação versionada.
 
-O agent roda em **Claude Code** e **Codex**, entende solicitações em linguagem natural, seleciona e executa automaticamente somente as skills necessárias e registra auditorias, análises e mudanças em dossiês Markdown locais.
+O agent roda em **Claude Code** e **Codex**, entende solicitações em linguagem natural, seleciona e executa automaticamente somente as skills necessárias, entrega primeiro no chat e registra apenas versões editorialmente aprovadas em dossiês Markdown locais.
 
-> Estado: V1.3 homologado localmente com roteamento automático, entrega chat-first e busca híbrida (lexical + vetorial local) sobre a Central de Ajuda. O MCP oficial Google Ads continua somente leitura; o complemento `google_ads_extended` prepara Keyword Planner com gates fail-closed e ainda não registra escrita. Novo em V1.3: auditoria e correção de tracking via API do Google Tag Manager (leitura sempre liberada; criação/edição só com allowlist local; publicação de versão fora de escopo, sempre manual). Search Console, Google Trends e GA4 ficam para fases futuras. Dados, credenciais, MCPs/API locais e dossiês reais permanecem fora do Git.
+> Estado: V1.4 local com diagnóstico `full` por padrão, cobertura por nível, pacote de evidências e fluxo chat-first com aprovação editorial antes do dossiê. O MCP oficial Google Ads continua somente leitura; o complemento `google_ads_extended` e a integração GTM permanecem fail-closed conforme os gates documentados. Search Console, Google Trends e GA4 ficam para fases futuras. Dados, credenciais, MCPs/API locais e dossiês reais permanecem fora do Git.
 
 ## 1. O que o agent faz
 
@@ -16,8 +16,9 @@ O agent roda em **Claude Code** e **Codex**, entende solicitações em linguagem
 - Audita tracking, estrutura, termos, públicos, assets e performance; quando o cliente rastreia via Google Tag Manager, audita e corrige tags/triggers/variáveis diretamente pela API do GTM (sem publicar).
 - Propõe otimizações em lotes versionados.
 - Executa somente mudanças suportadas, aprovadas e revalidadas.
-- Registra antes, aprovação, execução e depois no mesmo dossiê.
-- Entrega o relatório completo no chat; o dossiê serve como memória estruturada e auditoria.
+- Analisa todas as camadas aplicáveis ou declara explicitamente indisponibilidade/insuficiência.
+- Entrega o relatório completo no chat, itera e só cria o dossiê após aprovação editorial.
+- Registra no dossiê aprovado diagnóstico, plano, aprovação operacional, execução e depois.
 - Consulta seletivamente a Central Meta e fontes oficiais Google Ads.
 
 Não exclui nem arquiva ativos, não ativa recomendações automáticas e não executa mudanças silenciosas.
@@ -185,7 +186,7 @@ No complemento, `planner_connected` exige três evidências: uso permitido compa
 | `/executar-operacao <id>` | Revalida e executa somente lote suportado. |
 | `/reverter-operacao <id>` | Propõe restauração conhecida com nova aprovação. |
 
-## 10. Catálogo das 26 skills
+## 10. Catálogo das 27 skills
 
 ### Entrada pública
 
@@ -232,6 +233,14 @@ No complemento, `planner_connected` exige três evidências: uso permitido compa
 
 Análises multicanal podem compartilhar um dossiê, mas mutações usam um `operation_id` por plataforma. Aprovar Meta não aprova Google Ads e vice-versa.
 
+O fluxo possui três gates distintos:
+
+1. **Aprovação editorial:** autoriza registrar no dossiê a versão integral já mostrada no chat. Não aprova mídia.
+2. **`/aprovar-operacao <id>`:** aprova a versão/hash do change set persistido. Não executa.
+3. **`/executar-operacao <id>`:** executa somente quando a integração e as permissões foram homologadas.
+
+Sem aprovação editorial, a entrega permanece `awaiting_record_approval` no chat e nenhum dossiê novo é criado.
+
 Na V1.1 inicial:
 
 - Meta pode ser executado somente se escrita tiver sido homologada.
@@ -261,7 +270,7 @@ python3 -m pip install -r requirements-dev.txt
 python3 scripts/validate_all.py
 ```
 
-O comando único verifica 25 módulos mais o roteador, descoberta nas duas plataformas, matriz e grafo, schemas acionáveis, isolamento do RAG lexical e vetorial, rotas sintéticas, base Meta e o conector Google Ads fail-closed no runtime `pipx` instalado quando disponível. Não realiza mutações externas.
+O comando único verifica 26 módulos mais o roteador, descoberta nas duas plataformas, matriz e grafo, schemas acionáveis, cobertura diagnóstica, aprovação editorial, rastreabilidade evidência→achado→ação→mudança, isolamento do RAG e conectores fail-closed. Não realiza mutações externas.
 
 ## 14. Segurança e Git
 

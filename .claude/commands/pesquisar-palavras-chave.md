@@ -1,1 +1,1 @@
-Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `pesquisa_palavras_chave`, plataforma `google_ads` e os argumentos do gestor. Nunca invente métricas e entregue pesquisa, limitações e próximos passos completos no chat.
+Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `pesquisa_palavras_chave`, plataforma `google_ads` e os argumentos do gestor. Nunca invente métricas; entregue e itere pesquisa, limitações e próximos passos no chat e só registre após aprovação editorial.

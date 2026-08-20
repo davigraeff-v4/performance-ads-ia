@@ -18,7 +18,7 @@ description: Consolida estratégia, arquitetura, targeting, palavras-chave quand
 3. Verificar compatibilidade entre tipo, rede, budget, lance, conversões, targeting, ads/assets, feed e destino.
 4. Definir status inicial seguro e checklist de publicação manual.
 5. Gerar change set versionado com itens Google Ads marcados `manual_only` enquanto `write_tools_registered` for falso.
-6. Atualizar dossiê para `proposed` somente quando houver mutação proposta; planejamento puro termina `analysis_only`.
+6. Apresentar tudo no chat. Após aprovação editorial, criar dossiê `proposed` quando houver mutação; planejamento puro persiste `analysis_only`.
 
 ## Gate
 

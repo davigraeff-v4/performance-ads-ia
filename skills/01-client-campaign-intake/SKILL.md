@@ -18,7 +18,7 @@ description: Estrutura cliente, plataformas, contas e campanha a partir de brief
 3. Separar valores confirmados, hipóteses e campos ausentes.
 4. Perguntar em uma única rodada apenas pelos críticos: cliente, modelo, objetivo, oferta, plataforma, conta/escopo quando houver, budget ou limite, restrições e definição do resultado.
 5. Criar/atualizar `CLIENTE.md` sem apagar histórico.
-6. Iniciar dossiê da demanda.
+6. Iniciar a representação candidata em memória. Não criar dossiê antes de apresentar o conteúdo no chat e obter aprovação editorial.
 
 ## Saída
 

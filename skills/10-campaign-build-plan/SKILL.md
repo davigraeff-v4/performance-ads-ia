@@ -9,7 +9,7 @@ description: Consolida estratégia, arquitetura, públicos, budget, lances, trac
 
 1. Skills `02`–`09` concluídas conforme `dependency_graph.json`.
 2. Conta e mensuração validadas.
-3. Dossiê em `draft`.
+3. Versão candidata no chat; dossiê ainda inexistente em demanda nova.
 
 ## Processo
 
@@ -18,7 +18,7 @@ description: Consolida estratégia, arquitetura, públicos, budget, lances, trac
 3. Verificar compatibilidade entre objetivo, conversion location, performance goal, evento, público, posicionamento, budget, lance e criativo.
 4. Definir status inicial seguro; preferir criação pausada quando a ferramenta permitir.
 5. Gerar change set versionado com ordem, antes/depois, risco e reversão.
-6. Atualizar dossiê para `proposed` e solicitar `/aprovar-operacao <id>`.
+6. Apresentar a candidata completa no chat. Após aprovação editorial, criar dossiê `proposed`; somente então orientar `/aprovar-operacao <id>`.
 
 ## Gate
 

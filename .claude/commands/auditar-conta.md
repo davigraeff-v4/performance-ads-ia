@@ -1,1 +1,1 @@
-Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `auditoria` e os argumentos do gestor. Siga somente a rota calculada, não altere contas, encerre `analysis_only` e entregue o relatório completo no chat.
+Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `auditoria` e os argumentos do gestor. Use diagnóstico `full`, não altere contas, entregue e itere tudo no chat e só persista `analysis_only` após aprovação editorial.

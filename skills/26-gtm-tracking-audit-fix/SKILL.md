@@ -34,7 +34,7 @@ Se o gestor perguntar como instalar ou configurar a API do Google Tag Manager, s
 
 ## Processo
 
-1. **Identificar o container.** Usar `python3 scripts/gtm_audit.py --list-accounts` e `--list-containers --account-path accounts/{id}` para localizar a conta/container do cliente. Registrar `account_path` e `container_path` no dossiê.
+1. **Identificar o container.** Usar `python3 scripts/gtm_audit.py --list-accounts` e `--list-containers --account-path accounts/{id}` para localizar a conta/container do cliente. Registrar `account_path` e `container_path` na candidata; persistir só após aprovação editorial.
 2. **Snapshot somente leitura.** `python3 scripts/gtm_audit.py --snapshot --container-path {path}` retorna tags, triggers e variáveis do workspace padrão. Nunca afirmar o que está configurado sem esse retorno.
 3. **Cruzar com o esperado.** Para cada mecanismo de mensuração relevante (GA4 config, conversion linker, tag de conversão Google Ads, Pixel/CAPI via parceiro, consent mode), verificar se existe, se dispara no trigger certo e se não há duplicidade ou conflito (ex: gtag.js e GTM rastreando o mesmo evento).
 4. **Classificar cada achado** com o mesmo vocabulário da skill 03: `confiavel`, `utilizavel_com_ressalvas`, `insuficiente`. Rotular claramente `GTM informa` (fato observado no container) versus `Meta informa`/`Google informa` (o que a plataforma de mídia espera) versus `metodologia recomenda`.
@@ -52,7 +52,7 @@ Antes de qualquer item GTM entrar como executável em `13-approved-change-execut
 
 ## Saída
 
-Registrar no dossiê: containers inspecionados, snapshot resumido, achados classificados com rótulo de fonte, itens de correção propostos (se houver) prontos para entrar no change set da plataforma correspondente, e limitações (ex: sem acesso de leitura a um container, sem allowlist de escrita configurada).
+Entregar no chat e manter na candidata: containers inspecionados, snapshot resumido, achados classificados com rótulo de fonte, itens de correção propostos prontos para o change set da plataforma e limitações. Criar/atualizar dossiê somente após aprovação editorial.
 
 ## Proibições
 

@@ -1,1 +1,1 @@
-Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `analise` e os argumentos do gestor. Siga somente a rota calculada, encerre `analysis_only` e entregue no chat o relatório completo; o dossiê é a memória estruturada.
+Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `analise` e os argumentos do gestor. Use diagnóstico `full` salvo foco explícito, entregue e itere tudo no chat e só persista `analysis_only` após aprovação editorial.

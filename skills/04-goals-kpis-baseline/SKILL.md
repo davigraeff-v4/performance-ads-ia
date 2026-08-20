@@ -28,4 +28,4 @@ description: Define KPIs, metas, baseline, breakeven e indicadores de saúde com
 
 ## Saída
 
-Tabela com `kpi`, `definicao`, `formula`, `fonte`, `baseline`, `meta`, `janela`, `limite` e `confianca`. Registrar quais decisões cada KPI pode ou não sustentar.
+Tabela no chat/candidata com `kpi`, `definicao`, `formula`, `denominador`, `unidade`, `fonte`, `atual`, `comparacao`, `delta_absoluto`, `delta_percentual`, `baseline`, `meta`, `janela`, `limite` e `confianca`. Registrar quais decisões cada KPI pode ou não sustentar. Persistir somente após aprovação editorial.

@@ -1,1 +1,1 @@
-Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `reversao` e o ID informado. Crie novo change set apenas com valores restauráveis conhecidos, marque `proposed`, entregue-o no chat e exija nova aprovação e execução separadas.
+Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `reversao` e o ID informado. Apresente no chat novo change set apenas com valores restauráveis conhecidos; persista `proposed` após aprovação editorial e exija aprovação operacional e execução separadas.

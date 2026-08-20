@@ -10,7 +10,7 @@ description: Audita a confiabilidade de mensuração Meta Ads ou Google Ads, eve
 1. `knowledge/measurement/measurement-quality.md`.
 2. Para Meta: `knowledge/official-meta/measurement-and-capi.md`.
 3. Para Google Ads: `knowledge/official-google/conversions-bidding-and-budget.md`.
-4. Ficha do cliente, dossiê e fontes externas.
+4. Ficha do cliente, representação candidata ou dossiê existente e fontes externas.
 
 ## Processo
 
@@ -29,4 +29,4 @@ description: Audita a confiabilidade de mensuração Meta Ads ou Google Ads, eve
 
 ## Saída
 
-Registrar sinais verificados, lacunas, divergências, impacto analítico, correções propostas e gate. Não declarar tracking "correto" sem evidência observada.
+Registrar na candidata sinais verificados, lacunas, divergências, impacto analítico, correções propostas e gate. Não declarar tracking "correto" sem evidência observada nem persistir dossiê antes da aprovação editorial.

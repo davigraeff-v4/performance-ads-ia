@@ -93,6 +93,10 @@ def resolve_branch(
         status = "blocked"
         gates.append("google_ads_write_manual_only")
 
+    dossier_policy = matrix.get("dossier_policy", {})
+    candidate_intents = set(dossier_policy.get("candidate_intents", []))
+    requires_editorial_approval = intent in candidate_intents
+
     return {
         "route_id": f"{intent}:{platform}:{source_mode}",
         "platform": platform,
@@ -103,6 +107,17 @@ def resolve_branch(
         "gates": gates,
         "final_state": route.get("final_state"),
         "output": route.get("output"),
+        "delivery_state": (
+            dossier_policy.get("candidate_state")
+            if requires_editorial_approval and status == "ready"
+            else route.get("final_state")
+        ),
+        "dossier_persistence": (
+            dossier_policy.get("persistence")
+            if requires_editorial_approval
+            else "existing_dossier_required"
+        ),
+        "dossier_state_after_approval": route.get("final_state"),
     }
 
 

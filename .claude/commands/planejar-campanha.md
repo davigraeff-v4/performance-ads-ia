@@ -1,1 +1,1 @@
-Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `planejamento` e os argumentos do gestor. Planeje sem executar, mantenha ramos multicanal separados e entregue no chat o plano completo; o dossiê termina `analysis_only`.
+Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `planejamento` e os argumentos do gestor. Planeje sem executar, mantenha ramos multicanal separados, entregue e itere no chat; só após aprovação editorial persista `analysis_only`.

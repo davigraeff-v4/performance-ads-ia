@@ -1,1 +1,1 @@
-Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `otimizacao` e os argumentos do gestor. Exija diagnóstico anterior ao change set, gere um lote e `operation_id` por plataforma, entregue o plano completo no chat e não execute.
+Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `otimizacao` e os argumentos do gestor. Exija diagnóstico `full` anterior ao change set, entregue e itere o plano completo no chat; só após aprovação editorial gere dossiê/`operation_id` por plataforma. Não execute.

@@ -1,1 +1,1 @@
-Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `relatorio` e os argumentos do gestor. Preserve fontes, atribuições e denominadores por plataforma e entregue o relatório completo no chat; não promova aprendizado sem aprovação.
+Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `relatorio` e os argumentos do gestor. Preserve cobertura, fontes, atribuições e denominadores; entregue e itere o relatório completo no chat e só registre após aprovação editorial. Não promova aprendizado sem aprovação.

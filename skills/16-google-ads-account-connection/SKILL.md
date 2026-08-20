@@ -9,7 +9,7 @@ description: Confirma de forma não destrutiva a conta Google Ads correta, manag
 
 1. Skill `00-configuracao-mcp` concluída para Google Ads, quando houver MCP.
 2. Skill `01-client-campaign-intake` com cliente e conta esperada.
-3. `CLIENTE.md` e dossiê atual.
+3. `CLIENTE.md` e representação candidata; usar dossiê somente em continuação de operação persistida.
 4. Se o MCP ainda não estiver configurado, seguir o apêndice opcional da seção 15 do `README.md`; nunca pedir segredos no chat.
 
 ## Processo
@@ -56,4 +56,4 @@ Planner é uma capability separada: somente registrar `planner_connected` depois
 
 ## Registro
 
-Salvar no dossiê data, customer mascarado, manager mascarado, moeda, timezone, modo de fonte, ferramentas, revisão do servidor e limitações. Nunca registrar developer token, OAuth, ADC, JSON de credencial ou configuração completa.
+Acrescentar à candidata data, customer/manager mascarados, moeda, timezone, modo de fonte, ferramentas, revisão e limitações. Persistir no dossiê somente após aprovação editorial. Nunca registrar developer token, OAuth, ADC, JSON de credencial ou configuração completa.

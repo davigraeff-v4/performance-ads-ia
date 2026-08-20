@@ -35,7 +35,7 @@ Antes de acionar skills operacionais, registrar:
    - `context_only`: briefing e informações manuais.
    - `unavailable`: fonte necessária indisponível.
 
-Executar somente as skills planejadas pela matriz, respeitando as dependências do `dependency_graph.json` e o contrato de saída retornado por ramo. Registrar route ID canônico, contrato de saída, skills planejadas, executadas e puladas com motivo. Em demanda multicanal, compartilhar contexto comercial, mas nunca misturar contas, atribuições, moedas, fontes, populações ou conclusões. Análises podem ser consolidadas; mutações exigem um `operation_id` e uma aprovação por plataforma.
+Executar somente as skills planejadas pela matriz, respeitando as dependências do `dependency_graph.json` e o contrato de saída retornado por ramo. Manter em memória route ID canônico, contrato de saída, skills planejadas, executadas e puladas com motivo. Skill obrigatória planejada deve ser executada ou marcada como pulada com justificativa válida; uma lacuna silenciosa bloqueia a conclusão. Em demanda multicanal, compartilhar contexto comercial, mas nunca misturar contas, atribuições, moedas, fontes, populações ou conclusões. Análises podem ser consolidadas; mutações exigem um `operation_id` e uma aprovação por plataforma depois da persistência aprovada.
 
 Uma mensagem pode conter mais de uma intenção (ex: cadastro de cliente e uma pergunta de planejamento/boas práticas na mesma mensagem). Resolver e executar uma rota por intenção identificada; uma intenção estreita (`onboarding`, `configuracao`) nunca dispensa o Knowledge Gate da seção 4 para uma segunda pergunta embutida na mesma mensagem que o exija.
 
@@ -49,7 +49,7 @@ Uma mensagem pode conter mais de uma intenção (ex: cadastro de cliente e uma p
 6. Metodologia operacional deste repositório.
 7. Hipóteses do agente, sempre rotuladas.
 
-Uma fonte inferior não pode sobrescrever silenciosamente uma superior. Divergências devem aparecer no dossiê. Dados Meta, Google Ads e comerciais não devem ser reconciliados como se usassem a mesma atribuição.
+Uma fonte inferior não pode sobrescrever silenciosamente uma superior. Divergências devem aparecer na candidata do chat e, após aprovação editorial, no dossiê. Dados Meta, Google Ads e comerciais não devem ser reconciliados como se usassem a mesma atribuição.
 
 ## 4. Knowledge Gate
 
@@ -59,7 +59,7 @@ Antes de analisar ou propor mudanças:
 2. Ler os arquivos indicados pela skill acionada.
 3. Conferir a data de verificação das fontes oficiais.
 4. Verificar online a fonte oficial quando a decisão for sensível, a regra puder ter mudado ou a referência estiver marcada para revisão.
-5. Registrar no dossiê somente as fontes efetivamente usadas.
+5. Registrar na versão candidata somente as fontes efetivamente usadas; persistir no dossiê apenas após aprovação editorial.
 
 Conteúdo oficial explica funcionamento e política da plataforma. Metodologia interna explica como a equipe decide. Nunca atribuir uma heurística interna à Meta ou ao Google.
 
@@ -74,6 +74,8 @@ A base `knowledge/meta-help-center/` contém snapshot local de 151 artigos ofici
 O repositório mantém uma base seletiva da Central de Ajuda em `knowledge/official-google/help-center/`, além do catálogo e das fontes de API em `knowledge/official-google/`; não existe cópia integral do Help Center. Usar `skills/17-google-ads-official-retrieval/SKILL.md` e carregar somente os documentos recuperados pelo índice. Para comportamento atual, elegibilidade, política, cobrança, campos da API, tipos de campanha e decisões materiais, abrir a fonte oficial ao vivo. Release notes ou metadata do MCP podem complementar, mas não substituir, a página oficial específica.
 
 ## 5. Contrato analítico
+
+`auditoria`, `analise` e `otimizacao` usam `depth_mode=full` por padrão. `focused` só é permitido quando o gestor restringir explicitamente o escopo e não pode ser apresentado como diagnóstico completo da conta.
 
 Toda análise deve declarar:
 
@@ -90,6 +92,14 @@ Toda análise deve declarar:
 Classificar afirmações como `[F]` fato, `[C]` cálculo, `[H]` hipótese, `[R]` recomendação ou `[I]` indisponibilidade.
 
 Cada achado deve conter ID rastreável, plataforma/nível, evidência, impacto, confiança, limitação, hipótese principal, hipótese alternativa, verificação discriminante, ação exata, prioridade, responsável, prazo, janela de avaliação e critérios de sucesso e parada. Campo sem base fica explicitamente indisponível; não pode ser omitido para produzir um plano genérico.
+
+Antes dos achados, toda análise `full` deve produzir:
+
+1. Matriz de cobertura por plataforma e tipo de campanha, conforme `knowledge/methodology/diagnostic-coverage-contract.md`.
+2. Pacote de evidências comparativas com IDs, fonte, nível, janela, unidade, definição, denominador, valores, variações e cobertura de investimento/conversões.
+3. Camadas marcadas como `analyzed`, `unavailable`, `insufficient` ou `not_applicable`. Camada aplicável ausente bloqueia o rótulo de diagnóstico completo.
+
+A rastreabilidade obrigatória é `evidence_id -> finding_id -> action_id -> change_id`. Ação sem evidência no nível do alvo não pode virar change set.
 
 Não tratar correlação como causalidade. Não confundir atribuição da plataforma com incrementalidade. Não declarar lucratividade sem custos e margem suficientes.
 
@@ -121,25 +131,34 @@ Separar compras atribuídas, receita atribuída, CPA, ROAS, ticket, margem e ROA
 - O conector local complementar pode expor Keyword Planner somente quando o uso permitido do developer token, a allowlist de customer e o flag local estiverem confirmados. Conexão ou Basic Access isoladamente não satisfazem esse gate.
 - Na etapa V1.1 inicial, nenhuma ferramenta de escrita Google Ads é registrada; toda mudança permanece `manual_only` até existir adapter específico, permissão homologada, testes em conta de teste e nova versão deste contrato.
 
-## 9. Dossiê obrigatório
+## 9. Entrega chat-first e dossiê aprovado
 
-Toda auditoria, análise, criação, otimização, execução, reversão ou relatório gera Markdown em `clients/{slug}/` usando `templates/dossie-operacao.md`. O agent localiza o dossiê por `operation_id`, cliente, plataforma, escopo, tipo, status e atualização; nunca escolhe apenas o arquivo mais recente quando houver ambiguidade.
+O chat é a superfície obrigatória de análise e decisão. Antes de criar qualquer dossiê novo, o agent deve entregar a versão completa no chat, iterar com o gestor e identificar uma versão final candidata. Não criar arquivo provisório, vazio ou parcialmente preenchido.
+
+A persistência exige aprovação editorial explícita para registrar exatamente a versão candidata. Uma aprovação genérica só vale como editorial quando existe uma candidata aguardando registro e não há `/aprovar-operacao <id>` nem pedido explícito de aprovação operacional. Sem aprovação editorial, nenhum dossiê novo é criado.
+
+Depois da aprovação, criar Markdown em `clients/{slug}/` usando `templates/dossie-operacao.md`. O conteúdo humano deve reproduzir integralmente a versão aprovada no chat; o bloco estruturado registra `record_approval`, hash do conteúdo, análise, rota e estado. O agent localiza dossiês existentes por `operation_id`, cliente, plataforma, escopo, tipo, status e atualização; nunca apenas pelo mais recente.
 
 Nome: `AAAA-MM-DD-HHMM-{plataforma}-{tipo}-{escopo}.md`.
 
-Estados: `draft`, `proposed`, `approved`, `executing`, `executed`, `partial_failure`, `failed`, `reverted`, `analysis_only`, `blocked`.
+Estados persistidos: `proposed`, `approved`, `executing`, `executed`, `partial_failure`, `failed`, `reverted`, `analysis_only`, `blocked`. `draft` é legado; novas versões candidatas ficam somente no chat como `awaiting_record_approval`.
 
 Análise sem mutação termina como `analysis_only`. Nunca usar `executed` para recomendação não aplicada.
 
-O dossiê é memória estruturada e trilha de auditoria, não a entrega principal. O mesmo resultado estruturado deve alimentar o arquivo e um relatório completo e autossuficiente no chat, com veredito, escopo/fontes, KPIs, achados, hipóteses, plano de ação, riscos, limitações e próxima decisão. Informar status, `operation_id` e caminho do dossiê somente como referência final; nunca exigir que o gestor abra o arquivo para compreender ou decidir.
+O dossiê é snapshot aprovado, memória estruturada e trilha de auditoria. Detalhes de roteamento ficam no apêndice técnico; seções operacionais vazias não aparecem antes de serem aplicáveis. Nunca exigir que o gestor abra o arquivo para compreender ou decidir.
 
 ## 10. Change set e aprovação
+
+Existem duas aprovações independentes:
+
+- Aprovação editorial: autoriza criar o dossiê com o diagnóstico/plano mostrado no chat; não autoriza mutação.
+- Aprovação operacional: `/aprovar-operacao <id>` autoriza a versão/hash do change set já persistido; não executa.
 
 Cada mutação deve registrar plataforma, conta, ID e versão da operação, achados de origem, alvo, antes/depois, evidência, justificativa, impacto esperado, confiança, impacto financeiro, risco, reversão, precondições, modo de execução, ordem, dependências, responsável, janela de avaliação e critérios de sucesso e parada.
 
 O hash lógico de aprovação é SHA-256 da representação canônica do ID, versão e lista ordenada de mudanças, sem o bloco de aprovação. Qualquer alteração invalida a aprovação.
 
-`/aprovar-operacao <id>` registra, mas não executa. `/executar-operacao <id>` é uma ação separada. Antes de executar, recalcular hash, confirmar versão, reler alvos, comparar snapshots e confirmar capacidade/permissão. Não aceitar aprovação aberta ou multicanal para lotes não individualizados.
+`/aprovar-operacao <id>` nunca deve ser inferido de “aprovado” usado para registrar a versão candidata. `/executar-operacao <id>` é uma ação separada. Antes de executar, recalcular hash, confirmar versão, reler alvos, comparar snapshots e confirmar capacidade/permissão. Não aceitar aprovação aberta ou multicanal para lotes não individualizados.
 
 ## 11. Execução e segurança
 

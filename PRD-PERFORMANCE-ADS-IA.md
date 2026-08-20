@@ -1,10 +1,10 @@
 # PRD — PERFORMANCE ADS IA
 
 **Versão:** 1.4.0-local
-**Data:** 2026-08-08
+**Data:** 2026-08-20
 **Responsável:** Davi
 **Ambientes:** Claude Code e Codex
-**Estado:** V1.2 — roteamento automático e entrega chat-first homologados localmente; MCP oficial validado; complemento local fail-closed instalado; busca híbrida (lexical + vetorial local) sobre a Central de Ajuda Meta e Google Ads
+**Estado:** V1.4 — diagnóstico completo por cobertura, evidências rastreáveis e persistência somente após aprovação editorial
 
 ## 1. Visão geral
 
@@ -29,9 +29,9 @@ Gestores precisam decidir sob pressão usando fontes incompletas, atribuições 
 
 ## 3. Proposta de valor
 
-`demanda → roteamento → fontes → qualidade → diagnóstico/estratégia → decisão → aprovação → execução suportada → verificação → aprendizado`
+`demanda → roteamento → fontes → qualidade → cobertura/evidências → diagnóstico no chat → iteração → aprovação editorial → dossiê → aprovação operacional → execução suportada → verificação → aprendizado`
 
-Cada operação possui uma representação estruturada persistida no dossiê e projetada como relatório completo no chat. Análises multicanal preservam ramos independentes; mutações usam operações e aprovações separadas.
+Cada operação nasce como versão candidata no chat. O dossiê é criado somente após aprovação editorial e reproduz exatamente a versão aprovada. Análises multicanal preservam ramos independentes; mutações usam operações e aprovações separadas.
 
 ## 4. Usuários
 
@@ -80,7 +80,7 @@ Cada operação possui uma representação estruturada persistida no dossiê e p
 - 9 skills operacionais/transversais Meta Ads.
 - 9 skills Google Ads.
 - 1 skill roteadora pública, descoberta automaticamente no Codex e Claude Code.
-- Total: 26 skills (25 módulos + roteador).
+- Total: 27 skills (26 módulos + roteador).
 
 ### Estado
 
@@ -165,7 +165,7 @@ Gerar seeds, intenções, clusters, marca/não marca, match types, negativas, gr
 
 ### RF-09 — Diagnóstico
 
-Analisar níveis e segmentos relevantes, comparar janelas equivalentes, detectar mudanças e decompor entrega, resposta, conversão e qualidade. Cada achado liga evidência, impacto, hipótese principal/alternativa, verificação discriminante e ação exata com responsável, prazo, janela e critérios de sucesso/parada.
+Usar `full` por padrão em auditoria, análise e otimização. Produzir matriz de cobertura por plataforma/tipo, pacote de evidências comparativas e análise das camadas aplicáveis. Camada omitida bloqueia o rótulo de diagnóstico completo. Cada achado referencia evidências; cada ação referencia achados e registra baseline, resultado esperado, responsável, prazo, janela, sucesso, parada, dependência e risco.
 
 ### RF-10 — Change set
 
@@ -173,7 +173,7 @@ Registrar plataforma, conta, achados de origem, alvo, antes/depois, justificativ
 
 ### RF-11 — Aprovação
 
-Registrar ID, versão e hash por plataforma. Drift invalida a aprovação.
+Separar aprovação editorial de aprovação operacional. A primeira autoriza persistir a versão do chat; a segunda registra ID, versão e hash do change set por plataforma. Drift invalida a aprovação correspondente.
 
 ### RF-12 — Execução
 
@@ -181,7 +181,7 @@ Executar somente ferramentas homologadas. Na V1.1 inicial, Google Ads continua `
 
 ### RF-13 — Relatório
 
-Gerar no chat um relatório completo e autossuficiente preservando fontes, atribuições e denominadores por plataforma. Persistir o mesmo resultado no dossiê sem exigir sua abertura.
+Gerar primeiro no chat um relatório completo e autossuficiente com cobertura, KPIs, evidências, diagnóstico e ações. Iterar e persistir somente depois da aprovação editorial, sem exigir a abertura do dossiê.
 
 ### RF-14 — Conhecimento oficial
 
@@ -265,8 +265,10 @@ Quando aplicável: termos, keywords, match type, negativas, parcela de impressõ
 - Zero mistura silenciosa de contas/plataformas.
 - Zero mutação sem aprovação válida.
 - Google Ads permanece `manual_only` enquanto `write_tools_registered` não estiver homologado.
-- 100% das operações com dossiê.
+- 100% dos dossiês novos correspondem a uma versão previamente mostrada e aprovada no chat.
 - 100% das entregas analíticas compreensíveis e decidíveis diretamente no chat.
+- 100% dos diagnósticos `full` com todas as camadas aplicáveis declaradas.
+- 100% dos achados e ações com rastreabilidade `evidence_id -> finding_id -> action_id`.
 - 100% dos achados sintéticos com ação, responsável, janela e critérios de sucesso/parada.
 - Nenhum segredo ou dado real no Git.
 - Índice vetorial local nunca indexa `clients/`; isolamento por plataforma vale igualmente para o sinal lexical e o vetorial.
@@ -274,7 +276,7 @@ Quando aplicável: termos, keywords, match type, negativas, parcela de impressõ
 
 ## 16. Testes de aceite
 
-1. Validar 25 módulos, roteador público, metadados e descoberta Codex/Claude Code.
+1. Validar 26 módulos, roteador público, metadados e descoberta Codex/Claude Code.
 2. Validar schemas e grafo sem ciclos.
 3. Comparar regras de Claude e Codex.
 4. Rotear Meta, Google Ads e multicanal.
@@ -288,15 +290,15 @@ Quando aplicável: termos, keywords, match type, negativas, parcela de impressõ
 12. Verificar ausência de segredos e dados reais.
 13. Preservar 151 artigos Meta e regressões existentes.
 14. Bloquear recuperação Meta para consultas Google Ads e impedir vazamento entre ramos.
-15. Rejeitar por schema achados rasos, mudanças sem evidência e dossiês sem trilha de rota.
+15. Rejeitar achados sem evidência, ações sem achado, mudanças sem ação/evidência e dossiês sem aprovação editorial ou trilha de rota.
 16. Executar uma homologação única incluindo os testes do complemento Google Ads com `PYTHONPATH` correto.
 17. Confirmar que o índice vetorial local (quando construído) não indexa `clients/`, não mistura chunk de uma plataforma no índice da outra, e que a busca híbrida cai para lexical puro quando o índice ou o motor de embedding estiverem ausentes.
 
 ## 17. Roadmap
 
-### V1.2 atual
+### V1.4 atual
 
-Motor multicanal, roteador público automático, Google Ads consultivo, MCP oficial validado, complemento local fail-closed, modo por arquivos, keywords, schemas acionáveis, entrega chat-first, regressões de rota/RAG e busca híbrida (lexical + vetorial local) sobre a Central de Ajuda Meta e Google Ads.
+Motor multicanal, roteador público automático, Google Ads consultivo, conectores fail-closed, modo por arquivos, diagnóstico `full`, matriz de cobertura, pacote de evidências, entrega chat-first, aprovação editorial antes do dossiê e rastreabilidade até o change set.
 
 ### Homologação seguinte
 
@@ -308,4 +310,4 @@ Adapter de escrita Google Ads com `validate_only`, conta de teste, aprovação v
 
 ## 18. Critério final do V1
 
-O V1 está pronto quando nome, contrato, agents, README, PRD, 25 módulos mais roteador, comandos, schemas, templates, conhecimento, matriz, grafo e validações estiverem consistentes; o fluxo funcionar com ou sem MCP; o relatório completo chegar ao chat; e nenhum dado real ou segredo estiver versionado.
+O V1 está pronto quando nome, contrato, agents, README, PRD, 26 módulos mais roteador, comandos, schemas, templates, conhecimento, matriz, grafo e validações estiverem consistentes; o fluxo funcionar com ou sem MCP; o relatório completo chegar ao chat; e nenhum dado real ou segredo estiver versionado.

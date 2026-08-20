@@ -8,7 +8,7 @@ description: Revalida e executa somente change set de plataforma explicitamente 
 ## Pré-condições obrigatórias
 
 1. Comando explícito `/executar-operacao <id>`.
-2. Dossiê com status `approved`.
+2. Dossiê criado após aprovação editorial e com status operacional `approved`.
 3. Responsável, horário, versão e hash de aprovação.
 4. Plataforma e conta `validated_write`; o conector Google Ads V1.1 inicial não satisfaz este gate.
 5. `quality/execution-checklist.md` aprovado.

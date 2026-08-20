@@ -1,1 +1,1 @@
-Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `onboarding` e os argumentos do gestor. Preserve histórico, gere o dossiê e entregue o resumo completo no chat; pergunte em uma rodada apenas pelos campos críticos ausentes.
+Execute `skills/25-performance-ads-router/SKILL.md` com intenção fixa `onboarding` e os argumentos do gestor. Preserve histórico, entregue o resumo completo no chat e só registre dossiê após aprovação editorial; pergunte em uma rodada apenas pelos campos críticos ausentes.

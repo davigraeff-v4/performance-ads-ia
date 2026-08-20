@@ -21,12 +21,14 @@
     "timezones",
     "sources",
     "route",
+    "record_approval",
+    "analysis",
     "changes",
     "approval",
     "execution"
   ],
   "properties": {
-    "schema_version": {"const": "1.0"},
+    "schema_version": {"const": "1.1"},
     "operation_id": {"type": "string", "pattern": "^op-[a-z0-9-]+$"},
     "version": {"type": "integer", "minimum": 1},
     "status": {"enum": ["draft", "proposed", "approved", "executing", "executed", "partial_failure", "failed", "reverted", "analysis_only", "blocked"]},
@@ -48,6 +50,8 @@
     "timezones": {"$ref": "#/definitions/platformNullableStringMap"},
     "sources": {"type": "array", "items": {"type": "string"}},
     "route": {"$ref": "#/definitions/route"},
+    "record_approval": {"$ref": "#/definitions/recordApproval"},
+    "analysis": {"type": ["object", "null"]},
     "changes": {
       "type": "array",
       "items": {"$ref": "#/definitions/change"}
@@ -77,7 +81,7 @@
     "route": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["router_version", "intent", "route_ids", "output_contracts", "planned_skills", "executed_skills", "skipped_skills", "gates", "final_state"],
+      "required": ["router_version", "intent", "route_ids", "output_contracts", "planned_skills", "executed_skills", "skipped_skills", "gates", "dossier_persistence", "final_state"],
       "properties": {
         "router_version": {"type": "string"},
         "intent": {"type": "string"},
@@ -111,7 +115,22 @@
           }
         },
         "gates": {"type": "array", "items": {"type": "string"}},
+        "dossier_persistence": {"const": "after_editorial_approval"},
         "final_state": {"enum": ["analysis_only", "proposed", "approved", "executed_or_failure", "blocked_manual_only", "blocked"]}
+      }
+    },
+    "recordApproval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approved", "approved_by", "approved_at", "diagnostic_id", "diagnostic_version", "content_hash", "statement"],
+      "properties": {
+        "approved": {"const": true},
+        "approved_by": {"type": "string", "minLength": 1},
+        "approved_at": {"type": "string", "format": "date-time"},
+        "diagnostic_id": {"type": "string", "pattern": "^diag-[a-z0-9-]+$"},
+        "diagnostic_version": {"type": "integer", "minimum": 1},
+        "content_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "statement": {"type": "string", "minLength": 1}
       }
     },
     "change": {
@@ -119,7 +138,9 @@
       "additionalProperties": false,
       "required": [
         "change_id",
+        "action_ids",
         "finding_ids",
+        "evidence_ids",
         "platform",
         "target_type",
         "target_ref",
@@ -144,7 +165,9 @@
       ],
       "properties": {
         "change_id": {"type": "string"},
+        "action_ids": {"type": "array", "items": {"type": "string", "pattern": "^act-[a-z0-9-]+$"}, "minItems": 1},
         "finding_ids": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+        "evidence_ids": {"type": "array", "items": {"type": "string", "pattern": "^evd-[a-z0-9-]+$"}, "minItems": 1},
         "platform": {"enum": ["meta", "google_ads"]},
         "target_type": {"enum": ["campaign", "adset", "ad_group", "ad", "creative", "audience", "keyword", "negative_keyword", "asset", "asset_group", "conversion_action", "campaign_budget", "account_setting"]},
         "target_ref": {"type": "string"},
@@ -165,7 +188,7 @@
         "evaluation_window": {"type": ["string", "null"]},
         "success_criteria": {"type": "array", "items": {"type": "string"}, "minItems": 1},
         "stop_criteria": {"type": "array", "items": {"type": "string"}, "minItems": 1},
-        "execution_mode": {"enum": ["mcp", "manual_only", "blocked"]}
+        "execution_mode": {"enum": ["mcp", "gtm_api", "manual_only", "blocked"]}
       }
     },
     "approval": {

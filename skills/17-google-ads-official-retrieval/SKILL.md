@@ -30,7 +30,7 @@ python3 scripts/search_google_ads_help.py "pergunta original" --platform google_
 5. Abrir somente as 1–3 fontes mais aderentes e ler integralmente a seção necessária; não responder por snippet.
 6. Verificar data, versão da API, elegibilidade e limitações por tipo de campanha.
 7. Separar `Google informa` de `metodologia recomenda`.
-8. Registrar título, caminho local, URL, data de extração e data de consulta no dossiê.
+8. Registrar título, caminho local, URL, data de extração e data de consulta na candidata; persistir no dossiê somente após aprovação editorial.
 
 ## Rotas de configuração
 
