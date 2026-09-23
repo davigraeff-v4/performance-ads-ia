@@ -1,6 +1,0 @@
-interface:
-  display_name: "Roteador Performance Ads"
-  short_description: "Seleciona e executa o fluxo correto de mídia"
-  default_prompt: "Use $25-performance-ads-router para rotear e executar esta demanda de Meta Ads ou Google Ads."
-policy:
-  allow_implicit_invocation: true

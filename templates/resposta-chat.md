@@ -11,7 +11,7 @@ Este é o contrato de forma de toda entrega no chat. O corpo do dossiê é exata
 3. **Os números:** tabela com no máximo 5 colunas, seguida sempre de **Como ler esses números**, com um item para cada número que importa:
    - o que a métrica é (por extenso na primeira vez: "custo por lead (CPL)");
    - a conta com os valores reais na primeira vez ("R$ 323,83 ÷ 4 leads = R$ 80,96");
-   - a comparação (período anterior, outro conjunto, meta ou referência) com seta e sinal: ▲ +12,4% / ▼ −8,1%;
+   - a comparação (período anterior, outro conjunto, meta ou referência) com seta e sinal: ▲ +12,4% / ▼ −8,1%; quando houver, até três referências com a origem de cada uma: a meta do cliente, a linha de base (período anterior equivalente) e a referência da plataforma (ex.: "a Meta classifica abaixo da média de anunciantes parecidos"). Plataforma sem referência para a conta: diga isso, não estime;
    - se isso é bom ou ruim para o negócio, e por quê;
    - quando o volume for pequeno, dizer isso e o quanto a conclusão pode mudar.
 4. **O que está acontecendo:** um bloco por achado, com título em linguagem de negócio (`### 1. Os dois remarketings miram o mesmo público`):
@@ -63,5 +63,6 @@ Duas exceções: o comando que o gestor precisa digitar no próximo passo (ex.: 
 - **Consulta rápida:** o número pedido em destaque → comparação curta → uma frase de leitura. Não gera dossiê.
 - **Histórico do cliente:** o que já foi feito (data, o quê, situação), com as pendências e avaliações vencendo em destaque.
 - **Ajuste pontual:** o que muda (antes → depois), risco e como desfazer, checagem rápida de boas práticas e pedido de registro.
+- **Avaliação de operação:** cabeçalho (operação, data da execução, janela avaliada contra a linha de base) → veredito em uma frase (funcionou, não funcionou ou ainda não dá para dizer) → tabela "Critério · Combinado · Resultado · Situação" (✅ ⚠️ ❌ ❔) → por que deu esse resultado, separando o efeito da mudança de outras causas → o que a base oficial explica → o que fazer agora (manter, ajustar ou reverter com pausa) → pedido de aval para registrar a avaliação.
 
 Exemplo completo: `examples/synthetic/v2/otimizacao-remarketing.body.md`.

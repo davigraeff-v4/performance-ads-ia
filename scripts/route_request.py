@@ -36,6 +36,8 @@ def condition_matches(
 
 
 NO_SOURCE_INTENTS = {"duvida", "historico", "configuracao", "onboarding", "planejamento", "criacao"}
+# Avaliar uma operação é afirmar se ela funcionou: exige dado da conta ou arquivo, nunca só contexto.
+DATA_REQUIRED_INTENTS = {"avaliacao"}
 
 
 def resolve_branch(
@@ -87,6 +89,10 @@ def resolve_branch(
     if source_mode == "unavailable" and intent not in NO_SOURCE_INTENTS:
         status = "blocked"
         gates.append("required_source_unavailable")
+
+    if intent in DATA_REQUIRED_INTENTS and source_mode == "context_only":
+        status = "blocked"
+        gates.append("evaluation_requires_account_or_file_data")
 
     if platform == "google_ads" and intent == "execucao":
         status = "blocked"

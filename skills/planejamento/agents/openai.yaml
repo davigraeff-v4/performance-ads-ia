@@ -1,0 +1,4 @@
+interface:
+  display_name: "Planejamento"
+  short_description: "Estratégia, estrutura, públicos, verba e plano de construção"
+  default_prompt: "Use $planejamento para planejar uma campanha Meta Ads ou Google Ads."

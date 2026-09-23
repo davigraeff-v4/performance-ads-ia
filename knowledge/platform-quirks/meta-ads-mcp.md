@@ -45,3 +45,17 @@ Ainda não confirmados: Acre, Alagoas, Pernambuco, Tocantins.
 ## Base oficial ao vivo
 
 `ads_get_help_article` busca artigos da Central de Ajuda da Meta e costuma achar o artigo certo para premissas de mecanismo (por exemplo, sobreposição de leilão) que a base local não cobre. Use na checagem de boas práticas.
+
+- **Idioma da consulta:** em 2026-09-23, a consulta em português ("sobreposição de leilão conjuntos de anúncios") trouxe artigos sem relação (impostos no Brasil, LGPD); a mesma ideia em inglês ("auction overlap ad sets overlapping audiences") trouxe os 3 artigos certos. Consulte com o nome do produto em inglês.
+- **Formato da resposta:** um resumo do artigo em inglês, em minúsculas, com a URL. Serve para confirmar a regra e citar a URL oficial; não serve como cópia fiel para a base local.
+- **Cópia em português:** a página `https://www.facebook.com/business/help/{id}?locale=pt_BR` monta o texto por JavaScript; leitura simples por HTTP devolve só o título. Para acrescentar um artigo à base, é preciso um navegador. Páginas de glossário de métrica (ex.: 957407462768373, "campaign auction overlap") devolveram erro na Central com e sem `locale`.
+
+## Referências oficiais (benchmarks, ranking, oportunidade, anomalias, tendência)
+
+Observado numa conta real de conversas no WhatsApp em 2026-09-23 (todas só de leitura):
+
+- `ads_insights_industry_benchmark` pode devolver apenas "No industry benchmark data available for the given criteria." Isso é resultado, não erro: registre "sem referência do setor" e não estime. Na leitura, "acima da referência" significa sempre **melhor** posição, inclusive em métricas de custo (custo menor que os pares).
+- `ads_insights_auction_ranking_benchmarks` agrupa os anúncios por objetivo de otimização, evento otimizado e tipo de público (remarketing ou prospecção). Anúncios novos ou com pouca entrega vêm com os três rankings "Not Yet Available": não conclua nada sobre qualidade nesse caso.
+- `ads_get_opportunity_score` devolve a nota (0 a 100) **da conta** e recomendações em português, cada uma com `opportunity_score_lift` (pontos) e `lift_estimate`. Recomendações como "aumente o orçamento" (`budget_limited`) são da plataforma, não decisão do gestor; nunca ative recomendação automática.
+- `ads_insights_anomaly_signal` não aceita período; avalia a entrega atual. Exemplo de alerta: `active_delivery_narrow_audience`, com a faixa estimada do público de cada conjunto.
+- `ads_insights_performance_trend` não aceita período (usa todo o histórico disponível), só `analysis_level` ADSET ou AD. Devolve a variação em % **sem sinal** e o rótulo GOOD/BAD; a direção vem do rótulo. A métrica principal padrão é a taxa de cliques; `CPCL` aparece entre as métricas secundárias. Use `hide_ui: true` quando for só apoio ao diagnóstico. Não use o % como comparação do período analisado.

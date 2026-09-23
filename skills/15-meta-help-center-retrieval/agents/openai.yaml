@@ -1,4 +1,0 @@
-interface:
-  display_name: "Consulta à Central Meta"
-  short_description: "Localiza e lê artigos oficiais relevantes"
-  default_prompt: "Use $15-meta-help-center-retrieval para localizar e ler os artigos oficiais da Meta relacionados à pergunta."

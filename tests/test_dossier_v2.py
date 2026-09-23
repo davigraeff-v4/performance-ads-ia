@@ -89,8 +89,8 @@ class DossierV2Tests(unittest.TestCase):
         spec.update({"type": "analise", "changes": [], "evaluation": None, "knowledge_checks": []})
         spec["route"]["route_ids"] = ["analise:meta:connected_read"]
         spec["route"]["executed_skills"] = [
-            "01-client-campaign-intake", "02-meta-account-connection", "15-meta-help-center-retrieval",
-            "03-measurement-data-quality", "04-goals-kpis-baseline", "11-performance-diagnosis",
+            "contexto-cliente", "conexao/meta", "revisor/meta",
+            "mensuracao", "diagnostico/metas-e-linha-de-base", "diagnostico/meta",
         ]
         body = self.body.replace("<!-- mudancas -->", "Nenhuma mudança nesta rodada.")
         code, output = self.create(spec, body)
@@ -112,9 +112,9 @@ class DossierV2Tests(unittest.TestCase):
 
     def test_always_skill_cannot_be_skipped_as_condition_not_met(self) -> None:
         spec = copy.deepcopy(self.spec)
-        spec["route"]["executed_skills"].remove("15-meta-help-center-retrieval")
+        spec["route"]["executed_skills"].remove("revisor/meta")
         spec["route"]["skipped_skills"] = [{
-            "skill": "15-meta-help-center-retrieval",
+            "skill": "revisor/meta",
             "reason_code": "condition_not_met",
             "detail": "sem pergunta de funcionamento",
         }]
@@ -125,9 +125,9 @@ class DossierV2Tests(unittest.TestCase):
 
     def test_knowledge_check_is_mandatory_for_changes(self) -> None:
         spec = copy.deepcopy(self.spec)
-        spec["route"]["executed_skills"].remove("15-meta-help-center-retrieval")
+        spec["route"]["executed_skills"].remove("revisor/meta")
         spec["route"]["skipped_skills"] = [{
-            "skill": "15-meta-help-center-retrieval",
+            "skill": "revisor/meta",
             "reason_code": "no_platform_mechanism",
             "detail": "mudança operacional simples",
         }]
@@ -135,6 +135,57 @@ class DossierV2Tests(unittest.TestCase):
         code, output = self.create(spec)
         self.assertNotEqual(code, 0)
         self.assertIn("checagem de boas práticas", output)
+
+    def test_verdict_without_official_link_is_rejected(self) -> None:
+        spec = copy.deepcopy(self.spec)
+        spec["knowledge_checks"][0]["source_url"] = None
+        code, output = self.create(spec)
+        self.assertNotEqual(code, 0)
+        self.assertIn("exige o link da fonte oficial", output)
+
+    def test_non_official_source_is_only_a_warning(self) -> None:
+        spec = copy.deepcopy(self.spec)
+        spec["knowledge_checks"][0]["source_url"] = "https://blog.exemplo.com.br/sobreposicao"
+        code, output = self.create(spec)
+        self.assertEqual(code, 0, output)
+        self.assertIn("não parece ser documentação oficial", output)
+
+    def test_no_coverage_verdict_may_have_no_link(self) -> None:
+        spec = copy.deepcopy(self.spec)
+        spec["knowledge_checks"].append({
+            "premise": "Frequência acima de 3 em remarketing pequeno encarece o custo por mil impressões",
+            "verdict": "sem_cobertura", "source_title": None, "source_url": None,
+            "note": "Inferência da própria conta; nenhum artigo oficial trata disso.",
+        })
+        code, output = self.create(spec)
+        self.assertEqual(code, 0, output)
+
+    def _analysis_skipping_knowledge(self, intent: str, executed: list[str]) -> dict:
+        spec = copy.deepcopy(self.spec)
+        spec.update({"type": intent, "changes": [], "evaluation": None, "knowledge_checks": []})
+        spec["route"]["route_ids"] = [f"{intent}:meta:connected_read"]
+        spec["route"]["executed_skills"] = executed
+        spec["route"]["skipped_skills"] = [{
+            "skill": "revisor/meta",
+            "reason_code": "no_platform_mechanism",
+            "detail": "leitura de números sem premissa de mecanismo",
+        }]
+        return spec
+
+    def test_no_platform_mechanism_is_refused_in_analysis(self) -> None:
+        spec = self._analysis_skipping_knowledge("analise", [
+            "contexto-cliente", "conexao/meta",
+            "mensuracao", "diagnostico/metas-e-linha-de-base", "diagnostico/meta",
+        ])
+        code, output = self.create(spec, self.body.replace("<!-- mudancas -->", "Nenhuma mudança nesta rodada."))
+        self.assertNotEqual(code, 0)
+        self.assertIn("aceito só em relatório", output)
+
+    def test_no_platform_mechanism_is_a_warning_in_report(self) -> None:
+        spec = self._analysis_skipping_knowledge("relatorio", ["entrega"])
+        code, output = self.create(spec, self.body.replace("<!-- mudancas -->", "Nenhuma mudança nesta rodada."))
+        self.assertEqual(code, 0, output)
+        self.assertIn("pulada sem checagem", output)
 
     def test_deletion_in_rollback_is_rejected(self) -> None:
         spec = copy.deepcopy(self.spec)
@@ -155,9 +206,9 @@ class DossierV2Tests(unittest.TestCase):
         spec["platform"] = "google_ads"
         spec["route"]["route_ids"] = ["otimizacao:google_ads:connected_read"]
         spec["route"]["executed_skills"] = [
-            "01-client-campaign-intake", "16-google-ads-account-connection", "17-google-ads-official-retrieval",
-            "03-measurement-data-quality", "04-goals-kpis-baseline", "24-google-ads-performance-diagnosis",
-            "12-optimization-change-set",
+            "contexto-cliente", "conexao/google-ads", "revisor/google-ads",
+            "mensuracao", "diagnostico/metas-e-linha-de-base", "diagnostico/google-ads",
+            "change-set",
         ]
         for change in spec["changes"]:
             change["platform"] = "google_ads"

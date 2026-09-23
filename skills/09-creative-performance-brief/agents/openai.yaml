@@ -1,4 +1,0 @@
-interface:
-  display_name: "Performance Criativa"
-  short_description: "Diagnostica criativos e gera briefings de testes"
-  default_prompt: "Use $09-creative-performance-brief para analisar criativos e criar um briefing de teste."

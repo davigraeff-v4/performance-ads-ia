@@ -22,11 +22,11 @@ Search Console, Google Trends, GA4, TikTok Ads e outras plataformas ficam fora d
 
 ## 2. Roteamento da demanda
 
-Toda solicitação em linguagem natural ou comando entra pela skill pública `25-performance-ads-router`, descoberta por `.agents/skills/` no Codex e `.claude/skills/` no Claude Code. O roteador resolve a rota em `routing_matrix.json` por meio de `scripts/route_request.py`; skills internas não dependem de acionamento manual pelo gestor. Skills genéricas de mídia paga ou de analytics instaladas no ambiente não substituem o roteador para Meta Ads, Google Ads ou rastreamento de mídia.
+Toda solicitação em linguagem natural ou comando entra pela skill pública `performance-ads-roteador`, descoberta por `.agents/skills/` no Codex e `.claude/skills/` no Claude Code. O roteador resolve a rota em `routing_matrix.json` por meio de `scripts/route_request.py`; os módulos internos (em `skills/`) não dependem de acionamento manual pelo gestor. Skills genéricas de mídia paga ou de analytics instaladas no ambiente não substituem o roteador para Meta Ads, Google Ads ou rastreamento de mídia.
 
-Intenções: `duvida`, `consulta` e `historico` respondem no chat e nunca geram dossiê; `configuracao`, `onboarding`, `pesquisa_palavras_chave`, `planejamento`, `criacao`, `auditoria`, `analise`, `otimizacao`, `ajuste`, `relatorio` e `reversao` geram dossiê depois da aprovação editorial; `aprovacao` e `execucao` atualizam uma operação registrada. `ajuste` é a aplicação de uma decisão já tomada pelo gestor: dispensa diagnóstico, mas não dispensa change set, checagem de boas práticas nem as duas aprovações.
+Intenções: `duvida`, `consulta` e `historico` respondem no chat e nunca geram dossiê; `configuracao`, `onboarding`, `pesquisa_palavras_chave`, `planejamento`, `criacao`, `auditoria`, `analise`, `otimizacao`, `ajuste`, `relatorio` e `reversao` geram dossiê depois da aprovação editorial; `aprovacao`, `execucao` e `avaliacao` atualizam uma operação registrada. `avaliacao` compara o resultado depois da execução com os critérios de sucesso e de parada registrados, explica no chat se funcionou e por quê, e só é registrada (`dossier.py evaluate`) com o aval do gestor; exige dado da conta ou de arquivo, nunca só contexto. `ajuste` é a aplicação de uma decisão já tomada pelo gestor: dispensa diagnóstico, mas não dispensa change set, checagem de boas práticas nem as duas aprovações.
 
-Antes de acionar skills operacionais, registrar:
+Antes de acionar as etapas operacionais, registrar:
 
 1. Intenção da demanda.
 2. `requested_platforms`: `meta`, `google_ads`, ambas ou indefinidas.
@@ -37,7 +37,7 @@ Antes de acionar skills operacionais, registrar:
    - `context_only`: briefing e informações manuais.
    - `unavailable`: fonte necessária indisponível.
 
-Executar somente as skills planejadas pela matriz, respeitando as dependências do `dependency_graph.json` e o contrato de saída retornado por ramo. Manter em memória route ID canônico, contrato de saída, skills planejadas, executadas e puladas com motivo. Skill obrigatória planejada deve ser executada ou marcada como pulada com justificativa válida; uma lacuna silenciosa bloqueia a conclusão. Em demanda multicanal, compartilhar contexto comercial, mas nunca misturar contas, atribuições, moedas, fontes, populações ou conclusões. Análises podem ser consolidadas; mutações exigem um `operation_id` e uma aprovação por plataforma depois da persistência aprovada.
+Executar somente as etapas planejadas pela matriz, respeitando as dependências do `dependency_graph.json` e o contrato de saída retornado por ramo. Manter em memória route ID canônico, contrato de saída, etapas planejadas, executadas e puladas com motivo. Etapa obrigatória planejada deve ser executada ou marcada como pulada com justificativa válida; uma lacuna silenciosa bloqueia a conclusão. Em demanda multicanal, compartilhar contexto comercial, mas nunca misturar contas, atribuições, moedas, fontes, populações ou conclusões. Análises podem ser consolidadas; mutações exigem um `operation_id` e uma aprovação por plataforma depois da persistência aprovada.
 
 Uma mensagem pode conter mais de uma intenção (ex: cadastro de cliente e uma pergunta de planejamento/boas práticas na mesma mensagem). Resolver e executar uma rota por intenção identificada; uma intenção estreita (`onboarding`, `configuracao`) nunca dispensa o Knowledge Gate da seção 4 para uma segunda pergunta embutida na mesma mensagem que o exija.
 
@@ -55,12 +55,12 @@ Uma fonte inferior não pode sobrescrever silenciosamente uma superior. Divergê
 
 ## 4. Knowledge Gate
 
-A base oficial não serve só para responder dúvidas: ela confere as premissas do diagnóstico, das mudanças e da leitura de resultados. Toda operação com mudanças registra ao menos uma checagem de boas práticas (`knowledge_checks`: premissa, veredito sustenta/contradiz/sem cobertura, fonte e nota). Premissa contradita pela fonte oficial exige correção do texto e do plano antes da apresentação. No Meta, a ferramenta `ads_get_help_article` do conector é fonte oficial ao vivo válida.
+A base oficial não serve só para responder dúvidas: ela confere as premissas do diagnóstico, das mudanças e da leitura de resultados. Toda operação com mudanças registra ao menos uma checagem de boas práticas (`knowledge_checks`: premissa, veredito sustenta/contradiz/sem cobertura, fonte e nota). Premissa contradita pela fonte oficial exige correção do texto e do plano antes da apresentação. Veredito sustenta ou contradiz exige título e URL da fonte oficial; sem cobertura dispensa fonte. No Meta, a ferramenta `ads_get_help_article` do conector é fonte oficial ao vivo válida. O revisor `scripts/kb_check.py` recebe as premissas, busca na base da plataforma certa e devolve os candidatos e o esqueleto das checagens; o veredito é sempre do agent, depois de ler. Pular a checagem (`no_platform_mechanism`) só é aceito em relatório sem mudanças.
 
 Antes de analisar ou propor mudanças:
 
 1. Ler `knowledge/README.md`.
-2. Ler os arquivos indicados pela skill acionada.
+2. Ler os arquivos indicados pelo módulo acionado.
 3. Conferir a data de verificação das fontes oficiais.
 4. Verificar online a fonte oficial quando a decisão for sensível, a regra puder ter mudado ou a referência estiver marcada para revisão.
 5. Registrar na versão candidata somente as fontes efetivamente usadas; persistir no dossiê apenas após aprovação editorial.
@@ -71,11 +71,11 @@ A busca sobre `knowledge/meta-help-center/` e `knowledge/official-google/help-ce
 
 ### 4.1 Meta Ads
 
-A base `knowledge/meta-help-center/` contém snapshot local de 151 artigos oficiais. Usar `skills/15-meta-help-center-retrieval/SKILL.md` por recuperação seletiva, nunca por carregamento integral. Correspondência exata ou forte com título exige leitura integral; correspondência temática permite abrir somente os 1–3 melhores candidatos. Política, segurança, elegibilidade, cobrança, restrição ou decisão material exigem validação atual da URL oficial.
+A base `knowledge/meta-help-center/` contém snapshot local de 153 artigos oficiais. Usar `skills/revisor/references/meta.md` por recuperação seletiva, nunca por carregamento integral. Correspondência exata ou forte com título exige leitura integral; correspondência temática permite abrir somente os 1–3 melhores candidatos. Política, segurança, elegibilidade, cobrança, restrição ou decisão material exigem validação atual da URL oficial.
 
 ### 4.2 Google Ads
 
-O repositório mantém uma base seletiva da Central de Ajuda em `knowledge/official-google/help-center/`, além do catálogo e das fontes de API em `knowledge/official-google/`; não existe cópia integral do Help Center. Usar `skills/17-google-ads-official-retrieval/SKILL.md` e carregar somente os documentos recuperados pelo índice. Para comportamento atual, elegibilidade, política, cobrança, campos da API, tipos de campanha e decisões materiais, abrir a fonte oficial ao vivo. Release notes ou metadata do MCP podem complementar, mas não substituir, a página oficial específica.
+O repositório mantém uma base seletiva da Central de Ajuda em `knowledge/official-google/help-center/`, além do catálogo e das fontes de API em `knowledge/official-google/`; não existe cópia integral do Help Center. Usar `skills/revisor/references/google-ads.md` e carregar somente os documentos recuperados pelo índice. Para comportamento atual, elegibilidade, política, cobrança, campos da API, tipos de campanha e decisões materiais, abrir a fonte oficial ao vivo. Release notes ou metadata do MCP podem complementar, mas não substituir, a página oficial específica.
 
 ## 5. Contrato analítico
 
@@ -179,7 +179,7 @@ O hash lógico de aprovação é SHA-256 da representação canônica do ID, ver
 
 ## 12. Configuração MCP e credenciais
 
-A skill `00-configuracao-mcp` diagnostica Meta ou Google Ads e só altera configuração local após confirmação. Nunca exibir configuração completa nem gravar tokens no projeto.
+A skill `conexao/configuracao-mcp` diagnostica Meta ou Google Ads e só altera configuração local após confirmação. Nunca exibir configuração completa nem gravar tokens no projeto.
 
 Status "conectado" não prova autenticação, conta correta, leitura ou escrita. Validar cada gate separadamente.
 
@@ -196,7 +196,7 @@ Para Google Ads:
 
 ### 12.1 Google Tag Manager (GTM)
 
-O GTM não é uma plataforma de mídia paga: é camada de mensuração de apoio, acionada por `skills/26-gtm-tracking-audit-fix/SKILL.md` quando o tracking do cliente passa por um container GTM. Um achado ou change set originado no GTM sempre é rotulado com a plataforma de mídia que a tag serve (`meta` ou `google_ads`), nunca como plataforma própria.
+O GTM não é uma plataforma de mídia paga: é camada de mensuração de apoio, acionada por `skills/mensuracao/references/gtm.md` quando o tracking do cliente passa por um container GTM. Um achado ou change set originado no GTM sempre é rotulado com a plataforma de mídia que a tag serve (`meta` ou `google_ads`), nunca como plataforma própria.
 
 - Conexão via API do Google Tag Manager (`tagmanager.googleapis.com`) diretamente pelo Google Cloud Console, sem servidor MCP: pacote local em `integrations/gtm/`.
 - Client secret OAuth, token cacheado e qualquer credencial ficam somente em `credentials/` e variáveis `PERFORMANCE_ADS_GTM_*` de um `.env` local — nunca no Git (ver `.gitignore`).
@@ -207,6 +207,6 @@ O GTM não é uma plataforma de mídia paga: é camada de mensuração de apoio,
 
 ## 13. Aprendizado e Git
 
-Aprendizados ficam primeiro em `clients/{slug}/CLIENTE.md`. Para promover algo a `knowledge/sanitized-learnings/`, remover nomes, IDs, valores, ofertas, criativos e dados identificáveis; declarar evidência, escopo e limitação; solicitar aprovação de Davi.
+Aprendizados do cliente ficam em `clients/{slug}/APRENDIZADOS.md` (ou, até a ficha ser migrada, na seção de histórico do `CLIENTE.md`); `CLIENTE.md` guarda o perfil estável, e o histórico de operações vem dos dossiês, resumido por `scripts/client_brief.py`. A migração de uma ficha antiga (`scripts/migrate_client_profile.py`) é feita cliente por cliente, com cópia de segurança e aprovação do gestor. Para promover algo a `knowledge/sanitized-learnings/`, remover nomes, IDs, valores, ofertas, criativos e dados identificáveis; declarar evidência, escopo e limitação; solicitar aprovação de Davi.
 
 Publicação e pushes exigem autorização explícita. Versionar apenas motor, templates, conhecimento revisado, snapshot oficial Meta atribuído e exemplos sintéticos. Nunca versionar clientes reais, dossiês, exportações, configurações locais, credenciais ou respostas OAuth.

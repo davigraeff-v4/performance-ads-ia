@@ -157,7 +157,25 @@ def collect(clients_dir: Path, slug: str) -> list[Entry]:
     return sorted(entries, key=lambda entry: (entry.date, entry.path.name), reverse=True)
 
 
+# Arquivos da ficha que também entram na busca (não são operações).
+PROFILE_NOTES = {"APRENDIZADOS.md": "Aprendizados do cliente", "HISTORICO-ANTERIOR.md": "Histórico escrito à mão (anterior à migração)"}
+
+
+def profile_note_entries(clients_dir: Path, slug: str) -> list[Entry]:
+    base = client_dir(clients_dir, slug)
+    entries = []
+    for name, title in PROFILE_NOTES.items():
+        path = base / name
+        if path.is_file():
+            entries.append(Entry(path=path, date="", kind="ficha", status=None, title=title, platform=None,
+                                 type=None, text=path.read_text(encoding="utf-8", errors="ignore")))
+    return entries
+
+
 def format_entry(entry: Entry, clients_dir: Path) -> str:
+    if entry.kind == "ficha":
+        relative = entry.path.relative_to(clients_dir.resolve()) if entry.path.is_relative_to(clients_dir.resolve()) else entry.path
+        return f"Ficha · {entry.title}\n    {relative}"
     day = "/".join(reversed(entry.date.split("-"))) if entry.date else "—"
     status = STATUS_LABELS.get(entry.status or "", entry.status or "sem status")
     platform = PLATFORM_LABELS.get(entry.platform or "", "plataforma não registrada")
@@ -204,7 +222,7 @@ def cmd_search(args: argparse.Namespace) -> int:
         print("Consulta vazia depois de remover palavras comuns; use termos mais específicos.")
         return 1
     ranked = []
-    for entry in collect(clients_dir, args.client):
+    for entry in collect(clients_dir, args.client) + profile_note_entries(clients_dir, args.client):
         title_tokens = set(tokens(entry.title))
         body_tokens = tokens(entry.text)
         body_set = set(body_tokens)

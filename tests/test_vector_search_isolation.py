@@ -168,6 +168,7 @@ class VectorFallbackTests(unittest.TestCase):
             "--platform",
             "meta",
             "--title-only",
+            "--no-rewrite",
         )
         self.assertFalse(payload["vector_used"])
         self.assertTrue(all(result["signal"] == "lexical" for result in payload["results"]))
@@ -184,6 +185,7 @@ class VectorFallbackTests(unittest.TestCase):
             "--platform",
             "meta",
             "--title-only",
+            "--no-rewrite",
         )
         hybrid = run_search(
             META_SEARCH,

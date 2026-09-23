@@ -13,10 +13,13 @@ Use este índice no início de toda auditoria, análise, criação ou otimizaç�
 
 ### Central de Ajuda completa — recuperação seletiva
 
-- `meta-help-center/INDEX.md` — índice de 151 artigos em 12 categorias.
+- `meta-help-center/INDEX.md` — índice de 153 artigos em 12 categorias.
 - `meta-help-center/{categoria}/{artigo}.md` — snapshot integral com título, URL e data de extração.
-- `skills/15-meta-help-center-retrieval/SKILL.md` — regra if/else e gates de leitura.
+- `skills/revisor/references/meta.md` — regra if/else e gates de leitura.
 - `scripts/search_meta_help.py` — busca por título e tópico sem carregar a base inteira.
+- `retrieval-rewrites.json` — dicionário controlado que traduz premissas escritas pelo gestor ("disputa interna no leilão") para o termo de produto do título oficial ("sobreposição no leilão"), por plataforma, e lista os termos que indicam consulta sobre política.
+- `scripts/kb_check.py` — revisor de boas práticas: recebe premissas e devolve os artigos a ler, trechos e o esqueleto de `knowledge_checks`.
+- `scripts/eval_retrieval.py` — mede a busca com as consultas rotuladas de `tests/fixtures/retrieval_eval.json`; rode com `--compare` antes e depois de mexer na busca, no dicionário ou na base.
 
 Para qualquer dúvida sobre funcionamento do Meta Ads, rode primeiro:
 
@@ -51,7 +54,7 @@ O Google Ads usa uma base seletiva em expansão, sem alegar snapshot integral:
 - `official-google/source-catalog.md` — rotas oficiais ainda dependentes de leitura ao vivo.
 - `official-google/google-ads-mcp-and-api.md` — API e MCP.
 - Os demais resumos em `official-google/` são legados em revisão durante a expansão da base.
-- `skills/17-google-ads-official-retrieval/SKILL.md` — gate seletivo Google Ads.
+- `skills/revisor/references/google-ads.md` — gate seletivo Google Ads.
 
 Para dúvidas de interface/produto, execute primeiro:
 

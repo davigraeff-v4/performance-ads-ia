@@ -1,0 +1,4 @@
+interface:
+  display_name: "Qualidade de Mensuração"
+  short_description: "Audita eventos, atribuição e consistência de dados"
+  default_prompt: "Use $mensuracao para auditar tracking e confiabilidade dos dados."

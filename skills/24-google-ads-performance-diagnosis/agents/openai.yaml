@@ -1,4 +1,0 @@
-interface:
-  display_name: "Diagnóstico Google Ads"
-  short_description: "Diagnostica performance e gargalos Google Ads"
-  default_prompt: "Use $24-google-ads-performance-diagnosis para diagnosticar campanhas e contas Google Ads."

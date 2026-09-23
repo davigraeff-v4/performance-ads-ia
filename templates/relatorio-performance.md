@@ -8,7 +8,7 @@ Contrato do relatório no chat. Segue `templates/resposta-chat.md` (explicativo,
 2. **Resumo do período:** o resultado de negócio, o que melhorou, o que piorou e a decisão principal, em até 6 frases.
 3. **Resultado de negócio:** leads válidos, oportunidades, vendas e receita quando existirem. Em lead generation, custo por lead sozinho não prova qualidade; em e-commerce, ROAS não é lucro.
 4. **Os números por plataforma:** uma tabela por plataforma (Meta Ads, Google Ads e comercial separados), seguida de "Como ler esses números". Atribuições diferentes não são somadas.
-5. **O que foi bem e o que foi mal, e por quê:** para cada ponto, o número, a comparação e a explicação. Conferir as explicações de mecanismo na base oficial (skill 15 ou 17) e citar a fonte.
+5. **O que foi bem e o que foi mal, e por quê:** para cada ponto, o número, a comparação e a explicação. Conferir as explicações de mecanismo na base oficial (módulo `revisor`, com `scripts/kb_check.py`) e citar a fonte.
 6. **O que fizemos no período:** operações executadas, com a situação de cada uma e o resultado da avaliação quando a janela já venceu (`scripts/client_history.py list {slug}`).
 7. **Avaliações pendentes:** operações cuja janela de avaliação venceu, com a proposta de avaliação.
 8. **Próximas decisões:** o que o gestor precisa decidir, com opções e recomendação.

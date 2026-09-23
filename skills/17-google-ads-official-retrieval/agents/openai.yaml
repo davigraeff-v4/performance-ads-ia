@@ -1,4 +1,0 @@
-interface:
-  display_name: "Fontes Oficiais Google Ads"
-  short_description: "Consulta documentação oficial do Google Ads"
-  default_prompt: "Use $17-google-ads-official-retrieval para consultar fontes oficiais relevantes do Google Ads."

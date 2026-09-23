@@ -1,0 +1,42 @@
+{
+  "meta": {
+    "consultas": 22,
+    "avaliadas_por_acerto": 15,
+    "aguardando_artigo": 3,
+    "acerto_1": 0.533,
+    "acerto_3": 0.867,
+    "forte_errado": 0.143,
+    "intrusao_politica": 0.15,
+    "gate_ok": 1.0
+  },
+  "google_ads": {
+    "consultas": 18,
+    "avaliadas_por_acerto": 16,
+    "aguardando_artigo": 0,
+    "acerto_1": 0.625,
+    "acerto_3": 0.75,
+    "forte_errado": 0.176,
+    "intrusao_politica": 0.0,
+    "gate_ok": 1.0
+  },
+  "todas": {
+    "consultas": 40,
+    "avaliadas_por_acerto": 31,
+    "aguardando_artigo": 3,
+    "acerto_1": 0.581,
+    "acerto_3": 0.806,
+    "forte_errado": 0.158,
+    "intrusao_politica": 0.081,
+    "gate_ok": 1.0
+  },
+  "controle": {
+    "consultas": 11,
+    "avaliadas_por_acerto": 10,
+    "aguardando_artigo": 1,
+    "acerto_1": 0.6,
+    "acerto_3": 0.8,
+    "forte_errado": 0.091,
+    "intrusao_politica": 0.091,
+    "gate_ok": 0.0
+  }
+}

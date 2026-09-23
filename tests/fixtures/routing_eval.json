@@ -1,0 +1,511 @@
+{
+  "version": "1.2.0",
+  "description": "Frases reais de pedidos ao agent (sessões de 08/2026 a 09/2026), anonimizadas: nomes de cliente viram 'cliente X', sem IDs, telefones ou links. 'esperado' lista as intenções e plataformas corretas; 'aceitas' lista intenções que podem substituir a esperada; 'extras_ok' lista intenções a mais que são permitidas, mas não substituem nenhuma esperada; 'plataforma_pela_ficha' indica que a frase não diz a plataforma e ela vem do CLIENTE.md. 'fora_do_escopo' marca pedidos que não entram pelo roteador. A classificação é do modelo, então a parte semiautomática (scripts/eval_routing.py --prompt/--score) não roda no CI; a conferência de que toda rota esperada existe (--check) roda.",
+  "frases": [
+    {
+      "id": "r01",
+      "frase": "tem como rodar campanha de visita à loja/visita ao local no meta ads? se sim, como faço isso e quais as boas práticas e recomendações",
+      "esperado": [
+        {
+          "intent": "duvida",
+          "plataformas": [
+            "meta"
+          ]
+        }
+      ],
+      "aceitas": [
+        "planejamento"
+      ]
+    },
+    {
+      "id": "r02",
+      "frase": "qual a id da página do facebook do cliente X?",
+      "esperado": [
+        {
+          "intent": "consulta",
+          "plataformas": [
+            "meta"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "r03",
+      "frase": "como faço para mudar os horários em que as campanhas rodam no ads editor? quero colocar as campanhas do cliente X para rodar somente no horário comercial em dia de semana",
+      "esperado": [
+        {
+          "intent": "duvida",
+          "plataformas": [
+            "google_ads"
+          ]
+        }
+      ],
+      "aceitas": [
+        "ajuste"
+      ]
+    },
+    {
+      "id": "r04",
+      "frase": "compare o custo por lead no google do cliente X de maio e junho juntos e de julho e agosto juntos, das conversões gerais, não somente de preenchimento de formulário",
+      "esperado": [
+        {
+          "intent": "consulta",
+          "plataformas": [
+            "google_ads"
+          ]
+        }
+      ],
+      "aceitas": [
+        "analise"
+      ]
+    },
+    {
+      "id": "r05",
+      "frase": "para qual canal as pessoas estão entrando em contato nas campanhas do cliente X?",
+      "esperado": [
+        {
+          "intent": "consulta",
+          "plataformas": [
+            "meta"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "r06",
+      "frase": "como está separado o investimento por campanha e por loja no meta ads e no google ads do cliente X, investimento diário",
+      "esperado": [
+        {
+          "intent": "consulta",
+          "plataformas": [
+            "meta",
+            "google_ads"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "r07",
+      "frase": "desativei as campanhas de leads para whatsapp do cliente X, rodando somente formulário; precisamos ajustar o investimento para agora investir 100% em leads de formulário. no último dossiê fizemos o cálculo, me passe aqui",
+      "esperado": [
+        {
+          "intent": "ajuste",
+          "plataformas": [
+            "meta"
+          ]
+        },
+        {
+          "intent": "historico",
+          "plataformas": []
+        }
+      ],
+      "plataforma_pela_ficha": true
+    },
+    {
+      "id": "r08",
+      "frase": "vamos otimizar as campanhas do cliente X, faça um comparativo com a nossa última otimização e os resultados que tivemos, para ver se conseguimos aumentar o número de leads e diminuir o CPL, com base no último dossiê",
+      "esperado": [
+        {
+          "intent": "avaliacao",
+          "plataformas": [
+            "google_ads"
+          ]
+        },
+        {
+          "intent": "otimizacao",
+          "plataformas": [
+            "google_ads"
+          ]
+        }
+      ],
+      "plataforma_pela_ficha": true,
+      "extras_ok": [
+        "historico"
+      ]
+    },
+    {
+      "id": "r09",
+      "frase": "no google ads do cliente X estamos tendo muitos leads procurando serviços que não fazemos e um alto número de perdas; me mande os termos de pesquisa que mais estão gerando leads para analisar se faz sentido",
+      "esperado": [
+        {
+          "intent": "analise",
+          "plataformas": [
+            "google_ads"
+          ]
+        }
+      ],
+      "aceitas": [
+        "consulta",
+        "otimizacao"
+      ]
+    },
+    {
+      "id": "r10",
+      "frase": "preciso de um relatório das palavras-chave que estão ativas em todas as campanhas do cliente X, uma lista para eu enviar ao cliente",
+      "esperado": [
+        {
+          "intent": "consulta",
+          "plataformas": [
+            "google_ads"
+          ]
+        }
+      ],
+      "aceitas": [
+        "relatorio"
+      ]
+    },
+    {
+      "id": "r11",
+      "frase": "vamos trabalhar com um novo cliente, cliente X, esta é a conta do google; a primeira otimização é colocar UTM em todos os anúncios. verifique os anúncios que estão sem UTM ou com o padrão errado",
+      "esperado": [
+        {
+          "intent": "onboarding",
+          "plataformas": [
+            "google_ads"
+          ]
+        },
+        {
+          "intent": "ajuste",
+          "plataformas": [
+            "google_ads"
+          ]
+        }
+      ],
+      "aceitas": [
+        "otimizacao",
+        "auditoria"
+      ]
+    },
+    {
+      "id": "r12",
+      "frase": "temos o cliente X, fizemos algumas atividades de UTM, porém preciso fazer uma varredura COMPLETA; coloca o tag manager na allowlist. preciso identificar os principais resultados, pontos positivos e pontos a melhorar na conta",
+      "esperado": [
+        {
+          "intent": "auditoria",
+          "plataformas": [
+            "meta",
+            "google_ads"
+          ]
+        }
+      ],
+      "profundidade": "full",
+      "requires_gtm_audit": true,
+      "plataforma_pela_ficha": true,
+      "extras_ok": [
+        "configuracao"
+      ]
+    },
+    {
+      "id": "r13",
+      "frase": "adicione na allowlist o GTM do cliente X; precisamos fazer o rastreamento da nova landing page de pneus, o GTM já está nela. crie as tags de lead iguais às da outra landing page",
+      "esperado": [
+        {
+          "intent": "ajuste",
+          "plataformas": [
+            "meta",
+            "google_ads"
+          ]
+        }
+      ],
+      "requires_gtm_audit": true,
+      "extras_ok": [
+        "configuracao"
+      ],
+      "aceitas": [
+        "criacao"
+      ]
+    },
+    {
+      "id": "r14",
+      "frase": "em todas as campanhas do cliente X no meta, tire de todos os conjuntos de anúncio o posicionamento do facebook e todos os outros, mantendo somente instagram",
+      "esperado": [
+        {
+          "intent": "ajuste",
+          "plataformas": [
+            "meta"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "r15",
+      "frase": "puxe os resultados das campanhas de tráfego pago do cliente X de agosto, geral e separado por unidade, meta e google; campanhas que não são de uma unidade podem ir num grupo separado",
+      "esperado": [
+        {
+          "intent": "relatorio",
+          "plataformas": [
+            "meta",
+            "google_ads"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "r16",
+      "frase": "analisa as campanhas do cliente X e sugira otimizações com base no resultado desse mês, somente informações de tráfego",
+      "esperado": [
+        {
+          "intent": "otimizacao",
+          "plataformas": [
+            "meta",
+            "google_ads"
+          ]
+        }
+      ],
+      "plataforma_pela_ficha": true,
+      "extras_ok": [
+        "analise"
+      ]
+    },
+    {
+      "id": "r17",
+      "frase": "quero resolver a questão do cliente X: a unidade tal no meta está com o CPL muito acima, o que pode ser?",
+      "esperado": [
+        {
+          "intent": "analise",
+          "plataformas": [
+            "meta"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "r18",
+      "frase": "acesse via mcp e crie um relatório de resultados mês a mês de janeiro a agosto do tráfego pago separado por canal, meta ads e google ads, o que deu certo, comparativo de resultados; vai ser analysis only",
+      "esperado": [
+        {
+          "intent": "relatorio",
+          "plataformas": [
+            "meta",
+            "google_ads"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "r19",
+      "frase": "veja o último dossiê do cliente X, mexemos bastante nas campanhas; vou te mandar o resultado de setembro e quero saber, com base nas otimizações que fizemos, se as vendas melhoraram",
+      "esperado": [
+        {
+          "intent": "avaliacao",
+          "plataformas": [
+            "google_ads"
+          ]
+        }
+      ],
+      "fonte": "file_based",
+      "plataforma_pela_ficha": true,
+      "aceitas": [
+        "analise"
+      ],
+      "extras_ok": [
+        "historico"
+      ]
+    },
+    {
+      "id": "r20",
+      "frase": "gera um relatório da primeira quinzena das campanhas do cliente X; pode ser bem simples: valor investido, conversas iniciadas, custo por conversa iniciada e comparativo",
+      "esperado": [
+        {
+          "intent": "relatorio",
+          "plataformas": [
+            "meta"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "r21",
+      "frase": "vamos otimizar algumas campanhas do cliente X no google ads: vou colocar 60% do investimento diário na campanha de branding, 20% numa nova campanha focada no termo que mais converte e o resto dividido nas outras",
+      "esperado": [
+        {
+          "intent": "ajuste",
+          "plataformas": [
+            "google_ads"
+          ]
+        }
+      ],
+      "aceitas": [
+        "otimizacao",
+        "criacao"
+      ]
+    },
+    {
+      "id": "r22",
+      "frase": "um cliente mandou esta mensagem questionando o objetivo da campanha: engajamento com canal WhatsApp para um SaaS B2B, e diz que não usaria isso como arquitetura de aquisição. o que você acha e o que responder?",
+      "esperado": [
+        {
+          "intent": "duvida",
+          "plataformas": [
+            "meta"
+          ]
+        }
+      ],
+      "aceitas": [
+        "planejamento",
+        "analise"
+      ]
+    },
+    {
+      "id": "r23",
+      "frase": "vamos analisar o resultado das campanhas do cliente X no google junto com os dados de leads do CRM e o relatório de marketing em PDF que te mandei",
+      "esperado": [
+        {
+          "intent": "analise",
+          "plataformas": [
+            "google_ads"
+          ]
+        }
+      ],
+      "fonte": "file_based"
+    },
+    {
+      "id": "r24",
+      "frase": "adicione todos esses criativos e crie um texto principal para os anúncios dessas 3 campanhas; eu já adicionei os criativos na biblioteca",
+      "esperado": [
+        {
+          "intent": "criacao",
+          "plataformas": [
+            "meta"
+          ]
+        }
+      ],
+      "aceitas": [
+        "ajuste"
+      ]
+    },
+    {
+      "id": "r25",
+      "frase": "verifica se na conta do cliente X no meta ads estão configuradas corretamente as UTMs, por favor",
+      "esperado": [
+        {
+          "intent": "consulta",
+          "plataformas": [
+            "meta"
+          ]
+        }
+      ],
+      "aceitas": [
+        "auditoria",
+        "analise"
+      ]
+    },
+    {
+      "id": "r26",
+      "frase": "dentro do meta ads valide as campanhas de abril e junho — campanha, segmentação, público, anúncio, oferta, tudo; recebi um áudio do cliente e quero encontrar padrões",
+      "esperado": [
+        {
+          "intent": "analise",
+          "plataformas": [
+            "meta"
+          ]
+        }
+      ],
+      "profundidade": "full",
+      "aceitas": [
+        "auditoria"
+      ]
+    },
+    {
+      "id": "r27",
+      "frase": "semana passada subimos algumas campanhas do cliente X no google, na sexta; até agora geramos somente 1 lead. por que não estamos conseguindo gerar demanda?",
+      "esperado": [
+        {
+          "intent": "analise",
+          "plataformas": [
+            "google_ads"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "r28",
+      "frase": "subimos criativos novos no meta do cliente X; o número de leads aumentou bastante, mas a desqualificação também. desativa o advantage+ em todos os conjuntos que estão ativados, creio que é um dos grandes pontos",
+      "esperado": [
+        {
+          "intent": "ajuste",
+          "plataformas": [
+            "meta"
+          ]
+        }
+      ],
+      "nota": "O gestor já decidiu (desativar o Advantage+): é ajuste, que dispensa diagnóstico; a análise da desqualificação é aceita, não obrigatória.",
+      "extras_ok": [
+        "analise"
+      ]
+    },
+    {
+      "id": "r29",
+      "frase": "tenho um novo cliente, cliente X, esta é a identificação da conta de anúncios do meta; começamos a rodar campanha agora, pegue o contexto no google drive com as transcrições",
+      "esperado": [
+        {
+          "intent": "onboarding",
+          "plataformas": [
+            "meta"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "r30",
+      "frase": "preciso atingir este público nas campanhas de meta ads do cliente X: locadores, buffets, decoradores, arquitetos, restaurantes. qual tipo de interesse devo usar?",
+      "esperado": [
+        {
+          "intent": "planejamento",
+          "plataformas": [
+            "meta"
+          ]
+        }
+      ],
+      "aceitas": [
+        "duvida"
+      ]
+    },
+    {
+      "id": "r31",
+      "frase": "acesse a conta do cliente X no google ads, avalie as palavras-chave que mais convertem, principalmente de calibração e ensaios, para a parte de laboratório",
+      "esperado": [
+        {
+          "intent": "pesquisa_palavras_chave",
+          "plataformas": [
+            "google_ads"
+          ]
+        }
+      ],
+      "aceitas": [
+        "analise",
+        "consulta"
+      ]
+    },
+    {
+      "id": "r32",
+      "frase": "quantas tarefas no ekyte têm estas duas tags?",
+      "esperado": [],
+      "fora_do_escopo": true
+    },
+    {
+      "id": "r33",
+      "frase": "pesquise na internet boas práticas de anúncios para ChatGPT Ads",
+      "esperado": [],
+      "fora_do_escopo": true
+    }
+  ],
+  "historico_de_medicoes": [
+    {
+      "data": "2026-09-23",
+      "prompt": "Sprint 2 antes do exemplo de avaliação",
+      "gabarito": "1.0.0",
+      "acerto": 0.758,
+      "acerto_multi_intencao": 0.25,
+      "nota": "5 dos 8 erros eram gabarito rígido demais (revisto na 1.1.0 e 1.2.0, com 'aceitas' e 'extras_ok'). Contra o gabarito 1.2.0 as mesmas respostas dão 94% e 67%. Erro real: 'comparativo com a última otimização' não virou avaliacao."
+    },
+    {
+      "data": "2026-09-23",
+      "prompt": "Sprint 2 com o exemplo 'comparativo com a nossa última otimização' → avaliacao",
+      "gabarito": "1.2.0",
+      "acerto": 0.97,
+      "acerto_multi_intencao": 1.0,
+      "nota": "Erro restante: r03 ('Ads Editor') classificado como Meta; o Ads Editor é do Google Ads."
+    }
+  ]
+}

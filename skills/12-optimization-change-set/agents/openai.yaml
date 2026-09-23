@@ -1,4 +1,0 @@
-interface:
-  display_name: "Lote de Otimizações"
-  short_description: "Transforma diagnóstico em mudanças aprováveis"
-  default_prompt: "Use $12-optimization-change-set para criar um lote versionado de otimizações."

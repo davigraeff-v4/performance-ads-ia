@@ -1,0 +1,512 @@
+{
+  "version": "1.0.0",
+  "description": "Consultas rotuladas para medir a busca nas bases oficiais (Meta e Google Ads). Tipos: premissa (afirmação de mecanismo, como aparece em diagnósticos e change sets), pergunta (dúvida direta), politica (consulta legítima sobre política; não conta como intrusão), sem_cobertura (nenhum artigo da base responde; nada deveria sair como forte) e outra_plataforma (o gate precisa recusar). 'expected' lista os artigos aceitos; acertar qualquer um conta. Artigos marcados em 'pending' ainda não estão na base. Consultas com 'holdout' foram escritas antes de qualquer ajuste e não são usadas para calibrar pesos nem o dicionário de reescrita: medem se a melhora vale para premissas novas.",
+  "pending": {},
+  "queries": [
+    {
+      "id": "meta-01",
+      "platform": "meta",
+      "type": "premissa",
+      "query": "sobreposição de público entre conjuntos de anúncios",
+      "expected": [
+        "knowledge/meta-help-center/03-direcionamento-audiencias/sobre-publicos-sobrepostos.md",
+        "knowledge/meta-help-center/09-otimizacao-desempenho/como-entender-a-sobreposicao-no-leilao.md"
+      ]
+    },
+    {
+      "id": "meta-02",
+      "platform": "meta",
+      "type": "premissa",
+      "query": "conjuntos de anúncios com públicos sobrepostos disputando o mesmo leilão",
+      "expected": [
+        "knowledge/meta-help-center/09-otimizacao-desempenho/como-entender-a-sobreposicao-no-leilao.md",
+        "knowledge/meta-help-center/03-direcionamento-audiencias/sobre-publicos-sobrepostos.md"
+      ]
+    },
+    {
+      "id": "meta-03",
+      "platform": "meta",
+      "type": "premissa",
+      "query": "consolidar conjuntos de anúncios",
+      "expected": [
+        "knowledge/meta-help-center/09-otimizacao-desempenho/boas-praticas-para-veiculacao-de-anuncios.md",
+        "knowledge/meta-help-center/09-otimizacao-desempenho/edicoes-significativas-e-fase-de-aprendizado.md"
+      ]
+    },
+    {
+      "id": "meta-04",
+      "platform": "meta",
+      "type": "premissa",
+      "query": "reduzir orçamento reinicia a fase de aprendizado",
+      "expected": [
+        "knowledge/meta-help-center/09-otimizacao-desempenho/edicoes-significativas-e-fase-de-aprendizado.md"
+      ]
+    },
+    {
+      "id": "meta-05",
+      "platform": "meta",
+      "type": "premissa",
+      "query": "os dois remarketings disputam internamente o leilão e encarecem o CPM",
+      "expected": [
+        "knowledge/meta-help-center/09-otimizacao-desempenho/como-entender-a-sobreposicao-no-leilao.md",
+        "knowledge/meta-help-center/03-direcionamento-audiencias/sobre-publicos-sobrepostos.md"
+      ]
+    },
+    {
+      "id": "meta-06",
+      "platform": "meta",
+      "type": "pergunta",
+      "query": "como funciona o orçamento Advantage+",
+      "expected": [
+        "knowledge/meta-help-center/01-campanhas/sobre-o-orcamento-de-campanha-advantage-mais.md",
+        "knowledge/meta-help-center/01-campanhas/como-configurar-um-orcamento-de-campanha-advantage-mais.md",
+        "knowledge/meta-help-center/01-campanhas/entender-os-resultados-do-orcamento-de-campanha-advantage-mais.md"
+      ]
+    },
+    {
+      "id": "meta-07",
+      "platform": "meta",
+      "type": "premissa",
+      "query": "o público Advantage+ pode entregar fora do público definido quando espera resultado melhor",
+      "expected": [
+        "knowledge/meta-help-center/03-direcionamento-audiencias/sobre-o-publico-advantage.md",
+        "knowledge/meta-help-center/03-direcionamento-audiencias/controles-e-sugestoes-de-publico-advantage.md"
+      ]
+    },
+    {
+      "id": "meta-08",
+      "platform": "meta",
+      "type": "premissa",
+      "query": "meta de custo por resultado baixa demais reduz a entrega",
+      "expected": [
+        "knowledge/meta-help-center/02-orcamento-lances/sobre-a-meta-de-custo-por-resultado.md",
+        "knowledge/meta-help-center/09-otimizacao-desempenho/custo-por-resultado-excede-limite-de-lance.md",
+        "knowledge/meta-help-center/02-orcamento-lances/sobre-os-controles-de-custo-e-de-lance.md"
+      ]
+    },
+    {
+      "id": "meta-09",
+      "platform": "meta",
+      "type": "sem_cobertura",
+      "query": "frequência alta em público pequeno de remarketing faz o custo por mil impressões subir",
+      "expected": []
+    },
+    {
+      "id": "meta-10",
+      "platform": "meta",
+      "type": "pergunta",
+      "query": "diferença entre atribuição de 7 dias após o clique e 1 dia após a visualização",
+      "expected": [
+        "knowledge/meta-help-center/05-mensuracao-pixel/sobre-modelos-e-configuracoes-de-atribuicao.md",
+        "knowledge/meta-help-center/05-mensuracao-pixel/sobre-varias-configuracoes-de-atribuicao.md",
+        "knowledge/meta-help-center/05-mensuracao-pixel/como-comparar-configuracoes-de-atribuicao.md"
+      ]
+    },
+    {
+      "id": "meta-11",
+      "platform": "meta",
+      "type": "premissa",
+      "query": "pixel e API de conversões juntos contam o mesmo lead duas vezes sem desduplicação",
+      "expected": [
+        "knowledge/meta-help-center/05-mensuracao-pixel/comparar-opcoes-de-configuracao-da-api-de-conversoes.md",
+        "knowledge/meta-help-center/05-mensuracao-pixel/como-monitorar-a-configuracao-da-api-de-conversoes.md",
+        "knowledge/meta-help-center/05-mensuracao-pixel/sobre-a-api-de-conversoes.md"
+      ]
+    },
+    {
+      "id": "meta-12",
+      "platform": "meta",
+      "type": "pergunta",
+      "query": "o que é a pontuação de oportunidade",
+      "expected": [
+        "knowledge/meta-help-center/09-otimizacao-desempenho/sobre-pontuacao-de-oportunidade.md"
+      ]
+    },
+    {
+      "id": "meta-13",
+      "platform": "meta",
+      "type": "premissa",
+      "query": "restringir posicionamentos só ao Instagram reduz o alcance e pode aumentar o custo",
+      "expected": [
+        "knowledge/meta-help-center/04-criativos-formatos/como-escolher-posicionamentos-de-anuncios.md"
+      ]
+    },
+    {
+      "id": "meta-14",
+      "platform": "meta",
+      "type": "premissa",
+      "query": "trocar todos os criativos de uma vez faz o conjunto voltar ao aprendizado",
+      "expected": [
+        "knowledge/meta-help-center/09-otimizacao-desempenho/edicoes-significativas-e-fase-de-aprendizado.md"
+      ]
+    },
+    {
+      "id": "meta-15",
+      "platform": "meta",
+      "type": "pergunta",
+      "query": "como testar dois criativos com teste A/B",
+      "expected": [
+        "knowledge/meta-help-center/09-otimizacao-desempenho/sobre-testes-ab.md",
+        "knowledge/meta-help-center/09-otimizacao-desempenho/boas-praticas-para-testes-ab.md",
+        "knowledge/meta-help-center/09-otimizacao-desempenho/ferramentas-para-criar-testes-ab.md"
+      ]
+    },
+    {
+      "id": "meta-16",
+      "platform": "meta",
+      "type": "premissa",
+      "query": "o orçamento diário pode gastar mais que o valor definido em alguns dias",
+      "expected": [
+        "knowledge/meta-help-center/02-orcamento-lances/sobre-os-orcamentos-diarios.md"
+      ]
+    },
+    {
+      "id": "meta-17",
+      "platform": "meta",
+      "type": "pergunta",
+      "query": "público semelhante a partir da lista de clientes",
+      "expected": [
+        "knowledge/meta-help-center/03-direcionamento-audiencias/sobre-os-publicos-semelhantes.md",
+        "knowledge/meta-help-center/03-direcionamento-audiencias/como-criar-um-publico-semelhante.md",
+        "knowledge/meta-help-center/03-direcionamento-audiencias/sobre-publicos-personalizados-de-lista-de-clientes.md",
+        "knowledge/meta-help-center/03-direcionamento-audiencias/como-usar-publicos-personalizados-ou-semelhantes.md"
+      ]
+    },
+    {
+      "id": "meta-18",
+      "platform": "meta",
+      "type": "premissa",
+      "query": "o direcionamento detalhado Advantage+ amplia os interesses quando isso melhora o resultado",
+      "expected": [
+        "knowledge/meta-help-center/03-direcionamento-audiencias/sobre-o-direcionamento-detalhado-advantage.md"
+      ]
+    },
+    {
+      "id": "meta-19",
+      "platform": "meta",
+      "type": "politica",
+      "query": "anúncio reprovado por política de práticas discriminatórias",
+      "expected": [
+        "knowledge/meta-help-center/07-politicas-anuncios/politica-de-praticas-discriminatorias.md",
+        "knowledge/meta-help-center/10-solucao-problemas/como-solucionar-anuncio-rejeitado.md"
+      ]
+    },
+    {
+      "id": "meta-20",
+      "platform": "meta",
+      "type": "sem_cobertura",
+      "query": "melhor horário do dia para veicular anúncios de conversa no WhatsApp",
+      "expected": []
+    },
+    {
+      "id": "meta-21",
+      "platform": "meta",
+      "type": "sem_cobertura",
+      "query": "custo por lead médio do setor industrial no Brasil",
+      "expected": []
+    },
+    {
+      "id": "meta-22",
+      "platform": "meta",
+      "type": "outra_plataforma",
+      "query": "palavras-chave negativas no Google Ads",
+      "expected": []
+    },
+    {
+      "id": "google-01",
+      "platform": "google_ads",
+      "type": "premissa",
+      "query": "palavras-chave duplicadas em campanhas diferentes",
+      "expected": [
+        "knowledge/official-google/help-center/02-recursos/sobre-a-priorizacao-de-grupos-de-anuncios-e-de-recursos-em-uma-conta-do-google-ads.md"
+      ]
+    },
+    {
+      "id": "google-02",
+      "platform": "google_ads",
+      "type": "premissa",
+      "query": "duas campanhas de pesquisa com as mesmas palavras-chave competem entre si no leilão",
+      "expected": [
+        "knowledge/official-google/help-center/02-recursos/sobre-a-priorizacao-de-grupos-de-anuncios-e-de-recursos-em-uma-conta-do-google-ads.md"
+      ]
+    },
+    {
+      "id": "google-03",
+      "platform": "google_ads",
+      "type": "premissa",
+      "query": "leilão interno entre campanhas da mesma conta aumenta o custo por clique",
+      "expected": [
+        "knowledge/official-google/help-center/02-recursos/sobre-a-priorizacao-de-grupos-de-anuncios-e-de-recursos-em-uma-conta-do-google-ads.md"
+      ]
+    },
+    {
+      "id": "google-04",
+      "platform": "google_ads",
+      "type": "premissa",
+      "query": "meta de CPA muito baixa reduz o volume de conversões",
+      "expected": [
+        "knowledge/official-google/help-center/03-otimizacao-desempenho/sobre-os-lances-de-cpa-desejado.md"
+      ]
+    },
+    {
+      "id": "google-05",
+      "platform": "google_ads",
+      "type": "premissa",
+      "query": "mudar a meta de CPA coloca a estratégia de lances em aprendizado",
+      "expected": [
+        "knowledge/official-google/help-center/03-otimizacao-desempenho/sobre-os-status-da-estrategia-de-lances.md",
+        "knowledge/official-google/help-center/03-otimizacao-desempenho/sobre-os-lances-de-cpa-desejado.md"
+      ]
+    },
+    {
+      "id": "google-06",
+      "platform": "google_ads",
+      "type": "premissa",
+      "query": "correspondência ampla funciona melhor com lances inteligentes",
+      "expected": [
+        "knowledge/official-google/help-center/02-recursos/expandir-campanhas-de-lances-inteligentes-com-correspondencia-ampla.md",
+        "knowledge/official-google/help-center/02-recursos/sobre-a-configuracao-da-campanha-de-palavras-chave-de-correspondencia-ampla.md",
+        "knowledge/official-google/help-center/02-recursos/sobre-as-opcoes-de-correspondencia-de-palavra-chave.md"
+      ]
+    },
+    {
+      "id": "google-07",
+      "platform": "google_ads",
+      "type": "pergunta",
+      "query": "como adicionar palavras-chave negativas",
+      "expected": [
+        "knowledge/official-google/help-center/02-recursos/adicionar-palavras-chave-negativas-as-campanhas.md",
+        "knowledge/official-google/help-center/02-recursos/sobre-as-palavras-chave-negativas.md"
+      ]
+    },
+    {
+      "id": "google-08",
+      "platform": "google_ads",
+      "type": "premissa",
+      "query": "termo de pesquisa não é a mesma coisa que palavra-chave",
+      "expected": [
+        "knowledge/official-google/help-center/02-recursos/sobre-as-opcoes-de-correspondencia-de-palavra-chave.md",
+        "knowledge/official-google/help-center/02-recursos/ver-ideias-de-palavras-chave-negativas-usando-o-relatorio-de-termos-de-pesquisa.md",
+        "knowledge/official-google/help-center/02-recursos/sobre-as-palavras-chave-em-campanhas-da-rede-de-pesquisa.md"
+      ]
+    },
+    {
+      "id": "google-09",
+      "platform": "google_ads",
+      "type": "premissa",
+      "query": "parcela de impressões perdida por orçamento não serve para campanhas com Maximizar conversões",
+      "expected": [
+        "knowledge/official-google/help-center/03-otimizacao-desempenho/maximizar-conversoes.md"
+      ]
+    },
+    {
+      "id": "google-10",
+      "platform": "google_ads",
+      "type": "premissa",
+      "query": "a Performance Max rouba tráfego das campanhas de pesquisa com a mesma palavra-chave",
+      "expected": [
+        "knowledge/official-google/help-center/02-recursos/sobre-a-priorizacao-de-grupos-de-anuncios-e-de-recursos-em-uma-conta-do-google-ads.md",
+        "knowledge/official-google/help-center/01-campanhas/sobre-as-campanhas-performance-max.md"
+      ]
+    },
+    {
+      "id": "google-11",
+      "platform": "google_ads",
+      "type": "pergunta",
+      "query": "o que é o índice de qualidade",
+      "expected": [
+        "knowledge/official-google/help-center/03-otimizacao-desempenho/sobre-a-classificacao-do-anuncio.md",
+        "knowledge/official-google/help-center/02-recursos/otimizar-suas-palavras-chave-para-a-rede-de-pesquisa.md",
+        "knowledge/official-google/help-center/02-recursos/sobre-o-status-da-palavra-chave.md"
+      ]
+    },
+    {
+      "id": "google-12",
+      "platform": "google_ads",
+      "type": "premissa",
+      "query": "campanha limitada pelo orçamento deixa de aparecer em parte das buscas",
+      "expected": [
+        "knowledge/official-google/help-center/03-otimizacao-desempenho/sobre-os-status-da-estrategia-de-lances.md",
+        "knowledge/official-google/help-center/03-otimizacao-desempenho/sobre-o-relatorio-de-orcamento.md",
+        "knowledge/official-google/help-center/03-otimizacao-desempenho/visao-geral-dos-orcamentos.md"
+      ]
+    },
+    {
+      "id": "google-13",
+      "platform": "google_ads",
+      "type": "premissa",
+      "query": "o gasto de um dia pode chegar ao dobro do orçamento diário médio",
+      "expected": [
+        "knowledge/official-google/help-center/03-otimizacao-desempenho/escolher-seu-lance-e-orcamento.md",
+        "knowledge/official-google/help-center/03-otimizacao-desempenho/visao-geral-dos-orcamentos.md",
+        "knowledge/official-google/help-center/03-otimizacao-desempenho/sobre-o-relatorio-de-orcamento.md"
+      ]
+    },
+    {
+      "id": "google-14",
+      "platform": "google_ads",
+      "type": "pergunta",
+      "query": "como o Google Ads acompanha conversões de clique no WhatsApp do site",
+      "expected": [
+        "knowledge/official-google/help-center/02-recursos/como-o-google-ads-acompanha-conversoes-no-site.md",
+        "knowledge/official-google/help-center/02-recursos/usar-a-tag-do-google-para-o-acompanhamento-de-conversoes-do-google-ads.md"
+      ]
+    },
+    {
+      "id": "google-15",
+      "platform": "google_ads",
+      "type": "premissa",
+      "query": "segmentação por presença ou interesse mostra o anúncio para quem está fora da região",
+      "expected": [
+        "knowledge/official-google/help-center/02-recursos/sobre-as-opcoes-de-local-avancadas.md",
+        "knowledge/official-google/help-center/02-recursos/segmentar-anuncios-por-localizacoes-geograficas.md"
+      ]
+    },
+    {
+      "id": "google-16",
+      "platform": "google_ads",
+      "type": "premissa",
+      "query": "a previsão do planejador de palavras-chave não garante o volume de cliques",
+      "expected": [
+        "knowledge/official-google/help-center/02-recursos/sobre-as-previsoes-do-planejador-de-palavras-chave.md"
+      ]
+    },
+    {
+      "id": "google-17",
+      "platform": "google_ads",
+      "type": "sem_cobertura",
+      "query": "custo por clique médio de calibração de instrumentos no Paraná",
+      "expected": []
+    },
+    {
+      "id": "google-18",
+      "platform": "google_ads",
+      "type": "outra_plataforma",
+      "query": "público Advantage+ da Meta Ads",
+      "expected": []
+    },
+    {
+      "id": "meta-c01",
+      "platform": "meta",
+      "type": "premissa",
+      "query": "subir o orçamento em mais de 20% reinicia o aprendizado",
+      "expected": [
+        "knowledge/meta-help-center/09-otimizacao-desempenho/edicoes-significativas-e-fase-de-aprendizado.md"
+      ],
+      "holdout": true
+    },
+    {
+      "id": "meta-c02",
+      "platform": "meta",
+      "type": "premissa",
+      "query": "anúncios do mesmo anunciante não concorrem entre si no leilão",
+      "expected": [
+        "knowledge/meta-help-center/09-otimizacao-desempenho/como-entender-a-sobreposicao-no-leilao.md",
+        "knowledge/meta-help-center/03-direcionamento-audiencias/sobre-publicos-sobrepostos.md"
+      ],
+      "holdout": true
+    },
+    {
+      "id": "meta-c03",
+      "platform": "meta",
+      "type": "premissa",
+      "query": "o limite de custo faz a campanha gastar menos que o orçamento",
+      "expected": [
+        "knowledge/meta-help-center/02-orcamento-lances/sobre-os-controles-de-custo-e-de-lance.md",
+        "knowledge/meta-help-center/02-orcamento-lances/sobre-o-limite-de-lance.md",
+        "knowledge/meta-help-center/09-otimizacao-desempenho/custo-por-resultado-excede-limite-de-lance.md",
+        "knowledge/meta-help-center/02-orcamento-lances/sobre-a-meta-de-custo-por-resultado.md"
+      ],
+      "holdout": true
+    },
+    {
+      "id": "meta-c04",
+      "platform": "meta",
+      "type": "premissa",
+      "query": "o criativo dinâmico combina títulos e imagens automaticamente",
+      "expected": [
+        "knowledge/meta-help-center/04-criativos-formatos/sobre-o-criativo-dinamico.md",
+        "knowledge/meta-help-center/04-criativos-formatos/como-criar-um-anuncio-com-criativo-dinamico.md",
+        "knowledge/meta-help-center/04-criativos-formatos/boas-praticas-para-criativo-dinamico.md"
+      ],
+      "holdout": true
+    },
+    {
+      "id": "meta-c05",
+      "platform": "meta",
+      "type": "premissa",
+      "query": "uma janela de atribuição mais curta reduz as conversões reportadas",
+      "expected": [
+        "knowledge/meta-help-center/05-mensuracao-pixel/sobre-modelos-e-configuracoes-de-atribuicao.md",
+        "knowledge/meta-help-center/05-mensuracao-pixel/sobre-varias-configuracoes-de-atribuicao.md",
+        "knowledge/meta-help-center/05-mensuracao-pixel/como-comparar-configuracoes-de-atribuicao.md"
+      ],
+      "holdout": true
+    },
+    {
+      "id": "google-c01",
+      "platform": "google_ads",
+      "type": "premissa",
+      "query": "palavra-chave negativa de frase bloqueia variações próximas",
+      "expected": [
+        "knowledge/official-google/help-center/02-recursos/sobre-as-palavras-chave-negativas.md",
+        "knowledge/official-google/help-center/02-recursos/adicionar-palavras-chave-negativas-as-campanhas.md"
+      ],
+      "holdout": true
+    },
+    {
+      "id": "google-c02",
+      "platform": "google_ads",
+      "type": "premissa",
+      "query": "palavra-chave com baixo volume de pesquisa fica sem exibição",
+      "expected": [
+        "knowledge/official-google/help-center/02-recursos/sobre-o-status-da-palavra-chave.md",
+        "knowledge/official-google/help-center/02-recursos/sobre-a-pausa-automatica-de-palavras-chave-com-baixa-atividade.md"
+      ],
+      "holdout": true
+    },
+    {
+      "id": "google-c03",
+      "platform": "google_ads",
+      "type": "premissa",
+      "query": "campanhas com o mesmo termo não aumentam o custo por clique uma da outra",
+      "expected": [
+        "knowledge/official-google/help-center/02-recursos/sobre-a-priorizacao-de-grupos-de-anuncios-e-de-recursos-em-uma-conta-do-google-ads.md"
+      ],
+      "holdout": true
+    },
+    {
+      "id": "google-c04",
+      "platform": "google_ads",
+      "type": "pergunta",
+      "query": "orçamento compartilhado entre campanhas de pesquisa",
+      "expected": [
+        "knowledge/official-google/help-center/03-otimizacao-desempenho/sobre-orcamentos-compartilhados.md"
+      ],
+      "holdout": true
+    },
+    {
+      "id": "google-c05",
+      "platform": "google_ads",
+      "type": "premissa",
+      "query": "conversões otimizadas melhoram a medição dos leads do formulário",
+      "expected": [
+        "knowledge/official-google/help-center/02-recursos/sobre-as-conversoes-otimizadas.md"
+      ],
+      "holdout": true
+    },
+    {
+      "id": "google-c06",
+      "platform": "google_ads",
+      "type": "premissa",
+      "query": "importar conversões off-line do CRM melhora os lances",
+      "expected": [
+        "knowledge/official-google/help-center/02-recursos/sobre-as-importacoes-de-conversoes-off-line.md"
+      ],
+      "holdout": true
+    }
+  ],
+  "unavailable": {
+    "https://www.facebook.com/business/help/957407462768373": "Sobreposição de leilão da campanha (definição de métrica). A página devolveu erro na Central de Ajuda em 2026-09-23, com e sem locale=pt_BR; não entrou na base."
+  }
+}

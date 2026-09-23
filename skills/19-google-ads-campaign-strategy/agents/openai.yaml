@@ -1,4 +1,0 @@
-interface:
-  display_name: "Estratégia Google Ads"
-  short_description: "Define tipo e papel da campanha Google"
-  default_prompt: "Use $19-google-ads-campaign-strategy para definir a estratégia de uma campanha Google Ads."

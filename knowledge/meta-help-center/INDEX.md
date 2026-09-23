@@ -1,21 +1,21 @@
 # Base de Conhecimento — Central de Ajuda da Meta Ads
 
-Extraído da Central de Ajuda da Meta para Empresas (pt-BR), com foco em Meta Ads. Gerado em 2026-07-31.
+Extraído da Central de Ajuda da Meta para Empresas (pt-BR), com foco em Meta Ads. Gerado em 2026-07-31. Acrescidos 2 artigos em 2026-09-23 (sobreposição no leilão e públicos sobrepostos).
 
-**Total: 151 artigos em 12 categorias.**
+**Total: 153 artigos em 12 categorias.**
 
 ## Índice de categorias
 
 - [Primeiros Passos](#00-primeiros-passos) (8 artigos)
 - [Campanhas](#01-campanhas) (10 artigos)
 - [Orçamento e Lances](#02-orcamento-lances) (11 artigos)
-- [Direcionamento e Audiências](#03-direcionamento-audiencias) (13 artigos)
+- [Direcionamento e Audiências](#03-direcionamento-audiencias) (14 artigos)
 - [Criativos e Formatos de Anúncio](#04-criativos-formatos) (17 artigos)
 - [Mensuração: Pixel, CAPI e Atribuição](#05-mensuracao-pixel) (16 artigos)
 - [Catálogo e Commerce](#06-catalogo-commerce) (14 artigos)
 - [Políticas de Anúncios](#07-politicas-anuncios) (13 artigos)
 - [Contas e Faturamento](#08-contas-faturamento) (14 artigos)
-- [Otimização e Desempenho](#09-otimizacao-desempenho) (14 artigos)
+- [Otimização e Desempenho](#09-otimizacao-desempenho) (15 artigos)
 - [Solução de Problemas](#10-solucao-problemas) (8 artigos)
 - [Portfólio de Negócios](#11-portfolio-negocios) (13 artigos)
 
@@ -79,6 +79,7 @@ Extraído da Central de Ajuda da Meta para Empresas (pt-BR), com foco em Meta Ad
 - [Sobre os públicos personalizados de engajamento](03-direcionamento-audiencias/sobre-publicos-personalizados-de-engajamento.md) — [fonte original](https://www.facebook.com/business/help/1090330204367211)
 - [Sobre públicos personalizados da lista de clientes](03-direcionamento-audiencias/sobre-publicos-personalizados-de-lista-de-clientes.md) — [fonte original](https://www.facebook.com/business/help/341425252616329)
 - [Sobre públicos personalizados do site](03-direcionamento-audiencias/sobre-publicos-personalizados-do-site.md) — [fonte original](https://www.facebook.com/business/help/610516375684216)
+- [Sobre públicos sobrepostos](03-direcionamento-audiencias/sobre-publicos-sobrepostos.md) — [fonte original](https://www.facebook.com/business/help/1679591828938781)
 - [Sobre as recomendações de expansão do público no Gerenciador de Anúncios da Meta](03-direcionamento-audiencias/sobre-recomendacoes-de-expansao-de-publico.md) — [fonte original](https://www.facebook.com/business/help/1098451937465750)
 
 ## Criativos e Formatos de Anúncio
@@ -188,6 +189,7 @@ Extraído da Central de Ajuda da Meta para Empresas (pt-BR), com foco em Meta Ad
 - [Boas práticas para potencialmente reduzir o custo por resultado dos anúncios da Meta](09-otimizacao-desempenho/boas-praticas-para-reduzir-custo-por-resultado.md) — [fonte original](https://www.facebook.com/business/help/321695409726523)
 - [Boas práticas para testes A/B](09-otimizacao-desempenho/boas-praticas-para-testes-ab.md) — [fonte original](https://www.facebook.com/business/help/290009911394576)
 - [Boas práticas para veiculação de anúncios da Meta](09-otimizacao-desempenho/boas-praticas-para-veiculacao-de-anuncios.md) — [fonte original](https://www.facebook.com/business/help/950694752295474)
+- [Como entender a sobreposição no leilão](09-otimizacao-desempenho/como-entender-a-sobreposicao-no-leilao.md) — [fonte original](https://www.facebook.com/business/help/537699989762051)
 - [Como criar uma regra automatizada para orçamentos e lances no Gerenciador de Anúncios da Meta](09-otimizacao-desempenho/criar-regra-automatizada-para-orcamentos-e-lances.md) — [fonte original](https://www.facebook.com/business/help/1852322521654609)
 - [Sobre o custo por resultado que excede a meta de limite de lance ou de custo por resultado](09-otimizacao-desempenho/custo-por-resultado-excede-limite-de-lance.md) — [fonte original](https://www.facebook.com/business/help/867416745088574)
 - [Edições significativas e fase de aprendizado](09-otimizacao-desempenho/edicoes-significativas-e-fase-de-aprendizado.md) — [fonte original](https://www.facebook.com/business/help/316478108955072)

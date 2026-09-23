@@ -37,7 +37,7 @@ Cada demanda define:
    - `context_only`: briefing e informações manuais.
    - `unavailable`: fonte necessária ausente.
 
-O agent não percorre um fluxo fixo. A skill pública `25-performance-ads-router`, descoberta automaticamente pelas pastas `.agents/skills/` e `.claude/skills/`, classifica a demanda e consulta `routing_matrix.json`. Uma análise Google Ads não carrega as skills Meta; uma demanda multicanal abre os dois ramos e preserva fontes, contas e atribuições separadamente. O gestor não precisa mencionar nomes de skills.
+O agent não percorre um fluxo fixo. A skill pública `performance-ads-roteador`, descoberta automaticamente pelas pastas `.agents/skills/` e `.claude/skills/`, classifica a demanda e consulta `routing_matrix.json`. Uma análise Google Ads não carrega as skills Meta; uma demanda multicanal abre os dois ramos e preserva fontes, contas e atribuições separadamente. O gestor não precisa mencionar nomes de skills.
 
 ## 3. Requisitos
 
@@ -73,7 +73,7 @@ Abra a raiz do projeto no Claude Code ou Codex e confirme a presença de:
 - `routing_matrix.json`.
 - `skills/`.
 
-O roteador público já está exposto em `.agents/skills/25-performance-ads-router` e `.claude/skills/25-performance-ads-router`. Depois de instalar ou atualizar esta estrutura, reinicie a sessão do Codex/Claude Code para renovar a descoberta de skills.
+O roteador público já está exposto em `.agents/skills/performance-ads-roteador` e `.claude/skills/performance-ads-roteador`. Depois de instalar ou atualizar esta estrutura, reinicie a sessão do Codex/Claude Code para renovar a descoberta de skills.
 
 Depois escolha uma rota:
 
@@ -101,7 +101,7 @@ Endpoint oficial usado pelo projeto:
 https://mcp.facebook.com/ads
 ```
 
-Execute `/configuracao-mcp`, informe `Meta Ads` e siga a skill `00-configuracao-mcp`. O procedimento exige confirmação antes de editar configuração local e termina com teste somente leitura.
+Execute `/configuracao-mcp`, informe `Meta Ads` e siga a skill `conexao/configuracao-mcp`. O procedimento exige confirmação antes de editar configuração local e termina com teste somente leitura.
 
 ## 6. Google Ads MCP — opcional
 
@@ -188,48 +188,27 @@ No complemento, `planner_connected` exige três evidências: uso permitido compa
 | `/executar-operacao <id>` | Revalida e executa somente lote suportado. |
 | `/reverter-operacao <id>` | Propõe restauração conhecida com nova aprovação. |
 
-## 10. Catálogo das 27 skills
+## 10. Catálogo dos 10 módulos
 
-### Entrada pública
+Desde a Sprint 2, as 27 skills antigas viraram 10 módulos em `skills/`. Só o roteador é público; os outros 9 são internos e o gestor nunca precisa acioná-los. Cada módulo tem um `SKILL.md` (índice com as regras comuns) e, quando cobre mais de um caso, referências em `references/`. As rotas (`routing_matrix.json`) planejam **etapas**: `modulo` lê `skills/modulo/SKILL.md`; `modulo/referencia` lê também `skills/modulo/references/referencia.md`. As dependências entre etapas ficam em `dependency_graph.json`.
 
-| Skill | Responsabilidade |
-|---|---|
-| `25-performance-ads-router` | Entender a demanda, resolver a rota, executar skills internas e entregar no chat |
+| Módulo | Responsabilidade | Etapas |
+|---|---|---|
+| `performance-ads-roteador` | Entrada pública: entende o pedido, resolve a rota, executa as etapas e entrega no chat | — |
+| `contexto-cliente` | Cadastro, ficha, histórico e aprendizados do cliente | `contexto-cliente` |
+| `conexao` | Conta certa e capacidade real dos conectores; configuração do MCP | `conexao/meta`, `conexao/google-ads`, `conexao/configuracao-mcp` |
+| `mensuracao` | Qualidade da mensuração; auditoria de GTM quando pedida | `mensuracao`, `mensuracao/gtm` |
+| `diagnostico` | Metas e linha de base; diagnóstico por plataforma; modo avaliação | `diagnostico/metas-e-linha-de-base`, `diagnostico/meta`, `diagnostico/google-ads` |
 
-### Núcleo e Meta Ads
+| Módulo | Responsabilidade | Etapas |
+|---|---|---|
+| `planejamento` | Estratégia, arquitetura, públicos ou palavras-chave, verba e lances, criativos e plano de construção | 6 etapas `planejamento/meta-…` e 6 `planejamento/google-ads-…` |
+| `change-set` | Transforma diagnóstico ou decisão do gestor em mudanças aprováveis | `change-set` |
+| `revisor` | Base oficial: dúvidas e checagem de premissas (`kb_check.py`) | `revisor/meta`, `revisor/google-ads` |
+| `entrega` | Relatório e fechamento; exportação na Sprint 3 | `entrega` |
+| `executor` | Executa só o que foi aprovado e registra o resultado | `executor` |
 
-| Skill | Responsabilidade |
-|---|---|
-| `00-configuracao-mcp` | Configurar MCP da plataforma escolhida |
-| `01-client-campaign-intake` | Cliente, plataformas, contas e briefing |
-| `02-meta-account-connection` | Conta Meta |
-| `03-measurement-data-quality` | Mensuração compartilhada |
-| `04-goals-kpis-baseline` | Metas e baseline |
-| `05-campaign-strategy` | Estratégia Meta |
-| `06-account-campaign-architecture` | Arquitetura Meta |
-| `07-audience-strategy` | Públicos Meta |
-| `08-budget-bidding-allocation` | Budget e lances Meta |
-| `09-creative-performance-brief` | Criativos Meta |
-| `10-campaign-build-plan` | Construção Meta |
-| `11-performance-diagnosis` | Diagnóstico Meta |
-| `12-optimization-change-set` | Change set compartilhado |
-| `13-approved-change-executor` | Executor aprovado |
-| `14-reporting-memory-learning` | Relatório e memória |
-| `15-meta-help-center-retrieval` | Fontes oficiais Meta |
-
-### Google Ads
-
-| Skill | Responsabilidade |
-|---|---|
-| `16-google-ads-account-connection` | Customer, manager e leitura |
-| `17-google-ads-official-retrieval` | Fontes oficiais Google |
-| `18-google-ads-keyword-research` | Keywords, intenções e negativas |
-| `19-google-ads-campaign-strategy` | Tipo e estratégia da campanha |
-| `20-google-ads-campaign-architecture` | Arquitetura por tipo |
-| `21-google-ads-budget-bidding-conversions` | Budget, lances e conversões |
-| `22-google-ads-creative-assets-landing-page` | Ads, assets e landing pages |
-| `23-google-ads-campaign-build-plan` | Plano de construção Google |
-| `24-google-ads-performance-diagnosis` | Diagnóstico Google |
+Dossiês antigos citam os nomes antigos das skills (ex.: `11-performance-diagnosis`); isso é esperado, porque eles são registro histórico somente leitura.
 
 ## 11. Dossiês, aprovação e execução
 
@@ -246,7 +225,7 @@ Os dois são criados e atualizados só pelo `scripts/dossier.py`:
 | Conteúdo muda antes da execução | `dossier.py revise {operação} …` (nova versão, aprovação anterior invalidada) |
 | `/aprovar-operacao` | `dossier.py approve {operação} --statement "…"` |
 | Execução pelo conector ou manual | `dossier.py record-execution {operação} --results …` |
-| Fim da janela de avaliação | `dossier.py evaluate {operação} --result success\|failure\|inconclusive --notes "…"` |
+| `/avaliar-operacao`, no fim da janela e com o aval do gestor | `dossier.py evaluate {operação} --result success\|failure\|inconclusive --notes "…"` |
 | Conferir | `dossier.py verify --client {slug}` · `dossier.py list --open` |
 
 No Claude Code, um hook (`.claude/settings.json`) bloqueia escrita direta em `operacoes/`, edição de dossiê legado e dossiê novo escrito à mão.
@@ -256,8 +235,11 @@ Análises multicanal podem compartilhar um dossiê, mas mutações usam um `oper
 1. **Aprovação do conteúdo:** autoriza registrar a versão mostrada no chat. Não aprova mídia.
 2. **`/aprovar-operacao`:** aprova a versão e o hash das mudanças registradas. Não executa.
 3. **`/executar-operacao`:** executa somente quando a integração e as permissões foram homologadas.
+4. **`/avaliar-operacao`** (intenção `avaliacao`, profundidade rápida): no fim da janela, compara o resultado com os critérios de sucesso e de parada registrados e explica no chat se funcionou e por quê; só registra com o aval do gestor. Exige dado da conta ou de arquivo. O resumo do cliente e `dossier.py list --open` destacam as avaliações vencidas.
 
 **Dossiês legados** (Markdown com bloco JSON, na raiz da pasta do cliente) ficam como base de consulta somente leitura: `python3 scripts/client_history.py list {slug}` e `search {slug} "termos"`. Uma operação legada ainda aberta é migrada com `dossier.py migrate` antes de ser aprovada ou executada.
+
+**Memória do cliente (Sprint 2).** Toda conversa começa por `python3 scripts/client_brief.py {slug}`, gerado na hora, sem arquivo intermediário: perfil compacto do `CLIENTE.md`, operações em aberto (legado e V2), avaliações vencidas, decisões pendentes, últimas operações e as regras duráveis de `APRENDIZADOS.md`. A ficha passa a ter três partes: `CLIENTE.md` (perfil estável), `APRENDIZADOS.md` (regras duráveis, molde em `templates/aprendizados-template.md`) e, para fichas antigas, `HISTORICO-ANTERIOR.md` (a seção de histórico escrita à mão, copiada sem alteração). A separação de uma ficha antiga é feita por `python3 scripts/migrate_client_profile.py {slug} [--learnings rascunho.md] [--apply]`: sem `--apply` só simula; com `--apply` grava cópia de segurança e nunca sobrescreve arquivos existentes. Um cliente por vez, com aprovação do gestor.
 
 Na V1.1 inicial:
 
@@ -267,7 +249,7 @@ Na V1.1 inicial:
 
 ## 12. Conhecimento
 
-- Meta: snapshot seletivo de 151 artigos mais resumos operacionais.
+- Meta: snapshot seletivo de 153 artigos mais resumos operacionais.
 - Google Ads: base seletiva da Central de Ajuda, fontes de API e consulta oficial ao vivo.
 - Metodologia: regras internas separadas das afirmações das plataformas.
 - Aprendizados: somente padrões sanitizados e aprovados.
@@ -281,6 +263,8 @@ python3 scripts/build_knowledge_vector_index.py --platform all
 
 Sem esse passo, a busca cai automaticamente para o modo lexical original — não é obrigatório para o agent funcionar.
 
+- Revisor de boas práticas (V2, Sprint 2): `scripts/kb_check.py` recebe as premissas de mecanismo de um diagnóstico ou change set e devolve, por plataforma, os artigos a ler, os trechos mais ligados a cada premissa e o esqueleto de `knowledge_checks`. O ranqueamento vive em `scripts/help_search.py` (as duas interfaces `search_*_help.py` são finas). Premissas passam por um dicionário controlado de reescrita (`knowledge/retrieval-rewrites.json`); `strong` só com evidência de título; artigos de política só sobem em consulta sobre política. Medição: `python3 scripts/eval_retrieval.py --compare` (51 consultas rotuladas, 11 delas de controle). Em 2026-09-23, o acerto no 1º resultado foi de 58% para 97% nas consultas de ajuste e de 60% para 91% nas de controle, com zero "forte" errado.
+
 ## 13. Validação local
 
 ```text
@@ -288,7 +272,12 @@ python3 -m pip install -r requirements-dev.txt
 python3 scripts/validate_all.py
 ```
 
-O comando único verifica 26 módulos mais o roteador, descoberta nas duas plataformas, matriz e grafo, sincronia entre `prompt/agent-prompt.md`, CLAUDE.md e AGENTS.md, schemas, ciclo de vida dos dossiês V2 (hash, rota, estado), dossiês V2 dos clientes locais, isolamento do RAG, garantias do GTM (nunca publica, allowlist pelo caminho, `validate_only` sem escrita) e conectores fail-closed. Não realiza mutações externas. `python3 -m pytest` na raiz roda o motor e o GTM.
+O comando único verifica os 10 módulos e as 27 etapas de rota, descoberta nas duas plataformas, matriz e grafo, sincronia entre `prompt/agent-prompt.md`, CLAUDE.md e AGENTS.md, schemas, ciclo de vida dos dossiês V2 (hash, rota, estado), dossiês V2 dos clientes locais, isolamento do RAG, garantias do GTM (nunca publica, allowlist pelo caminho, `validate_only` sem escrita) e conectores fail-closed. Não realiza mutações externas. `python3 -m pytest` na raiz roda o motor e o GTM.
+
+Medições que acompanham mudanças no agent (Sprint 2):
+
+- **Busca na base oficial:** `python3 scripts/eval_retrieval.py --compare` (51 consultas rotuladas, 11 de controle). Rode antes e depois de mexer em pesos, no dicionário de reescrita ou na base; o patamar mínimo está em `tests/test_retrieval_eval.py`.
+- **Roteamento:** `python3 scripts/eval_routing.py --check` (no CI: toda rota esperada existe) e, a cada mudança no prompt ou no roteador, a classificação independente das 33 frases reais anonimizadas: `claude -p "$(python3 scripts/eval_routing.py --prompt)" --permission-mode plan > .work/rotas.txt` e `python3 scripts/eval_routing.py --score .work/rotas.txt`. As medições ficam em `historico_de_medicoes` de `tests/fixtures/routing_eval.json`.
 
 ## 14. Segurança e Git
 
@@ -606,7 +595,7 @@ Não apague credenciais ou revogue acessos automaticamente. Confirme o alvo e a 
 
 ### 16.1 Como funciona
 
-Diferente do Google Ads, o GTM **não usa servidor MCP**. É um cliente Python local (`integrations/gtm/`) que fala diretamente com a API oficial (`tagmanager.googleapis.com`) via OAuth. A skill `26-gtm-tracking-audit-fix` chama dois scripts:
+Diferente do Google Ads, o GTM **não usa servidor MCP**. É um cliente Python local (`integrations/gtm/`) que fala diretamente com a API oficial (`tagmanager.googleapis.com`) via OAuth. A skill `mensuracao/gtm` chama dois scripts:
 
 - `scripts/gtm_audit.py` — somente leitura: lista contas, containers e tira um snapshot de tags/triggers/variáveis de um workspace.
 - `scripts/gtm_edit.py` — cria/edita tag, trigger ou variável **em rascunho de workspace**, só depois de um change set aprovado (`/aprovar-operacao` → `/executar-operacao`).

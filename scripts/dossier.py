@@ -51,7 +51,13 @@ CHANGES_MARKER = "<!-- mudancas -->"
 CHANGES_START = "<!-- mudancas:inicio -->"
 CHANGES_END = "<!-- mudancas:fim -->"
 
-KNOWLEDGE_SKILLS = {"15-meta-help-center-retrieval", "17-google-ads-official-retrieval"}
+KNOWLEDGE_SKILLS = {"revisor/meta", "revisor/google-ads"}
+# Só um relatório sem mudanças pode dispensar a checagem de premissas.
+NO_MECHANISM_TYPES = {"relatorio"}
+OFFICIAL_SOURCE = re.compile(
+    r"^https://(www\.facebook\.com/(business/help|help)/|developers\.facebook\.com/|transparency\.meta\.com/|"
+    r"support\.google\.com/|developers\.google\.com/|ads-developers\.googleblog\.com/|blog\.google/|business\.google\.com/)"
+)
 # Verbos de exclusão/arquivamento de ativo. "Excluir compradores do público" é
 # segmentação legítima, por isso a regra dura vale só para a reversão e para
 # valores de status; no título e na justificativa vira alerta.
@@ -531,10 +537,15 @@ def check_route(operation: dict, matrix: dict, errors: list[str], warnings: list
                 )
             if reason["reason_code"] == "no_platform_mechanism":
                 if skill not in KNOWLEDGE_SKILLS:
-                    errors.append(f"motivo 'nenhum mecanismo de plataforma' só vale para as skills 15/17, não para {skill}")
+                    errors.append(f"motivo 'nenhum mecanismo de plataforma' só vale para as etapas do revisor (revisor/meta, revisor/google-ads), não para {skill}")
                 elif has_changes:
                     sink.append(
                         f"{skill} não pode ser pulada numa operação com mudanças: toda mudança passa pela checagem de boas práticas"
+                    )
+                elif operation["type"] not in NO_MECHANISM_TYPES:
+                    sink.append(
+                        f"{skill} não pode ser pulada numa operação do tipo '{operation['type']}': diagnóstico e auditoria "
+                        "sempre têm premissas de mecanismo para conferir (motivo aceito só em relatório)"
                     )
                 else:
                     warnings.append(f"{skill} pulada sem checagem de boas práticas: {reason['detail']}")
@@ -578,6 +589,16 @@ def check_changes(operation: dict, errors: list[str], warnings: list[str]) -> No
             errors.append(f"{label}: mudanças de GTM usam api_script ou manual_only")
         if change["action_kind"] == "create" and change["before"] not in (None, "", {}):
             warnings.append(f"{label}: criação com valor 'antes' preenchido")
+    for index, check in enumerate(operation["knowledge_checks"], start=1):
+        url = (check.get("source_url") or "").strip()
+        label = f"checagem {index} (“{check['premise'][:60]}”)"
+        if check["verdict"] in ("sustenta", "contradiz"):
+            if not url.startswith("https://"):
+                errors.append(f"{label}: veredito '{check['verdict']}' exige o link da fonte oficial em source_url")
+            elif not OFFICIAL_SOURCE.match(url):
+                warnings.append(f"{label}: a fonte não parece ser documentação oficial da Meta ou do Google ({url})")
+            if not (check.get("source_title") or "").strip():
+                errors.append(f"{label}: veredito '{check['verdict']}' exige o título do artigo em source_title")
     if changes and not operation["knowledge_checks"] and not operation.get("legacy_source"):
         errors.append("operação com mudanças sem nenhuma checagem de boas práticas (knowledge_checks)")
     if changes and operation.get("evaluation") is None:
@@ -970,11 +991,10 @@ def cmd_verify(args: argparse.Namespace) -> int:
     return 1 if failures else 0
 
 
-def cmd_list(args: argparse.Namespace) -> int:
-    clients_dir = Path(args.clients_dir)
-    today = date.fromisoformat(args.today) if args.today else datetime.now(TZ).date()
+def list_rows(clients_dir: Path, client: str | None, *, open_only: bool, today: date) -> list[dict]:
+    """Operações V2 resumidas; usada por `list` e pelo resumo do cliente."""
     rows = []
-    for path in operation_files(clients_dir, args.client):
+    for path in operation_files(clients_dir, client):
         try:
             operation = load_json(path)
         except DossierError:
@@ -982,12 +1002,14 @@ def cmd_list(args: argparse.Namespace) -> int:
         evaluation = operation.get("evaluation") or {}
         pending_evaluation = operation["status"] in {"executed", "partial_failure", "reverted"} and not evaluation.get("result")
         is_open = operation["status"] in OPEN_STATUSES or pending_evaluation
-        if args.open and not is_open:
+        if open_only and not is_open:
             continue
         note = ""
+        overdue = False
         if pending_evaluation and evaluation.get("due_date"):
             due = date.fromisoformat(evaluation["due_date"])
-            note = f"avaliação vencida desde {due:%d/%m}" if due <= today else f"avaliar a partir de {due:%d/%m}"
+            overdue = due <= today
+            note = f"avaliação vencida desde {due:%d/%m}" if overdue else f"avaliar a partir de {due:%d/%m}"
         rows.append({
             "operation_id": operation["operation_id"],
             "client": operation["client_slug"],
@@ -995,11 +1017,19 @@ def cmd_list(args: argparse.Namespace) -> int:
             "platform": PLATFORM_LABELS[operation["platform"]],
             "type": TYPE_LABELS[operation["type"]],
             "status": STATUS_LABELS[operation["status"]],
+            "status_code": operation["status"],
             "title": operation["title"],
             "note": note,
+            "evaluation_overdue": overdue,
             "pending_decisions": operation.get("pending_decisions", []),
             "path": str(path.with_suffix(".md")),
         })
+    return rows
+
+
+def cmd_list(args: argparse.Namespace) -> int:
+    today = date.fromisoformat(args.today) if args.today else datetime.now(TZ).date()
+    rows = list_rows(Path(args.clients_dir), args.client, open_only=args.open, today=today)
     if args.json:
         print(json.dumps(rows, ensure_ascii=False, indent=2))
         return 0

@@ -30,7 +30,7 @@ class PromptAndHookTests(unittest.TestCase):
         for name in ("CLAUDE.md", "AGENTS.md"):
             text = (ROOT / name).read_text(encoding="utf-8")
             with self.subTest(file=name):
-                self.assertIn("25-performance-ads-router", text)
+                self.assertIn("performance-ads-roteador", text)
                 self.assertIn("templates/resposta-chat.md", text)
                 self.assertIn("scripts/dossier.py", text)
                 self.assertIn("file_based", text)

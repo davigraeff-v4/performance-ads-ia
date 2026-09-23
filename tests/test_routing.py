@@ -37,7 +37,10 @@ class RoutingTests(unittest.TestCase):
                         args = ["--intent", intent, "--platform", platform, "--source-mode", source_mode]
                         if requires_keywords:
                             args.append("--requires-keywords")
-                        payload = route(*args, expected_code=3 if platform == "google_ads" and intent == "execucao" else 0)
+                        blocked = (platform == "google_ads" and intent == "execucao") or (
+                            intent == "avaliacao" and source_mode == "context_only"
+                        )
+                        payload = route(*args, expected_code=3 if blocked else 0)
                         if payload["status"] == "blocked":
                             continue
                         seen: set[str] = set()
@@ -77,25 +80,25 @@ class RoutingTests(unittest.TestCase):
     def test_meta_optimization_is_deep_and_never_loads_google(self) -> None:
         payload = route("--intent", "otimizacao", "--platform", "meta", "--source-mode", "connected_read")
         skills = payload["branches"][0]["planned_skills"]
-        self.assertIn("02-meta-account-connection", skills)
-        self.assertLess(skills.index("11-performance-diagnosis"), skills.index("12-optimization-change-set"))
+        self.assertIn("conexao/meta", skills)
+        self.assertLess(skills.index("diagnostico/meta"), skills.index("change-set"))
         self.assertFalse(any("google-ads" in skill for skill in skills))
 
     def test_google_optimization_is_deep_and_never_loads_meta(self) -> None:
         payload = route("--intent", "otimizacao", "--platform", "google_ads", "--source-mode", "connected_read")
         skills = payload["branches"][0]["planned_skills"]
-        self.assertIn("16-google-ads-account-connection", skills)
-        self.assertLess(skills.index("24-google-ads-performance-diagnosis"), skills.index("12-optimization-change-set"))
-        self.assertNotIn("11-performance-diagnosis", skills)
-        self.assertNotIn("15-meta-help-center-retrieval", skills)
+        self.assertIn("conexao/google-ads", skills)
+        self.assertLess(skills.index("diagnostico/google-ads"), skills.index("change-set"))
+        self.assertNotIn("diagnostico/meta", skills)
+        self.assertNotIn("revisor/meta", skills)
 
     def test_file_based_skips_account_connections_and_mcp_config(self) -> None:
-        for platform, account_skill in [("meta", "02-meta-account-connection"), ("google_ads", "16-google-ads-account-connection")]:
+        for platform, account_skill in [("meta", "conexao/meta"), ("google_ads", "conexao/google-ads")]:
             with self.subTest(platform=platform):
                 payload = route("--intent", "analise", "--platform", platform, "--source-mode", "file_based")
                 skills = payload["branches"][0]["planned_skills"]
                 self.assertNotIn(account_skill, skills)
-                self.assertNotIn("00-configuracao-mcp", skills)
+                self.assertNotIn("conexao/configuracao-mcp", skills)
 
     def test_multichannel_keeps_independent_sources_and_branches(self) -> None:
         payload = route(
@@ -105,14 +108,14 @@ class RoutingTests(unittest.TestCase):
             "--google-source-mode", "file_based",
         )
         self.assertEqual([branch["platform"] for branch in payload["branches"]], ["meta", "google_ads"])
-        self.assertIn("02-meta-account-connection", payload["branches"][0]["planned_skills"])
-        self.assertNotIn("16-google-ads-account-connection", payload["branches"][1]["planned_skills"])
+        self.assertIn("conexao/meta", payload["branches"][0]["planned_skills"])
+        self.assertNotIn("conexao/google-ads", payload["branches"][1]["planned_skills"])
 
     def test_keywords_are_conditional(self) -> None:
         without = route("--intent", "planejamento", "--platform", "google_ads", "--source-mode", "context_only")
         with_keywords = route("--intent", "planejamento", "--platform", "google_ads", "--source-mode", "context_only", "--requires-keywords")
-        self.assertNotIn("18-google-ads-keyword-research", without["branches"][0]["planned_skills"])
-        self.assertIn("18-google-ads-keyword-research", with_keywords["branches"][0]["planned_skills"])
+        self.assertNotIn("planejamento/google-ads-palavras-chave", without["branches"][0]["planned_skills"])
+        self.assertIn("planejamento/google-ads-palavras-chave", with_keywords["branches"][0]["planned_skills"])
 
     def test_onboarding_alone_never_covers_platform_knowledge_questions(self) -> None:
         # Documenta a garantia por trás da regra de "mensagens compostas": a
@@ -120,7 +123,7 @@ class RoutingTests(unittest.TestCase):
         # conhecimento — por isso uma segunda intenção (ex: planejamento)
         # embutida na mesma mensagem do gestor precisa da própria rota,
         # nunca deve ser respondida usando só o que o onboarding carregou.
-        for platform, knowledge_skill in [("meta", "15-meta-help-center-retrieval"), ("google_ads", "17-google-ads-official-retrieval")]:
+        for platform, knowledge_skill in [("meta", "revisor/meta"), ("google_ads", "revisor/google-ads")]:
             with self.subTest(platform=platform):
                 payload = route("--intent", "onboarding", "--platform", platform, "--source-mode", "context_only")
                 skills = payload["branches"][0]["planned_skills"]
@@ -131,7 +134,7 @@ class RoutingTests(unittest.TestCase):
         # planejamento) é corretamente identificada e roteada, o gate de
         # conhecimento vem garantido como passo "always" — não depende do
         # gestor lembrar de pedir explicitamente.
-        for platform, knowledge_skill in [("meta", "15-meta-help-center-retrieval"), ("google_ads", "17-google-ads-official-retrieval")]:
+        for platform, knowledge_skill in [("meta", "revisor/meta"), ("google_ads", "revisor/google-ads")]:
             with self.subTest(platform=platform):
                 payload = route("--intent", "planejamento", "--platform", platform, "--source-mode", "context_only")
                 skills = payload["branches"][0]["planned_skills"]
@@ -156,16 +159,16 @@ class RoutingTests(unittest.TestCase):
             for platform in ("meta", "google_ads"):
                 with self.subTest(intent=intent, platform=platform):
                     without = route("--intent", intent, "--platform", platform, "--source-mode", "context_only")
-                    self.assertNotIn("26-gtm-tracking-audit-fix", without["branches"][0]["planned_skills"])
+                    self.assertNotIn("mensuracao/gtm", without["branches"][0]["planned_skills"])
                     with_audit = route(
                         "--intent", intent, "--platform", platform,
                         "--source-mode", "context_only", "--requires-gtm-audit",
                     )
                     skills = with_audit["branches"][0]["planned_skills"]
-                    self.assertIn("26-gtm-tracking-audit-fix", skills)
+                    self.assertIn("mensuracao/gtm", skills)
                     self.assertLess(
-                        skills.index("03-measurement-data-quality"),
-                        skills.index("26-gtm-tracking-audit-fix"),
+                        skills.index("mensuracao"),
+                        skills.index("mensuracao/gtm"),
                     )
 
     def test_gtm_audit_is_not_offered_outside_auditoria_and_otimizacao(self) -> None:
@@ -173,7 +176,7 @@ class RoutingTests(unittest.TestCase):
             "--intent", "planejamento", "--platform", "meta",
             "--source-mode", "context_only", "--requires-gtm-audit",
         )
-        self.assertNotIn("26-gtm-tracking-audit-fix", payload["branches"][0]["planned_skills"])
+        self.assertNotIn("mensuracao/gtm", payload["branches"][0]["planned_skills"])
 
     def test_question_lookup_and_history_never_create_dossier(self) -> None:
         for intent in ("duvida", "consulta", "historico"):
@@ -186,7 +189,7 @@ class RoutingTests(unittest.TestCase):
     def test_question_uses_official_base_even_without_account_source(self) -> None:
         payload = route("--intent", "duvida", "--platform", "meta", "--source-mode", "unavailable")
         self.assertEqual(payload["status"], "ready")
-        self.assertEqual(payload["branches"][0]["planned_skills"], ["15-meta-help-center-retrieval"])
+        self.assertEqual(payload["branches"][0]["planned_skills"], ["revisor/meta"])
 
     def test_default_depth_is_full_only_for_audit(self) -> None:
         expected = {"auditoria": "full", "analise": "focused", "otimizacao": "focused", "relatorio": "focused", "ajuste": "quick"}
@@ -199,12 +202,12 @@ class RoutingTests(unittest.TestCase):
 
     def test_adjustment_checks_official_base_but_skips_diagnosis(self) -> None:
         skills = route("--intent", "ajuste", "--platform", "meta", "--source-mode", "connected_read")["branches"][0]["planned_skills"]
-        self.assertIn("15-meta-help-center-retrieval", skills)
-        self.assertIn("12-optimization-change-set", skills)
-        self.assertNotIn("11-performance-diagnosis", skills)
+        self.assertIn("revisor/meta", skills)
+        self.assertIn("change-set", skills)
+        self.assertNotIn("diagnostico/meta", skills)
 
     def test_report_checks_results_against_official_base(self) -> None:
-        for platform, knowledge in (("meta", "15-meta-help-center-retrieval"), ("google_ads", "17-google-ads-official-retrieval")):
+        for platform, knowledge in (("meta", "revisor/meta"), ("google_ads", "revisor/google-ads")):
             with self.subTest(platform=platform):
                 skills = route("--intent", "relatorio", "--platform", platform, "--source-mode", "connected_read")["branches"][0]["planned_skills"]
                 self.assertEqual(skills[0], knowledge)
@@ -217,6 +220,29 @@ class RoutingTests(unittest.TestCase):
         self.assertEqual(payload["status"], "ready")
         statuses = {branch["platform"]: branch["status"] for branch in payload["branches"]}
         self.assertEqual(statuses, {"google_ads": "ready", "meta": "not_applicable"})
+
+
+    def test_evaluation_reads_data_checks_measurement_and_updates_existing_dossier(self) -> None:
+        for platform, connection, knowledge, diagnosis in (
+            ("meta", "conexao/meta", "revisor/meta", "diagnostico/meta"),
+            ("google_ads", "conexao/google-ads", "revisor/google-ads", "diagnostico/google-ads"),
+        ):
+            payload = route("--intent", "avaliacao", "--platform", platform, "--source-mode", "connected_read")
+            branch = payload["branches"][0]
+            self.assertEqual(payload["status"], "ready")
+            self.assertEqual(branch["depth"], "quick")
+            self.assertEqual(branch["final_state"], "evaluated")
+            self.assertEqual(branch["dossier_persistence"], "existing_dossier_required")
+            for skill in (connection, knowledge, "mensuracao", "diagnostico/metas-e-linha-de-base", diagnosis):
+                self.assertIn(skill, branch["planned_skills"])
+            self.assertNotIn("change-set", branch["planned_skills"])
+
+    def test_evaluation_is_blocked_without_account_or_file_data(self) -> None:
+        payload = route("--intent", "avaliacao", "--platform", "meta", "--source-mode", "context_only", expected_code=3)
+        self.assertEqual(payload["status"], "blocked")
+        self.assertIn("evaluation_requires_account_or_file_data", payload["branches"][0]["gates"])
+        file_based = route("--intent", "avaliacao", "--platform", "meta", "--source-mode", "file_based")
+        self.assertEqual(file_based["status"], "ready")
 
 
 if __name__ == "__main__":

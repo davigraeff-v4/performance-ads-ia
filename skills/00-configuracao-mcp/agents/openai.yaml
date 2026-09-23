@@ -1,4 +1,0 @@
-interface:
-  display_name: "Configuração MCP de Mídia"
-  short_description: "Configura MCPs oficiais Meta e Google Ads"
-  default_prompt: "Use $00-configuracao-mcp para configurar e validar o MCP da plataforma solicitada."

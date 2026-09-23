@@ -1,4 +1,0 @@
-interface:
-  display_name: "Conexão Google Ads"
-  short_description: "Valida conta e leitura do Google Ads"
-  default_prompt: "Use $16-google-ads-account-connection para validar com segurança uma conta Google Ads."

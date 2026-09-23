@@ -1,4 +1,0 @@
-interface:
-  display_name: "Estratégia de Públicos"
-  short_description: "Planeja públicos, exclusões e hipóteses de teste"
-  default_prompt: "Use $07-audience-strategy para definir públicos e exclusões de uma campanha."

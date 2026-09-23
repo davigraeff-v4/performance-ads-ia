@@ -1,4 +1,0 @@
-interface:
-  display_name: "Relatório e Aprendizado"
-  short_description: "Entrega resultados e registra aprendizados locais"
-  default_prompt: "Use $14-reporting-memory-learning para gerar relatório e atualizar a memória do cliente."

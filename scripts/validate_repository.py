@@ -11,41 +11,56 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 META_HELP_BASE = ROOT / "knowledge" / "meta-help-center"
-EXPECTED_META_HELP_ARTICLES = 151
+EXPECTED_META_HELP_ARTICLES = 153
 GOOGLE_HELP_BASE = ROOT / "knowledge" / "official-google" / "help-center"
 VECTOR_INDEX_DIR = ROOT / "knowledge" / ".vector-index"
 VECTOR_INDEX_PLATFORMS = {
     "meta": ("meta-help-center", META_HELP_BASE),
     "google_ads": ("google-ads-help-center", GOOGLE_HELP_BASE),
 }
-EXPECTED_SKILLS = {
-    "00-configuracao-mcp",
-    "01-client-campaign-intake",
-    "02-meta-account-connection",
-    "03-measurement-data-quality",
-    "04-goals-kpis-baseline",
-    "05-campaign-strategy",
-    "06-account-campaign-architecture",
-    "07-audience-strategy",
-    "08-budget-bidding-allocation",
-    "09-creative-performance-brief",
-    "10-campaign-build-plan",
-    "11-performance-diagnosis",
-    "12-optimization-change-set",
-    "13-approved-change-executor",
-    "14-reporting-memory-learning",
-    "15-meta-help-center-retrieval",
-    "16-google-ads-account-connection",
-    "17-google-ads-official-retrieval",
-    "18-google-ads-keyword-research",
-    "19-google-ads-campaign-strategy",
-    "20-google-ads-campaign-architecture",
-    "21-google-ads-budget-bidding-conversions",
-    "22-google-ads-creative-assets-landing-page",
-    "23-google-ads-campaign-build-plan",
-    "24-google-ads-performance-diagnosis",
-    "25-performance-ads-router",
-    "26-gtm-tracking-audit-fix",
+# 10 módulos (pastas em skills/) e as etapas que as rotas usam. Etapa
+# "modulo" aponta para skills/modulo/SKILL.md; "modulo/ref" aponta para
+# skills/modulo/references/ref.md (o SKILL.md do módulo é o índice).
+EXPECTED_MODULES = {
+    "performance-ads-roteador",
+    "contexto-cliente",
+    "conexao",
+    "mensuracao",
+    "diagnostico",
+    "planejamento",
+    "change-set",
+    "revisor",
+    "entrega",
+    "executor",
+}
+EXPECTED_STEPS = {
+    "conexao/configuracao-mcp",
+    "contexto-cliente",
+    "conexao/meta",
+    "mensuracao",
+    "diagnostico/metas-e-linha-de-base",
+    "planejamento/meta-estrategia",
+    "planejamento/meta-arquitetura",
+    "planejamento/meta-publicos",
+    "planejamento/meta-orcamento-e-lances",
+    "planejamento/meta-briefing-criativo",
+    "planejamento/meta-plano-de-construcao",
+    "diagnostico/meta",
+    "change-set",
+    "executor",
+    "entrega",
+    "revisor/meta",
+    "conexao/google-ads",
+    "revisor/google-ads",
+    "planejamento/google-ads-palavras-chave",
+    "planejamento/google-ads-estrategia",
+    "planejamento/google-ads-arquitetura",
+    "planejamento/google-ads-orcamento-lances-e-conversoes",
+    "planejamento/google-ads-criativos-e-pagina",
+    "planejamento/google-ads-plano-de-construcao",
+    "diagnostico/google-ads",
+    "performance-ads-roteador",
+    "mensuracao/gtm",
 }
 EXPECTED_COMMANDS = {
     "configuracao-mcp.md",
@@ -58,6 +73,7 @@ EXPECTED_COMMANDS = {
     "relatorio-performance.md",
     "pesquisar-palavras-chave.md",
     "aprovar-operacao.md",
+    "avaliar-operacao.md",
     "executar-operacao.md",
     "reverter-operacao.md",
 }
@@ -65,6 +81,12 @@ EXPECTED_COMMANDS = {
 
 def fail(errors: list[str], message: str) -> None:
     errors.append(message)
+
+
+def step_file(step: str) -> Path:
+    module, _, reference = step.partition("/")
+    base = ROOT / "skills" / module
+    return base / "references" / f"{reference}.md" if reference else base / "SKILL.md"
 
 
 def validate_frontmatter(path: Path, errors: list[str]) -> None:
@@ -338,22 +360,30 @@ def main() -> int:
         if not (ROOT / relative).is_file():
             fail(errors, f"arquivo obrigatório ausente: {relative}")
 
-    skill_dirs = {path.name for path in (ROOT / "skills").iterdir() if path.is_dir()}
-    if skill_dirs != EXPECTED_SKILLS:
-        fail(errors, f"skills divergentes: {sorted(skill_dirs ^ EXPECTED_SKILLS)}")
-    for name in sorted(EXPECTED_SKILLS):
+    module_dirs = {path.name for path in (ROOT / "skills").iterdir() if path.is_dir()}
+    if module_dirs != EXPECTED_MODULES:
+        fail(errors, f"módulos divergentes: {sorted(module_dirs ^ EXPECTED_MODULES)}")
+    for name in sorted(EXPECTED_MODULES):
         validate_frontmatter(ROOT / "skills" / name / "SKILL.md", errors)
         openai_yaml = ROOT / "skills" / name / "agents" / "openai.yaml"
         if not openai_yaml.is_file():
             fail(errors, f"openai.yaml ausente: {name}")
         else:
             validate_openai_yaml(openai_yaml, name, errors)
+    referenced = set()
+    for step in sorted(EXPECTED_STEPS):
+        target = step_file(step)
+        referenced.add(target)
+        if step.split("/")[0] not in EXPECTED_MODULES or not target.is_file():
+            fail(errors, f"etapa sem arquivo: {step} → {target.relative_to(ROOT)}")
+    for orphan in sorted(set((ROOT / "skills").glob("*/references/*.md")) - referenced):
+        fail(errors, f"referência sem etapa nas rotas: {orphan.relative_to(ROOT)}")
 
     graph = json.loads((ROOT / "dependency_graph.json").read_text(encoding="utf-8"))
-    if set(graph) != EXPECTED_SKILLS:
-        fail(errors, "dependency_graph não cobre exatamente as skills")
+    if set(graph) != EXPECTED_STEPS:
+        fail(errors, "dependency_graph não cobre exatamente as etapas")
     for name, deps in graph.items():
-        unknown = set(deps) - EXPECTED_SKILLS
+        unknown = set(deps) - EXPECTED_STEPS
         if unknown:
             fail(errors, f"dependências desconhecidas em {name}: {sorted(unknown)}")
 
@@ -376,7 +406,7 @@ def main() -> int:
         visit(name)
 
     matrix = json.loads((ROOT / "routing_matrix.json").read_text(encoding="utf-8"))
-    if matrix.get("version") != "2.0.0":
+    if matrix.get("version") != "2.1.0":
         fail(errors, "versão inesperada da matriz de roteamento")
     declared_platforms = set(matrix.get("platforms", []))
     if declared_platforms != {"meta", "google_ads"}:
@@ -392,13 +422,13 @@ def main() -> int:
             if not isinstance(route.get("output"), str) or not route["output"]:
                 fail(errors, f"contrato de saída ausente na rota {intent}:{platform}")
             for step in route.get("steps", []):
-                if step.get("skill") not in EXPECTED_SKILLS:
-                    fail(errors, f"skill desconhecida na rota {intent}:{platform}: {step.get('skill')}")
+                if step.get("skill") not in EXPECTED_STEPS:
+                    fail(errors, f"etapa desconhecida na rota {intent}:{platform}: {step.get('skill')}")
                 if step.get("when") not in supported_conditions:
                     fail(errors, f"condição desconhecida na rota {intent}:{platform}: {step.get('when')}")
 
     for discovery_root in [ROOT / ".agents" / "skills", ROOT / ".claude" / "skills"]:
-        router_link = discovery_root / "25-performance-ads-router"
+        router_link = discovery_root / "performance-ads-roteador"
         if not router_link.is_dir() or not (router_link / "SKILL.md").is_file():
             fail(errors, f"roteador não descobrível em {discovery_root.relative_to(ROOT)}")
 
@@ -456,6 +486,20 @@ def main() -> int:
         "scripts/search_google_ads_help.py",
         "scripts/_help_index_common.py",
         "scripts/_vector_search.py",
+        "scripts/help_search.py",
+        "scripts/eval_retrieval.py",
+        "scripts/kb_check.py",
+        "scripts/client_brief.py",
+        "scripts/migrate_client_profile.py",
+        "templates/aprendizados-template.md",
+        "tests/test_client_brief.py",
+        "scripts/eval_routing.py",
+        "tests/fixtures/routing_eval.json",
+        "tests/test_routing_eval.py",
+        "knowledge/retrieval-rewrites.json",
+        "tests/fixtures/retrieval_eval.json",
+        "tests/test_retrieval_eval.py",
+        "tests/test_kb_check.py",
         "scripts/build_knowledge_vector_index.py",
         "tests/test_vector_search_isolation.py",
         "knowledge/google-ads/keyword-research-methodology.md",
@@ -520,7 +564,7 @@ def main() -> int:
             print(f"- {error}")
         return 1
     print(
-        f"VALIDATION OK: {len(EXPECTED_SKILLS)} skills (26 módulos + roteador), "
+        f"VALIDATION OK: {len(EXPECTED_MODULES)} módulos ({len(EXPECTED_STEPS)} etapas de rota), "
         f"{EXPECTED_META_HELP_ARTICLES} artigos Meta, base Google Ads e schemas JSON válidos"
     )
     return 0

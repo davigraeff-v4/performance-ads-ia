@@ -1,10 +1,11 @@
 {
-  "version": "2.0.0",
+  "version": "2.1.0",
   "platforms": ["meta", "google_ads"],
   "source_modes": ["connected_read", "file_based", "context_only", "unavailable"],
   "default_depth": {
     "consulta": "quick",
     "ajuste": "quick",
+    "avaliacao": "quick",
     "analise": "focused",
     "otimizacao": "focused",
     "relatorio": "focused",
@@ -21,14 +22,14 @@
     "duvida": {
       "meta": {
         "steps": [
-          {"skill": "15-meta-help-center-retrieval", "when": "always"}
+          {"skill": "revisor/meta", "when": "always"}
         ],
         "final_state": "no_dossier",
         "output": "resposta_explicada"
       },
       "google_ads": {
         "steps": [
-          {"skill": "17-google-ads-official-retrieval", "when": "always"}
+          {"skill": "revisor/google-ads", "when": "always"}
         ],
         "final_state": "no_dossier",
         "output": "resposta_explicada"
@@ -37,16 +38,16 @@
     "consulta": {
       "meta": {
         "steps": [
-          {"skill": "01-client-campaign-intake", "when": "always"},
-          {"skill": "02-meta-account-connection", "when": "source_mode=connected_read"}
+          {"skill": "contexto-cliente", "when": "always"},
+          {"skill": "conexao/meta", "when": "source_mode=connected_read"}
         ],
         "final_state": "no_dossier",
         "output": "resposta_dados"
       },
       "google_ads": {
         "steps": [
-          {"skill": "01-client-campaign-intake", "when": "always"},
-          {"skill": "16-google-ads-account-connection", "when": "source_mode=connected_read"}
+          {"skill": "contexto-cliente", "when": "always"},
+          {"skill": "conexao/google-ads", "when": "source_mode=connected_read"}
         ],
         "final_state": "no_dossier",
         "output": "resposta_dados"
@@ -55,14 +56,14 @@
     "historico": {
       "meta": {
         "steps": [
-          {"skill": "01-client-campaign-intake", "when": "always"}
+          {"skill": "contexto-cliente", "when": "always"}
         ],
         "final_state": "no_dossier",
         "output": "resumo_historico"
       },
       "google_ads": {
         "steps": [
-          {"skill": "01-client-campaign-intake", "when": "always"}
+          {"skill": "contexto-cliente", "when": "always"}
         ],
         "final_state": "no_dossier",
         "output": "resumo_historico"
@@ -71,14 +72,14 @@
     "configuracao": {
       "meta": {
         "steps": [
-          {"skill": "00-configuracao-mcp", "when": "always"}
+          {"skill": "conexao/configuracao-mcp", "when": "always"}
         ],
         "final_state": "analysis_only",
         "output": "diagnostico_configuracao"
       },
       "google_ads": {
         "steps": [
-          {"skill": "00-configuracao-mcp", "when": "always"}
+          {"skill": "conexao/configuracao-mcp", "when": "always"}
         ],
         "final_state": "analysis_only",
         "output": "diagnostico_configuracao"
@@ -87,14 +88,14 @@
     "onboarding": {
       "meta": {
         "steps": [
-          {"skill": "01-client-campaign-intake", "when": "always"}
+          {"skill": "contexto-cliente", "when": "always"}
         ],
         "final_state": "analysis_only",
         "output": "ficha_cliente"
       },
       "google_ads": {
         "steps": [
-          {"skill": "01-client-campaign-intake", "when": "always"}
+          {"skill": "contexto-cliente", "when": "always"}
         ],
         "final_state": "analysis_only",
         "output": "ficha_cliente"
@@ -103,10 +104,10 @@
     "pesquisa_palavras_chave": {
       "google_ads": {
         "steps": [
-          {"skill": "01-client-campaign-intake", "when": "always"},
-          {"skill": "16-google-ads-account-connection", "when": "source_mode=connected_read"},
-          {"skill": "17-google-ads-official-retrieval", "when": "always"},
-          {"skill": "18-google-ads-keyword-research", "when": "always"}
+          {"skill": "contexto-cliente", "when": "always"},
+          {"skill": "conexao/google-ads", "when": "source_mode=connected_read"},
+          {"skill": "revisor/google-ads", "when": "always"},
+          {"skill": "planejamento/google-ads-palavras-chave", "when": "always"}
         ],
         "final_state": "analysis_only",
         "output": "pesquisa_palavras_chave"
@@ -115,32 +116,32 @@
     "planejamento": {
       "meta": {
         "steps": [
-          {"skill": "01-client-campaign-intake", "when": "always"},
-          {"skill": "02-meta-account-connection", "when": "source_mode=connected_read"},
-          {"skill": "15-meta-help-center-retrieval", "when": "always"},
-          {"skill": "03-measurement-data-quality", "when": "always"},
-          {"skill": "04-goals-kpis-baseline", "when": "always"},
-          {"skill": "05-campaign-strategy", "when": "always"},
-          {"skill": "06-account-campaign-architecture", "when": "always"},
-          {"skill": "07-audience-strategy", "when": "always"},
-          {"skill": "08-budget-bidding-allocation", "when": "always"},
-          {"skill": "09-creative-performance-brief", "when": "always"}
+          {"skill": "contexto-cliente", "when": "always"},
+          {"skill": "conexao/meta", "when": "source_mode=connected_read"},
+          {"skill": "revisor/meta", "when": "always"},
+          {"skill": "mensuracao", "when": "always"},
+          {"skill": "diagnostico/metas-e-linha-de-base", "when": "always"},
+          {"skill": "planejamento/meta-estrategia", "when": "always"},
+          {"skill": "planejamento/meta-arquitetura", "when": "always"},
+          {"skill": "planejamento/meta-publicos", "when": "always"},
+          {"skill": "planejamento/meta-orcamento-e-lances", "when": "always"},
+          {"skill": "planejamento/meta-briefing-criativo", "when": "always"}
         ],
         "final_state": "analysis_only",
         "output": "plano_campanha"
       },
       "google_ads": {
         "steps": [
-          {"skill": "01-client-campaign-intake", "when": "always"},
-          {"skill": "16-google-ads-account-connection", "when": "source_mode=connected_read"},
-          {"skill": "17-google-ads-official-retrieval", "when": "always"},
-          {"skill": "03-measurement-data-quality", "when": "always"},
-          {"skill": "04-goals-kpis-baseline", "when": "always"},
-          {"skill": "18-google-ads-keyword-research", "when": "requires_keywords=true"},
-          {"skill": "19-google-ads-campaign-strategy", "when": "always"},
-          {"skill": "20-google-ads-campaign-architecture", "when": "always"},
-          {"skill": "21-google-ads-budget-bidding-conversions", "when": "always"},
-          {"skill": "22-google-ads-creative-assets-landing-page", "when": "always"}
+          {"skill": "contexto-cliente", "when": "always"},
+          {"skill": "conexao/google-ads", "when": "source_mode=connected_read"},
+          {"skill": "revisor/google-ads", "when": "always"},
+          {"skill": "mensuracao", "when": "always"},
+          {"skill": "diagnostico/metas-e-linha-de-base", "when": "always"},
+          {"skill": "planejamento/google-ads-palavras-chave", "when": "requires_keywords=true"},
+          {"skill": "planejamento/google-ads-estrategia", "when": "always"},
+          {"skill": "planejamento/google-ads-arquitetura", "when": "always"},
+          {"skill": "planejamento/google-ads-orcamento-lances-e-conversoes", "when": "always"},
+          {"skill": "planejamento/google-ads-criativos-e-pagina", "when": "always"}
         ],
         "final_state": "analysis_only",
         "output": "plano_campanha"
@@ -149,34 +150,34 @@
     "criacao": {
       "meta": {
         "steps": [
-          {"skill": "01-client-campaign-intake", "when": "always"},
-          {"skill": "02-meta-account-connection", "when": "source_mode=connected_read"},
-          {"skill": "15-meta-help-center-retrieval", "when": "always"},
-          {"skill": "03-measurement-data-quality", "when": "always"},
-          {"skill": "04-goals-kpis-baseline", "when": "always"},
-          {"skill": "05-campaign-strategy", "when": "always"},
-          {"skill": "06-account-campaign-architecture", "when": "always"},
-          {"skill": "07-audience-strategy", "when": "always"},
-          {"skill": "08-budget-bidding-allocation", "when": "always"},
-          {"skill": "09-creative-performance-brief", "when": "always"},
-          {"skill": "10-campaign-build-plan", "when": "always"}
+          {"skill": "contexto-cliente", "when": "always"},
+          {"skill": "conexao/meta", "when": "source_mode=connected_read"},
+          {"skill": "revisor/meta", "when": "always"},
+          {"skill": "mensuracao", "when": "always"},
+          {"skill": "diagnostico/metas-e-linha-de-base", "when": "always"},
+          {"skill": "planejamento/meta-estrategia", "when": "always"},
+          {"skill": "planejamento/meta-arquitetura", "when": "always"},
+          {"skill": "planejamento/meta-publicos", "when": "always"},
+          {"skill": "planejamento/meta-orcamento-e-lances", "when": "always"},
+          {"skill": "planejamento/meta-briefing-criativo", "when": "always"},
+          {"skill": "planejamento/meta-plano-de-construcao", "when": "always"}
         ],
         "final_state": "proposed",
         "output": "plano_construcao"
       },
       "google_ads": {
         "steps": [
-          {"skill": "01-client-campaign-intake", "when": "always"},
-          {"skill": "16-google-ads-account-connection", "when": "source_mode=connected_read"},
-          {"skill": "17-google-ads-official-retrieval", "when": "always"},
-          {"skill": "03-measurement-data-quality", "when": "always"},
-          {"skill": "04-goals-kpis-baseline", "when": "always"},
-          {"skill": "18-google-ads-keyword-research", "when": "requires_keywords=true"},
-          {"skill": "19-google-ads-campaign-strategy", "when": "always"},
-          {"skill": "20-google-ads-campaign-architecture", "when": "always"},
-          {"skill": "21-google-ads-budget-bidding-conversions", "when": "always"},
-          {"skill": "22-google-ads-creative-assets-landing-page", "when": "always"},
-          {"skill": "23-google-ads-campaign-build-plan", "when": "always"}
+          {"skill": "contexto-cliente", "when": "always"},
+          {"skill": "conexao/google-ads", "when": "source_mode=connected_read"},
+          {"skill": "revisor/google-ads", "when": "always"},
+          {"skill": "mensuracao", "when": "always"},
+          {"skill": "diagnostico/metas-e-linha-de-base", "when": "always"},
+          {"skill": "planejamento/google-ads-palavras-chave", "when": "requires_keywords=true"},
+          {"skill": "planejamento/google-ads-estrategia", "when": "always"},
+          {"skill": "planejamento/google-ads-arquitetura", "when": "always"},
+          {"skill": "planejamento/google-ads-orcamento-lances-e-conversoes", "when": "always"},
+          {"skill": "planejamento/google-ads-criativos-e-pagina", "when": "always"},
+          {"skill": "planejamento/google-ads-plano-de-construcao", "when": "always"}
         ],
         "final_state": "proposed",
         "output": "plano_construcao_manual"
@@ -185,26 +186,26 @@
     "auditoria": {
       "meta": {
         "steps": [
-          {"skill": "01-client-campaign-intake", "when": "always"},
-          {"skill": "02-meta-account-connection", "when": "source_mode=connected_read"},
-          {"skill": "15-meta-help-center-retrieval", "when": "always"},
-          {"skill": "03-measurement-data-quality", "when": "always"},
-          {"skill": "26-gtm-tracking-audit-fix", "when": "requires_gtm_audit=true"},
-          {"skill": "04-goals-kpis-baseline", "when": "always"},
-          {"skill": "11-performance-diagnosis", "when": "always"}
+          {"skill": "contexto-cliente", "when": "always"},
+          {"skill": "conexao/meta", "when": "source_mode=connected_read"},
+          {"skill": "revisor/meta", "when": "always"},
+          {"skill": "mensuracao", "when": "always"},
+          {"skill": "mensuracao/gtm", "when": "requires_gtm_audit=true"},
+          {"skill": "diagnostico/metas-e-linha-de-base", "when": "always"},
+          {"skill": "diagnostico/meta", "when": "always"}
         ],
         "final_state": "analysis_only",
         "output": "auditoria_conta"
       },
       "google_ads": {
         "steps": [
-          {"skill": "01-client-campaign-intake", "when": "always"},
-          {"skill": "16-google-ads-account-connection", "when": "source_mode=connected_read"},
-          {"skill": "17-google-ads-official-retrieval", "when": "always"},
-          {"skill": "03-measurement-data-quality", "when": "always"},
-          {"skill": "26-gtm-tracking-audit-fix", "when": "requires_gtm_audit=true"},
-          {"skill": "04-goals-kpis-baseline", "when": "always"},
-          {"skill": "24-google-ads-performance-diagnosis", "when": "always"}
+          {"skill": "contexto-cliente", "when": "always"},
+          {"skill": "conexao/google-ads", "when": "source_mode=connected_read"},
+          {"skill": "revisor/google-ads", "when": "always"},
+          {"skill": "mensuracao", "when": "always"},
+          {"skill": "mensuracao/gtm", "when": "requires_gtm_audit=true"},
+          {"skill": "diagnostico/metas-e-linha-de-base", "when": "always"},
+          {"skill": "diagnostico/google-ads", "when": "always"}
         ],
         "final_state": "analysis_only",
         "output": "auditoria_conta"
@@ -213,24 +214,24 @@
     "analise": {
       "meta": {
         "steps": [
-          {"skill": "01-client-campaign-intake", "when": "always"},
-          {"skill": "02-meta-account-connection", "when": "source_mode=connected_read"},
-          {"skill": "15-meta-help-center-retrieval", "when": "always"},
-          {"skill": "03-measurement-data-quality", "when": "always"},
-          {"skill": "04-goals-kpis-baseline", "when": "always"},
-          {"skill": "11-performance-diagnosis", "when": "always"}
+          {"skill": "contexto-cliente", "when": "always"},
+          {"skill": "conexao/meta", "when": "source_mode=connected_read"},
+          {"skill": "revisor/meta", "when": "always"},
+          {"skill": "mensuracao", "when": "always"},
+          {"skill": "diagnostico/metas-e-linha-de-base", "when": "always"},
+          {"skill": "diagnostico/meta", "when": "always"}
         ],
         "final_state": "analysis_only",
         "output": "relatorio_analise"
       },
       "google_ads": {
         "steps": [
-          {"skill": "01-client-campaign-intake", "when": "always"},
-          {"skill": "16-google-ads-account-connection", "when": "source_mode=connected_read"},
-          {"skill": "17-google-ads-official-retrieval", "when": "always"},
-          {"skill": "03-measurement-data-quality", "when": "always"},
-          {"skill": "04-goals-kpis-baseline", "when": "always"},
-          {"skill": "24-google-ads-performance-diagnosis", "when": "always"}
+          {"skill": "contexto-cliente", "when": "always"},
+          {"skill": "conexao/google-ads", "when": "source_mode=connected_read"},
+          {"skill": "revisor/google-ads", "when": "always"},
+          {"skill": "mensuracao", "when": "always"},
+          {"skill": "diagnostico/metas-e-linha-de-base", "when": "always"},
+          {"skill": "diagnostico/google-ads", "when": "always"}
         ],
         "final_state": "analysis_only",
         "output": "relatorio_analise"
@@ -239,28 +240,28 @@
     "otimizacao": {
       "meta": {
         "steps": [
-          {"skill": "01-client-campaign-intake", "when": "always"},
-          {"skill": "02-meta-account-connection", "when": "source_mode=connected_read"},
-          {"skill": "15-meta-help-center-retrieval", "when": "always"},
-          {"skill": "03-measurement-data-quality", "when": "always"},
-          {"skill": "26-gtm-tracking-audit-fix", "when": "requires_gtm_audit=true"},
-          {"skill": "04-goals-kpis-baseline", "when": "always"},
-          {"skill": "11-performance-diagnosis", "when": "always"},
-          {"skill": "12-optimization-change-set", "when": "always"}
+          {"skill": "contexto-cliente", "when": "always"},
+          {"skill": "conexao/meta", "when": "source_mode=connected_read"},
+          {"skill": "revisor/meta", "when": "always"},
+          {"skill": "mensuracao", "when": "always"},
+          {"skill": "mensuracao/gtm", "when": "requires_gtm_audit=true"},
+          {"skill": "diagnostico/metas-e-linha-de-base", "when": "always"},
+          {"skill": "diagnostico/meta", "when": "always"},
+          {"skill": "change-set", "when": "always"}
         ],
         "final_state": "proposed",
         "output": "plano_otimizacao"
       },
       "google_ads": {
         "steps": [
-          {"skill": "01-client-campaign-intake", "when": "always"},
-          {"skill": "16-google-ads-account-connection", "when": "source_mode=connected_read"},
-          {"skill": "17-google-ads-official-retrieval", "when": "always"},
-          {"skill": "03-measurement-data-quality", "when": "always"},
-          {"skill": "26-gtm-tracking-audit-fix", "when": "requires_gtm_audit=true"},
-          {"skill": "04-goals-kpis-baseline", "when": "always"},
-          {"skill": "24-google-ads-performance-diagnosis", "when": "always"},
-          {"skill": "12-optimization-change-set", "when": "always"}
+          {"skill": "contexto-cliente", "when": "always"},
+          {"skill": "conexao/google-ads", "when": "source_mode=connected_read"},
+          {"skill": "revisor/google-ads", "when": "always"},
+          {"skill": "mensuracao", "when": "always"},
+          {"skill": "mensuracao/gtm", "when": "requires_gtm_audit=true"},
+          {"skill": "diagnostico/metas-e-linha-de-base", "when": "always"},
+          {"skill": "diagnostico/google-ads", "when": "always"},
+          {"skill": "change-set", "when": "always"}
         ],
         "final_state": "proposed",
         "output": "plano_otimizacao_manual"
@@ -269,20 +270,20 @@
     "ajuste": {
       "meta": {
         "steps": [
-          {"skill": "01-client-campaign-intake", "when": "always"},
-          {"skill": "02-meta-account-connection", "when": "source_mode=connected_read"},
-          {"skill": "15-meta-help-center-retrieval", "when": "always"},
-          {"skill": "12-optimization-change-set", "when": "always"}
+          {"skill": "contexto-cliente", "when": "always"},
+          {"skill": "conexao/meta", "when": "source_mode=connected_read"},
+          {"skill": "revisor/meta", "when": "always"},
+          {"skill": "change-set", "when": "always"}
         ],
         "final_state": "proposed",
         "output": "ajuste_pontual"
       },
       "google_ads": {
         "steps": [
-          {"skill": "01-client-campaign-intake", "when": "always"},
-          {"skill": "16-google-ads-account-connection", "when": "source_mode=connected_read"},
-          {"skill": "17-google-ads-official-retrieval", "when": "always"},
-          {"skill": "12-optimization-change-set", "when": "always"}
+          {"skill": "contexto-cliente", "when": "always"},
+          {"skill": "conexao/google-ads", "when": "source_mode=connected_read"},
+          {"skill": "revisor/google-ads", "when": "always"},
+          {"skill": "change-set", "when": "always"}
         ],
         "final_state": "proposed",
         "output": "ajuste_pontual_manual"
@@ -291,16 +292,16 @@
     "relatorio": {
       "meta": {
         "steps": [
-          {"skill": "15-meta-help-center-retrieval", "when": "always"},
-          {"skill": "14-reporting-memory-learning", "when": "always"}
+          {"skill": "revisor/meta", "when": "always"},
+          {"skill": "entrega", "when": "always"}
         ],
         "final_state": "analysis_only",
         "output": "relatorio_performance"
       },
       "google_ads": {
         "steps": [
-          {"skill": "17-google-ads-official-retrieval", "when": "always"},
-          {"skill": "14-reporting-memory-learning", "when": "always"}
+          {"skill": "revisor/google-ads", "when": "always"},
+          {"skill": "entrega", "when": "always"}
         ],
         "final_state": "analysis_only",
         "output": "relatorio_performance"
@@ -321,7 +322,7 @@
     "execucao": {
       "meta": {
         "steps": [
-          {"skill": "13-approved-change-executor", "when": "always"}
+          {"skill": "executor", "when": "always"}
         ],
         "final_state": "executed",
         "output": "resultado_execucao",
@@ -329,23 +330,49 @@
       },
       "google_ads": {
         "steps": [
-          {"skill": "13-approved-change-executor", "when": "always"}
+          {"skill": "executor", "when": "always"}
         ],
         "final_state": "blocked_manual_only",
         "output": "instrucao_manual"
       }
     },
+    "avaliacao": {
+      "meta": {
+        "steps": [
+          {"skill": "contexto-cliente", "when": "always"},
+          {"skill": "conexao/meta", "when": "source_mode=connected_read"},
+          {"skill": "revisor/meta", "when": "always"},
+          {"skill": "mensuracao", "when": "always"},
+          {"skill": "diagnostico/metas-e-linha-de-base", "when": "always"},
+          {"skill": "diagnostico/meta", "when": "always"}
+        ],
+        "final_state": "evaluated",
+        "output": "avaliacao_operacao"
+      },
+      "google_ads": {
+        "steps": [
+          {"skill": "contexto-cliente", "when": "always"},
+          {"skill": "conexao/google-ads", "when": "source_mode=connected_read"},
+          {"skill": "revisor/google-ads", "when": "always"},
+          {"skill": "mensuracao", "when": "always"},
+          {"skill": "diagnostico/metas-e-linha-de-base", "when": "always"},
+          {"skill": "diagnostico/google-ads", "when": "always"}
+        ],
+        "final_state": "evaluated",
+        "output": "avaliacao_operacao"
+      }
+    },
     "reversao": {
       "meta": {
         "steps": [
-          {"skill": "12-optimization-change-set", "when": "always"}
+          {"skill": "change-set", "when": "always"}
         ],
         "final_state": "proposed",
         "output": "change_set_reversao"
       },
       "google_ads": {
         "steps": [
-          {"skill": "12-optimization-change-set", "when": "always"}
+          {"skill": "change-set", "when": "always"}
         ],
         "final_state": "proposed",
         "output": "change_set_reversao_manual"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Diagnóstico"
+  short_description: "Metas, linha de base e diagnóstico de performance"
+  default_prompt: "Use $diagnostico para diagnosticar a performance Meta Ads ou Google Ads."

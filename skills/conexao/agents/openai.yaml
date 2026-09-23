@@ -1,0 +1,4 @@
+interface:
+  display_name: "Conexão com as plataformas"
+  short_description: "Confirma conta e capacidade real dos conectores"
+  default_prompt: "Use $conexao para confirmar a conta e a capacidade do conector Meta Ads ou Google Ads."

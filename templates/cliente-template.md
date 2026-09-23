@@ -66,6 +66,11 @@
 - Formato de relatório:
 - Restrições permanentes:
 
-## Histórico e aprendizados
+## Onde está o resto
 
-Acrescente entradas datadas. Nunca apague o histórico anterior; quando algo mudar, registre a substituição e a data.
+Esta ficha guarda só o perfil estável do cliente (contas, negócio, metas, fontes e preferências). O resto vive em outro lugar:
+
+- **Regras duráveis** ("nesta conta o custo por mil impressões domina o custo por lead"): `APRENDIZADOS.md`, no molde de `templates/aprendizados-template.md`.
+- **Histórico de operações:** nos dossiês, lido por `python3 scripts/client_brief.py {slug}` e `python3 scripts/client_history.py`.
+
+Quando um dado do perfil mudar, atualize a linha e a data em "Atualizado em"; nunca apague uma regra de `APRENDIZADOS.md`, marque como revista.

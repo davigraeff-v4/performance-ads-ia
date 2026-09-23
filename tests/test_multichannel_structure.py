@@ -16,12 +16,12 @@ class MultichannelStructureTests(unittest.TestCase):
         graph = json.loads((ROOT / "dependency_graph.json").read_text(encoding="utf-8"))
         google = {name for name in graph if "google-ads" in name}
         self.assertEqual(len(google), 9)
-        self.assertIn("23-google-ads-campaign-build-plan", google)
-        self.assertIn("24-google-ads-performance-diagnosis", google)
+        self.assertIn("planejamento/google-ads-plano-de-construcao", google)
+        self.assertIn("diagnostico/google-ads", google)
 
     def test_google_write_remains_fail_closed(self) -> None:
         contract = (ROOT / "CONTRATO-OPERACIONAL.md").read_text(encoding="utf-8")
-        executor = (ROOT / "skills/13-approved-change-executor/SKILL.md").read_text(encoding="utf-8")
+        executor = (ROOT / "skills/executor/SKILL.md").read_text(encoding="utf-8")
         self.assertIn("nenhuma ferramenta de escrita Google Ads é registrada", contract)
         self.assertIn("bloquear toda chamada de escrita", executor)
 
@@ -45,7 +45,7 @@ class MultichannelStructureTests(unittest.TestCase):
         self.assertIn("um `operation_id` e uma aprovação por plataforma", contract)
 
     def test_keyword_research_does_not_invent_metrics(self) -> None:
-        skill = (ROOT / "skills/18-google-ads-keyword-research/SKILL.md").read_text(encoding="utf-8")
+        skill = (ROOT / "skills/planejamento/references/google-ads-palavras-chave.md").read_text(encoding="utf-8")
         self.assertIn("Nunca apresentar estimativa do modelo como volume", skill)
 
     def test_google_ads_mcp_installation_is_documented_for_both_clients(self) -> None:
@@ -68,7 +68,7 @@ class MultichannelStructureTests(unittest.TestCase):
     def test_gtm_api_installation_is_documented_and_never_publishes(self) -> None:
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         contract = (ROOT / "CONTRATO-OPERACIONAL.md").read_text(encoding="utf-8")
-        skill = (ROOT / "skills/26-gtm-tracking-audit-fix/SKILL.md").read_text(encoding="utf-8")
+        skill = (ROOT / "skills/mensuracao/references/gtm.md").read_text(encoding="utf-8")
         required_in_readme = [
             "## 16. Apêndice opcional — Google Tag Manager (GTM)",
             "Tag Manager API",
@@ -85,7 +85,7 @@ class MultichannelStructureTests(unittest.TestCase):
         self.assertIn("README.md §16", skill)
 
     def test_google_ads_mcp_skill_protects_credentials_and_validates_reads(self) -> None:
-        skill = (ROOT / "skills/00-configuracao-mcp/SKILL.md").read_text(encoding="utf-8")
+        skill = (ROOT / "skills/conexao/references/configuracao-mcp.md").read_text(encoding="utf-8")
         required = [
             "Nunca pedir que o usuário cole segredo",
             "Google Workspace CLI e Google Ads API são superfícies diferentes",

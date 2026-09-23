@@ -1,0 +1,107 @@
+{
+  "version": "1.0.0",
+  "description": "Dicionário controlado de reescrita: traduz premissas escritas em linguagem de gestor (\"disputa interna no leilão\") para o termo de produto que aparece no título do artigo oficial (\"sobreposição de leilão\"). Cada regra só vale para a sua plataforma. 'padroes' são expressões regulares aplicadas à consulta normalizada (minúsculas, sem acento, pontuação vira espaço). 'termos' são títulos ou trechos de título; só uma correspondência forte de título por um termo conta. Regras novas entram com uma consulta rotulada em tests/fixtures/retrieval_eval.json e a medição de scripts/eval_retrieval.py antes e depois.",
+  "meta": [
+    {
+      "id": "sobreposicao-leilao",
+      "padroes": ["sobrepos", "sobrepost", "(disputa|disputam|competem|compete|concorrem|concorre)\\b.*\\b(leilao|entre si)", "leilao interno", "disputa interna", "canibaliz", "mesmo anunciante"],
+      "termos": ["sobreposição de leilão", "públicos sobrepostos"]
+    },
+    {
+      "id": "consolidacao-conjuntos",
+      "padroes": ["consolid", "muitos conjuntos", "fragment", "juntar (os )?conjuntos", "unificar (os )?conjuntos"],
+      "termos": ["boas práticas para veiculação de anúncios", "edições significativas e fase de aprendizado"]
+    },
+    {
+      "id": "fase-aprendizado",
+      "padroes": ["aprendizado", "edicao significativa", "edicoes significativas"],
+      "termos": ["edições significativas e fase de aprendizado"]
+    },
+    {
+      "id": "gasto-acima-orcamento-diario",
+      "padroes": ["gast\\w* mais (que|do que) o (valor|orcamento)", "acima do orcamento", "ultrapass\\w* o orcamento", "orcamento diario.*(passa|excede|ultrapass|mais)"],
+      "termos": ["sobre os orçamentos diários"]
+    },
+    {
+      "id": "posicionamentos",
+      "padroes": ["posicionamento", "so (no |ao )?instagram", "somente (no |o )?instagram", "instagram only", "so (no )?feed"],
+      "termos": ["como escolher posicionamentos de anúncios"]
+    },
+    {
+      "id": "controles-de-custo",
+      "padroes": ["limite de custo", "controle de custo", "limite de lance", "meta de custo", "custo por resultado (alvo|desejado|meta)"],
+      "termos": ["sobre os controles de custo e de lance", "sobre a meta de custo por resultado", "sobre o limite de lance"]
+    },
+    {
+      "id": "publico-advantage",
+      "padroes": ["publico advantage", "fora do publico", "expand\\w* (o )?publico", "sugest\\w* de publico"],
+      "termos": ["sobre o público advantage+", "controles de público e sugestões de público"]
+    },
+    {
+      "id": "teste-ab",
+      "padroes": ["teste a b", "testes a b", "ab test", "teste ab"],
+      "termos": ["sobre testes a/b", "boas práticas para testes a/b"]
+    },
+    {
+      "id": "desduplicacao-capi",
+      "padroes": ["desduplic", "deduplic", "(conta|contam|contando|contar)\\w* .*duas vezes", "evento duplicado", "lead duplicado"],
+      "termos": ["comparar as opções de configuração da api de conversões", "como monitorar e melhorar a configuração da api de conversões"]
+    },
+    {
+      "id": "janela-atribuicao",
+      "padroes": ["janela de atribuicao", "apos o clique", "apos a visualizacao", "configurac\\w* de atribuicao"],
+      "termos": ["sobre modelos de atribuição e configurações de atribuição", "sobre as várias configurações de atribuição"]
+    }
+  ],
+  "google_ads": [
+    {
+      "id": "priorizacao-palavras-chave",
+      "padroes": ["mesm(a|as|o|os) (palavra|palavras|termo|termos)", "palavras chave duplicad", "palavra chave duplicad", "(competem|compete|concorrem|concorre|disputam|disputa)\\b.*\\b(entre si|leilao)", "leilao interno", "canibaliz", "rouba\\w* (o )?trafego", "uma da outra"],
+      "termos": ["sobre a priorização de grupos de anúncios e de recursos"]
+    },
+    {
+      "id": "limitada-orcamento",
+      "padroes": ["limitad\\w* (pelo|por) orcamento"],
+      "termos": ["sobre os status da estratégia de lances", "sobre o relatório de orçamento"]
+    },
+    {
+      "id": "gasto-dobro-orcamento",
+      "padroes": ["dobro do orcamento", "gast\\w* mais (que|do que) o orcamento", "ultrapass\\w* o orcamento", "acima do orcamento"],
+      "termos": ["escolher seu lance e orçamento", "visão geral dos orçamentos"]
+    },
+    {
+      "id": "indice-qualidade",
+      "padroes": ["indice de qualidade", "quality score"],
+      "termos": ["sobre a classificação do anúncio"]
+    },
+    {
+      "id": "aprendizado-lances",
+      "padroes": ["aprendizado", "periodo de aprendizagem"],
+      "termos": ["sobre os status da estratégia de lances"]
+    },
+    {
+      "id": "previsao-planejador",
+      "padroes": ["previs\\w* do planejador", "forecast", "estimativa do planejador"],
+      "termos": ["sobre as previsões do planejador de palavras-chave"]
+    },
+    {
+      "id": "opcoes-local",
+      "padroes": ["presenca ou interesse", "fora da regiao", "fora da area", "interesse no local"],
+      "termos": ["sobre as opções de local avançadas"]
+    },
+    {
+      "id": "termo-vs-palavra",
+      "padroes": ["termo de pesquisa nao e", "termos de pesquisa nao sao", "diferenca entre termo de pesquisa e palavra"],
+      "termos": ["sobre as opções de correspondência de palavra-chave"]
+    },
+    {
+      "id": "cpa-desejado",
+      "padroes": ["meta de cpa", "cpa desejado", "cpa alvo", "meta de custo por conversao"],
+      "termos": ["sobre os lances de cpa desejado"]
+    }
+  ],
+  "politica": {
+    "description": "Termos que indicam uma consulta sobre política, restrição ou revisão. Sem nenhum deles, artigos de política têm a pontuação reduzida.",
+    "padroes": ["polit", "reprov", "rejeit", "restri", "violac", "proibid", "bloquead", "desativad", "em analise", "revisao de anuncio", "discrimin", "moradia", "habitac", "emprego", "credito", "financeir", "sensacional", "nudez", "drog", "farmac", "eleic", "temas sociais", "assuntos sociais", "padroes de publicidade", "suspens", "conta restrita", "linguagem ofensiva", "privacidade"]
+  }
+}

@@ -30,7 +30,7 @@ class MetaHelpSearchTests(unittest.TestCase):
         payload = search("Sobre a meta de ROAS", "--title-only", "--limit", "1")
         self.assertEqual(payload["platform"], "meta")
         self.assertFalse(payload["out_of_scope"])
-        self.assertEqual(payload["article_count"], 151)
+        self.assertEqual(payload["article_count"], 153)
         self.assertEqual(payload["results"][0]["match"], "exact")
         self.assertTrue(payload["results"][0]["path"].endswith("sobre-a-meta-de-roas.md"))
 

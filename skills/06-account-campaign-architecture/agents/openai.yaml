@@ -1,4 +1,0 @@
-interface:
-  display_name: "Arquitetura de Campanhas"
-  short_description: "Desenha campanhas, conjuntos, anúncios e nomes"
-  default_prompt: "Use $06-account-campaign-architecture para estruturar uma conta ou campanha Meta."

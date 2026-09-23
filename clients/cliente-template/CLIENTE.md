@@ -46,6 +46,6 @@
 |---|---|---:|---|---|---|
 | CPQL | investimento / lead qualificado | 120 | BRL | planilha comercial | mensal |
 
-## Histórico e aprendizados
+## Onde está o resto
 
-Nenhuma operação real. Conteúdo sintético para validação estrutural.
+Regras duráveis em `APRENDIZADOS.md`; histórico de operações nos dossiês (`python3 scripts/client_brief.py cliente-template`). Conteúdo sintético para validação estrutural.

@@ -41,7 +41,7 @@ Os dois conjuntos de remarketing da campanha de formulário de Curitiba geram le
 
 ## Checagem com boas práticas
 
-- ✅ **Juntar conjuntos parecidos:** a Meta recomenda combinar conjuntos com públicos sobrepostos para reduzir a sobreposição de leilão e sair mais rápido do aprendizado. [Entender a sobreposição de leilão](https://www.facebook.com/business/help/537699989762051)
+- ✅ **Juntar conjuntos parecidos:** a Meta recomenda combinar conjuntos com públicos sobrepostos para reduzir a sobreposição no leilão e sair mais rápido do aprendizado. [Como entender a sobreposição no leilão](https://www.facebook.com/business/help/537699989762051)
 - ⚠️ **“Os conjuntos disputam entre si e isso encarece o lance”:** essa era a hipótese inicial, e está errada. A Meta não coloca dois anúncios do mesmo anunciante para competir no mesmo leilão. Ajustei a explicação acima para o efeito real, que é a perda de entrega. [Sobre públicos sobrepostos](https://www.facebook.com/business/help/1679591828938781)
 - ❔ **Tamanho mínimo do público unificado:** não há regra oficial de tamanho mínimo para remarketing. Vamos acompanhar se o conjunto consegue gastar o orçamento.
 

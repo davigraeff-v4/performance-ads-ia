@@ -1,0 +1,4 @@
+interface:
+  display_name: "Revisor de boas práticas"
+  short_description: "Confere premissas com a base oficial"
+  default_prompt: "Use $revisor para conferir premissas e dúvidas com a base oficial da Meta ou do Google Ads."

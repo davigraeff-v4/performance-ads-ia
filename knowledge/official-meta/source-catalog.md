@@ -3,7 +3,7 @@
 - **verificado_em:** 2026-07-31
 - **finalidade:** rotear pesquisa ao vivo; não substituir a página atual
 
-O snapshot local ampliado está em `knowledge/meta-help-center/INDEX.md`, com 151 artigos e URLs originais. Use `scripts/search_meta_help.py` e a skill `15-meta-help-center-retrieval` para localizar apenas os artigos relevantes.
+O snapshot local ampliado está em `knowledge/meta-help-center/INDEX.md`, com 153 artigos e URLs originais. Use `scripts/search_meta_help.py` e o módulo `revisor` (`skills/revisor/references/meta.md`) para localizar apenas os artigos relevantes.
 
 | Tema | Fonte oficial inicial |
 |---|---|

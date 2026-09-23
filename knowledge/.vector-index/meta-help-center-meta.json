@@ -1500,6 +1500,36 @@
     "chunk_index": 2
   },
   {
+    "title": "Sobre públicos sobrepostos",
+    "section": null,
+    "category": "03-direcionamento-audiencias",
+    "url": "https://www.facebook.com/business/help/1679591828938781",
+    "extracted_at": "2026-09-23",
+    "path": "knowledge/meta-help-center/03-direcionamento-audiencias/sobre-publicos-sobrepostos.md",
+    "platform": "meta",
+    "chunk_index": 0
+  },
+  {
+    "title": "Sobre públicos sobrepostos",
+    "section": null,
+    "category": "03-direcionamento-audiencias",
+    "url": "https://www.facebook.com/business/help/1679591828938781",
+    "extracted_at": "2026-09-23",
+    "path": "knowledge/meta-help-center/03-direcionamento-audiencias/sobre-publicos-sobrepostos.md",
+    "platform": "meta",
+    "chunk_index": 1
+  },
+  {
+    "title": "Sobre públicos sobrepostos",
+    "section": null,
+    "category": "03-direcionamento-audiencias",
+    "url": "https://www.facebook.com/business/help/1679591828938781",
+    "extracted_at": "2026-09-23",
+    "path": "knowledge/meta-help-center/03-direcionamento-audiencias/sobre-publicos-sobrepostos.md",
+    "platform": "meta",
+    "chunk_index": 2
+  },
+  {
     "title": "Sobre as recomendações de expansão do público no Gerenciador de Anúncios da Meta",
     "section": null,
     "category": "03-direcionamento-audiencias",
@@ -5098,6 +5128,36 @@
     "path": "knowledge/meta-help-center/09-otimizacao-desempenho/boas-praticas-para-veiculacao-de-anuncios.md",
     "platform": "meta",
     "chunk_index": 5
+  },
+  {
+    "title": "Como entender a sobreposição no leilão",
+    "section": null,
+    "category": "09-otimizacao-desempenho",
+    "url": "https://www.facebook.com/business/help/537699989762051",
+    "extracted_at": "2026-09-23",
+    "path": "knowledge/meta-help-center/09-otimizacao-desempenho/como-entender-a-sobreposicao-no-leilao.md",
+    "platform": "meta",
+    "chunk_index": 0
+  },
+  {
+    "title": "Como entender a sobreposição no leilão",
+    "section": "Como a sobreposição no leilão afeta o desempenho",
+    "category": "09-otimizacao-desempenho",
+    "url": "https://www.facebook.com/business/help/537699989762051",
+    "extracted_at": "2026-09-23",
+    "path": "knowledge/meta-help-center/09-otimizacao-desempenho/como-entender-a-sobreposicao-no-leilao.md",
+    "platform": "meta",
+    "chunk_index": 1
+  },
+  {
+    "title": "Como entender a sobreposição no leilão",
+    "section": "Como diagnosticar e reduzir a sobreposição no leilão no Gerenciador de Anúncios da Meta",
+    "category": "09-otimizacao-desempenho",
+    "url": "https://www.facebook.com/business/help/537699989762051",
+    "extracted_at": "2026-09-23",
+    "path": "knowledge/meta-help-center/09-otimizacao-desempenho/como-entender-a-sobreposicao-no-leilao.md",
+    "platform": "meta",
+    "chunk_index": 2
   },
   {
     "title": "Como criar uma regra automatizada para orçamentos e lances no Gerenciador de Anúncios da Meta",

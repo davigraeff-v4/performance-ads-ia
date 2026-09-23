@@ -1,0 +1,74 @@
+<!-- Referência do módulo `revisor`; etapa `revisor/google-ads` nas rotas. -->
+
+# Recuperação Oficial Google Ads
+
+## Dois modos de uso
+
+1. **Dúvida:** o gestor pergunta como algo funciona. A consulta é a pergunta original.
+2. **Checagem de premissas:** em diagnóstico, mudanças e relatório, a consulta é cada premissa de mecanismo que sustenta um achado ou mudança (ex.: "duas campanhas com as mesmas palavras-chave competem no leilão"). Este modo roda em toda rota que planeja esta skill, mesmo sem pergunta do gestor.
+
+Na checagem de premissas:
+
+- rodar o revisor com todas as premissas de uma vez:
+
+  ```bash
+  python3 scripts/kb_check.py --platform google_ads "premissa 1" "premissa 2"
+  ```
+
+  ele devolve, por premissa, os artigos candidatos (com os trechos mais ligados à premissa), quais precisam ser lidos por inteiro e um esqueleto de `knowledge_checks` com o veredito em branco;
+- ler a fonte antes de julgar e dar o veredito **sustenta**, **contradiz** ou **sem cobertura**, com título, URL e uma nota curta. `sustenta` e `contradiz` sem URL oficial são recusados pelo `dossier.py`;
+- se contradiz, corrigir o texto e o plano antes de apresentar e contar isso ao gestor na seção "Checagem com boas práticas";
+- registrar cada checagem em `knowledge_checks` do spec do dossiê.
+
+Premissas escritas como afirmação ("as duas campanhas competem no leilão") passam por um dicionário controlado de reescrita (`knowledge/retrieval-rewrites.json`) que as traduz para o termo do produto ("priorização de grupos de anúncios"). Se nada relevante aparecer, reescreva com o termo do produto ou abra a página oficial ao vivo.
+
+## Fontes permitidas
+
+1. Pesquisar `knowledge/official-google/help-center/INDEX.md` pela busca seletiva.
+2. Ler integralmente somente os 1–3 documentos locais relevantes.
+3. Para temas fora da cobertura local, ler `knowledge/official-google/source-catalog.md` e os resumos ainda vigentes.
+4. Para informação atual, pesquisar e abrir páginas em:
+   - `support.google.com/google-ads/`
+   - `developers.google.com/google-ads/api/`
+   - `github.com/googleads/google-ads-mcp`
+   - `console.cloud.google.com/` somente para orientar a ação interativa do usuário no projeto correto.
+
+## Processo
+
+1. Preservar a pergunta original.
+2. Identificar se o tema é interface/produto, API/MCP, política ou metodologia.
+3. Para interface/produto, executar a partir da raiz:
+
+```bash
+python3 scripts/search_google_ads_help.py "pergunta original" --platform google_ads --limit 3
+```
+
+4. O buscador roda em modo híbrido por padrão: primeiro tenta correspondência de título; só quando o título fica abaixo de `strong` ele também considera um sinal semântico local (índice vetorial em `knowledge/.vector-index/`). `strong` significa que o título bate com a consulta ou com o termo do dicionário de reescrita (`signal: rewrite`); o sinal semântico e o conteúdo sozinhos nunca dão `strong`. Correspondência `exact` ou `strong` exige leitura integral. `related` permite abrir até três candidatos. `weak` não sustenta resposta sozinho. Páginas de política e suspensão só sobem quando a consulta é sobre política. Sem índice vetorial, o buscador cai para o modo lexical sem quebrar; `--no-rewrite` desliga o dicionário. A qualidade é medida por `python3 scripts/eval_retrieval.py --compare`.
+5. Abrir somente as 1–3 fontes mais aderentes e ler integralmente a seção necessária; não responder por snippet.
+6. Verificar data, versão da API, elegibilidade e limitações por tipo de campanha.
+7. Separar `Google informa` de `metodologia recomenda`.
+8. Registrar título, caminho local, URL, data de extração e data de consulta na candidata; persistir no dossiê somente após aprovação editorial.
+
+## Rotas de configuração
+
+- Projeto e API habilitada: `oauth/cloud-project`.
+- Credenciais e armazenamento seguro: `oauth/credential-management`.
+- OAuth de usuário/ADC: `oauth/single-user-authentication`.
+- Refresh token sem `gcloud`: exemplo oficial `generate-user-credentials`.
+- Service account: `oauth/service-accounts`.
+- Developer token e nível de acesso: `api-policy/developer-token` e `api-policy/access-levels`.
+- MCC/login customer ID: `concepts/call-structure`.
+- Instalação e ferramentas MCP: README atual de `googleads/google-ads-mcp`.
+
+Ao orientar obtenção de credenciais, nunca pedir valores no chat. Explicar onde o usuário encontra cada item e trabalhar somente com caminhos locais e placeholders.
+
+## Gates
+
+- Política, cobrança, elegibilidade, campos de API e comportamento mutável exigem fonte ao vivo.
+- O snapshot local é seletivo e não representa cobertura integral da Central.
+- Não carregar todos os artigos como prevenção genérica.
+- Não chamar o buscador sem `--platform google_ads`; consultas Meta devem falhar fechadas — o gate de plataforma vale igualmente para o sinal lexical e o vetorial, cada um com índice fisicamente separado por plataforma.
+- Não afirmar que leu um artigo apenas porque o sinal vetorial encontrou similaridade; abrir e ler o arquivo indicado antes de responder.
+- Não usar blog, fórum, fornecedor ou MCP comunitário como fonte normativa quando houver fonte oficial.
+- Não afirmar disponibilidade de recurso na conta sem verificar via MCP/interface.
+- Não transformar recomendação do Google em regra universal ou autorização de execução.
