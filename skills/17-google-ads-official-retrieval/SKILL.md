@@ -5,6 +5,13 @@ description: Localiza e lê seletivamente a base local da Central de Ajuda, a do
 
 # Recuperação Oficial Google Ads
 
+## Dois modos de uso
+
+1. **Dúvida:** o gestor pergunta como algo funciona. A consulta é a pergunta original.
+2. **Checagem de premissas:** em diagnóstico, mudanças e relatório, a consulta é cada premissa de mecanismo que sustenta um achado ou mudança (ex.: "duas campanhas com as mesmas palavras-chave competem no leilão"). Este modo roda em toda rota que planeja esta skill, mesmo sem pergunta do gestor.
+
+Na checagem de premissas, ler a fonte antes de julgar e dar o veredito **sustenta**, **contradiz** ou **sem cobertura**, com título, URL e uma nota curta. Se contradiz, corrigir o texto e o plano antes de apresentar e contar isso ao gestor na seção "Checagem com boas práticas". Registrar cada checagem em `knowledge_checks` do spec do dossiê. A busca local tem baixa precisão para premissas escritas como afirmação: se os resultados não tratarem do tema, reescreva com os termos do produto (ex.: "priorização de palavras-chave") ou abra a página oficial ao vivo.
+
 ## Fontes permitidas
 
 1. Pesquisar `knowledge/official-google/help-center/INDEX.md` pela busca seletiva.

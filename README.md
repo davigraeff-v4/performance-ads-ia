@@ -4,7 +4,7 @@ Agente especialista em Meta Ads e Google Ads para planejar, analisar e otimizar 
 
 O agent roda em **Claude Code** e **Codex**, entende solicitações em linguagem natural, seleciona e executa automaticamente somente as skills necessárias, entrega primeiro no chat e registra apenas versões editorialmente aprovadas em dossiês Markdown locais.
 
-> Estado: V1.4 local com diagnóstico `full` por padrão, cobertura por nível, pacote de evidências e fluxo chat-first com aprovação editorial antes do dossiê. O MCP oficial Google Ads continua somente leitura; o complemento `google_ads_extended` e a integração GTM permanecem fail-closed conforme os gates documentados. Search Console, Google Trends e GA4 ficam para fases futuras. Dados, credenciais, MCPs/API locais e dossiês reais permanecem fora do Git.
+> Estado: V2.0 local. Respostas no chat explicativas e visuais (`templates/resposta-chat.md`), dossiê em dois arquivos (`.md` para ler e `.json` de registro) criado só por `scripts/dossier.py`, checagem obrigatória de boas práticas nas mudanças, histórico do cliente consultável (inclusive os dossiês legados) e profundidade `full` só em auditoria. O MCP oficial Google Ads continua somente leitura; o complemento `google_ads_extended` e a integração GTM permanecem fail-closed conforme os gates documentados. Search Console, Google Trends e GA4 ficam para fases futuras. Dados, credenciais, MCPs/API locais e dossiês reais permanecem fora do Git.
 
 ## 1. O que o agent faz
 
@@ -17,9 +17,11 @@ O agent roda em **Claude Code** e **Codex**, entende solicitações em linguagem
 - Propõe otimizações em lotes versionados.
 - Executa somente mudanças suportadas, aprovadas e revalidadas.
 - Analisa todas as camadas aplicáveis ou declara explicitamente indisponibilidade/insuficiência.
-- Entrega o relatório completo no chat, itera e só cria o dossiê após aprovação editorial.
-- Registra no dossiê aprovado diagnóstico, plano, aprovação operacional, execução e depois.
-- Consulta seletivamente a Central Meta e fontes oficiais Google Ads.
+- Entrega no chat de forma explicativa e visual: todo número vem com leitura, sem IDs internos, hashes ou códigos.
+- Confere as premissas do diagnóstico e das mudanças na base oficial (Central Meta, fontes Google Ads e `ads_get_help_article` do conector Meta).
+- Só cria o dossiê depois da aprovação do conteúdo, e só pelo `scripts/dossier.py`.
+- Registra aprovação, execução (inclusive o que o gestor fez à mão) e a avaliação do resultado ao fim da janela.
+- Consulta o histórico do cliente, com os dossiês legados como base somente leitura.
 
 Não exclui nem arquiva ativos, não ativa recomendações automáticas e não executa mudanças silenciosas.
 
@@ -27,7 +29,7 @@ Não exclui nem arquiva ativos, não ativa recomendações automáticas e não e
 
 Cada demanda define:
 
-1. Intenção: configurar, planejar, criar, auditar, analisar, otimizar, relatar, aprovar, executar ou reverter.
+1. Intenção: tirar dúvida, consulta rápida, histórico, configurar, cadastrar, pesquisar palavras-chave, planejar, criar, auditar, analisar, otimizar, ajuste pontual, relatar, aprovar, executar ou reverter. A tabela de decisão com exemplos está no CLAUDE.md/AGENTS.md (gerados de `prompt/agent-prompt.md` por `scripts/build_agent_prompts.py`).
 2. Plataformas: `meta`, `google_ads`, ambas ou ainda indefinidas.
 3. Fonte por plataforma:
    - `connected_read`: MCP/API somente leitura.
@@ -182,7 +184,7 @@ No complemento, `planner_connected` exige três evidências: uso permitido compa
 | `/analisar-campanha` | Analisa performance do escopo. |
 | `/otimizar-campanha` | Gera lote priorizado por plataforma. |
 | `/relatorio-performance` | Gera relatório mono ou multicanal. |
-| `/aprovar-operacao <id>` | Registra aprovação; não executa. |
+| `/aprovar-operacao [id]` | Registra a aprovação de execução; sem id, lista as operações abertas e confirma pelo título. Não executa. |
 | `/executar-operacao <id>` | Revalida e executa somente lote suportado. |
 | `/reverter-operacao <id>` | Propõe restauração conhecida com nova aprovação. |
 
@@ -229,17 +231,33 @@ No complemento, `planner_connected` exige três evidências: uso permitido compa
 | `23-google-ads-campaign-build-plan` | Plano de construção Google |
 | `24-google-ads-performance-diagnosis` | Diagnóstico Google |
 
-## 11. Aprovação e execução
+## 11. Dossiês, aprovação e execução
 
-Análises multicanal podem compartilhar um dossiê, mas mutações usam um `operation_id` por plataforma. Aprovar Meta não aprova Google Ads e vice-versa.
+Cada operação registrada vive em `clients/{slug}/operacoes/`, em dois arquivos com o mesmo nome:
 
-O fluxo possui três gates distintos:
+- `.md`: o dossiê para ler, com o texto aprovado no chat, as mudanças em blocos, o andamento (aprovação, execução, diferenças, avaliação) e, recolhidos no fim, os dados técnicos;
+- `.json`: o registro de máquina (`schemas/operation-v2.schema.json`).
 
-1. **Aprovação editorial:** autoriza registrar no dossiê a versão integral já mostrada no chat. Não aprova mídia.
-2. **`/aprovar-operacao <id>`:** aprova a versão/hash do change set persistido. Não executa.
-3. **`/executar-operacao <id>`:** executa somente quando a integração e as permissões foram homologadas.
+Os dois são criados e atualizados só pelo `scripts/dossier.py`:
 
-Sem aprovação editorial, a entrega permanece `awaiting_record_approval` no chat e nenhum dossiê novo é criado.
+| Momento | Comando |
+|---|---|
+| Gestor aprova o conteúdo mostrado no chat | `dossier.py new --client {slug} --spec … --body …` |
+| Conteúdo muda antes da execução | `dossier.py revise {operação} …` (nova versão, aprovação anterior invalidada) |
+| `/aprovar-operacao` | `dossier.py approve {operação} --statement "…"` |
+| Execução pelo conector ou manual | `dossier.py record-execution {operação} --results …` |
+| Fim da janela de avaliação | `dossier.py evaluate {operação} --result success\|failure\|inconclusive --notes "…"` |
+| Conferir | `dossier.py verify --client {slug}` · `dossier.py list --open` |
+
+No Claude Code, um hook (`.claude/settings.json`) bloqueia escrita direta em `operacoes/`, edição de dossiê legado e dossiê novo escrito à mão.
+
+Análises multicanal podem compartilhar um dossiê, mas mutações usam um `operation_id` por plataforma. Aprovar Meta não aprova Google Ads e vice-versa. O fluxo possui três gates distintos:
+
+1. **Aprovação do conteúdo:** autoriza registrar a versão mostrada no chat. Não aprova mídia.
+2. **`/aprovar-operacao`:** aprova a versão e o hash das mudanças registradas. Não executa.
+3. **`/executar-operacao`:** executa somente quando a integração e as permissões foram homologadas.
+
+**Dossiês legados** (Markdown com bloco JSON, na raiz da pasta do cliente) ficam como base de consulta somente leitura: `python3 scripts/client_history.py list {slug}` e `search {slug} "termos"`. Uma operação legada ainda aberta é migrada com `dossier.py migrate` antes de ser aprovada ou executada.
 
 Na V1.1 inicial:
 
@@ -270,7 +288,7 @@ python3 -m pip install -r requirements-dev.txt
 python3 scripts/validate_all.py
 ```
 
-O comando único verifica 26 módulos mais o roteador, descoberta nas duas plataformas, matriz e grafo, schemas acionáveis, cobertura diagnóstica, aprovação editorial, rastreabilidade evidência→achado→ação→mudança, isolamento do RAG e conectores fail-closed. Não realiza mutações externas.
+O comando único verifica 26 módulos mais o roteador, descoberta nas duas plataformas, matriz e grafo, sincronia entre `prompt/agent-prompt.md`, CLAUDE.md e AGENTS.md, schemas, ciclo de vida dos dossiês V2 (hash, rota, estado), dossiês V2 dos clientes locais, isolamento do RAG, garantias do GTM (nunca publica, allowlist pelo caminho, `validate_only` sem escrita) e conectores fail-closed. Não realiza mutações externas. `python3 -m pytest` na raiz roda o motor e o GTM.
 
 ## 14. Segurança e Git
 

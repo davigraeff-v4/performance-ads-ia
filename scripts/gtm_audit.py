@@ -36,7 +36,7 @@ def main() -> int:
     args = parser.parse_args()
 
     try:
-        settings = Settings.from_environment()
+        settings = Settings.from_environment(base_dir=ROOT)
     except ConfigurationError as error:
         print(json.dumps({"error": str(error)}), file=sys.stderr)
         return 1

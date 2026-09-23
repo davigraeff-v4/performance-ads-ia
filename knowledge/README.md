@@ -1,6 +1,6 @@
 # Base de Conhecimento — PERFORMANCE ADS IA
 
-Use este índice no início de toda auditoria, análise, criação ou otimização. Leia apenas os arquivos relevantes, mas cumpra as leituras obrigatórias da skill.
+Use este índice no início de toda auditoria, análise, criação ou otimização. Leia apenas os arquivos relevantes, mas cumpra as leituras obrigatórias da skill. A base oficial também serve para conferir as premissas do diagnóstico e das mudanças, não só para responder dúvidas (skills 15 e 17, modo checagem de premissas).
 
 ## Precedência
 
@@ -60,6 +60,10 @@ python3 scripts/search_google_ads_help.py "pergunta original" --platform google_
 ```
 
 Para comportamento atual, elegibilidade, política, cobrança, campos da API ou decisão material, abrir também a fonte oficial ao vivo. Não atribuir metodologia interna ao Google.
+
+## Particularidades dos conectores
+
+- `platform-quirks/README.md` — limitações e armadilhas do conector Meta, da API do GTM e do MCP do Google Ads, descobertas em operação. Ler antes de planejar mudanças executadas pelo conector e antes de executar.
 
 ## Metodologia
 

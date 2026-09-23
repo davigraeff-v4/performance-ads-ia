@@ -9,7 +9,7 @@ description: Consolida estratégia, arquitetura, targeting, palavras-chave quand
 
 1. Skills `01`, `03`, `04`, `17`, `19`, `20`, `21` e `22` concluídas conforme o escopo.
 2. Skill `18` concluída quando houver keywords, search themes ou validação de demanda.
-3. Dossiê em `draft` e conta/modo de fonte registrados.
+3. Conta e modo de fonte confirmados; versão candidata só no chat até a aprovação do conteúdo.
 
 ## Processo
 
@@ -18,7 +18,7 @@ description: Consolida estratégia, arquitetura, targeting, palavras-chave quand
 3. Verificar compatibilidade entre tipo, rede, budget, lance, conversões, targeting, ads/assets, feed e destino.
 4. Definir status inicial seguro e checklist de publicação manual.
 5. Gerar change set versionado com itens Google Ads marcados `manual_only` enquanto `write_tools_registered` for falso.
-6. Apresentar tudo no chat. Após aprovação editorial, criar dossiê `proposed` quando houver mutação; planejamento puro persiste `analysis_only`.
+6. Apresentar tudo no chat no formato de `templates/resposta-chat.md`. Depois da aprovação do conteúdo, registrar com `scripts/dossier.py new`: nasce `proposed` quando houver mutação; planejamento puro fica `analysis_only`.
 
 ## Gate
 

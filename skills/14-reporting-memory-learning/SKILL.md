@@ -7,9 +7,9 @@ description: Gera relatórios Meta Ads, Google Ads ou multicanal, atualiza a mem
 
 ## Leituras
 
-1. `templates/relatorio-performance.md`.
+1. `templates/relatorio-performance.md` e `templates/resposta-chat.md`.
 2. `quality/reporting-scorecard.md`.
-3. Dossiês e `CLIENTE.md`.
+3. `CLIENTE.md`, `python3 scripts/client_history.py list {slug}` e os dossiês relevantes (legados e V2).
 4. Trilha de negócio aplicável.
 
 ## Processo
@@ -18,11 +18,12 @@ description: Gera relatórios Meta Ads, Google Ads ou multicanal, atualiza a mem
 2. Consolidar fatos sem misturar plataformas, atribuições, populações ou denominadores.
 3. Gerar uma única representação estruturada e projetá-la primeiro no chat.
 4. Apresentar no chat sumário executivo, cobertura, escopo/fontes, KPIs comparativos, evidências, diagnóstico, hipóteses, plano de ação, decisões, mudanças, impacto, riscos, limitações e próximo passo.
-5. Separar resultado observado de impacto causal.
-6. Iterar até existir versão final candidata e pedir aprovação editorial.
-7. Somente depois da aprovação criar/atualizar o dossiê com o conteúdo idêntico.
-8. Atualizar `CLIENTE.md` acrescentando histórico; nunca apagar aprendizado anterior.
-9. Gerar proposta de aprendizado sanitizado quando houver padrão reutilizável.
+5. Separar resultado observado de impacto causal. Explicar por que cada resultado está bom ou ruim à luz da base oficial (skill 15 ou 17) e registrar essas checagens.
+6. Para operações executadas cuja janela de avaliação venceu, propor a avaliação: comparar com os critérios registrados e, com o aval do gestor, registrar com `dossier.py evaluate`.
+7. Iterar até existir versão final e pedir aprovação do conteúdo.
+8. Depois da aprovação, registrar com `scripts/dossier.py new`, com o mesmo texto.
+9. Atualizar `CLIENTE.md` acrescentando histórico em uma linha por operação, do mais recente para o mais antigo; regras duráveis sobre o cliente vão para a seção de aprendizados. Nunca apagar aprendizado anterior.
+10. Gerar proposta de aprendizado sanitizado quando houver padrão reutilizável.
 
 ## Governança do aprendizado
 
@@ -35,6 +36,6 @@ Remover nome, ID, valores, oferta, criativo e qualquer identificador. Declarar n
 - Ficha do cliente atualizada.
 - Proposta sanitizada separada, se aplicável.
 
-Antes da aprovação, informar `diagnostic_id` e versão candidata. Depois da persistência, informar `operation_id`, status e caminho como referência. Não despejar JSON, logs ou respostas brutas no chat.
+Depois do registro, informar numa linha o caminho do dossiê e o próximo passo. Não despejar IDs, JSON, logs ou respostas brutas no chat.
 
 Não confundir aprovação do gestor com melhora medida de performance.

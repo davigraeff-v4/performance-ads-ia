@@ -1,61 +1,23 @@
-# Relatório de Performance — {cliente} — {período}
+# Relatório de performance
 
-Este é o contrato da entrega no chat. O relatório deve ser autossuficiente e apresentado antes de qualquer dossiê novo. O arquivo só nasce após aprovação editorial da versão final.
+Contrato do relatório no chat. Segue `templates/resposta-chat.md` (explicativo, com todo número interpretado, tabelas de até 5 colunas e sem códigos internos) e acrescenta o que é próprio de um fechamento de período. O dossiê só nasce depois da aprovação do conteúdo, por `scripts/dossier.py`.
 
-## Veredito executivo
+## Estrutura
 
-- Objetivo e resultado comercial observado:
-- Plataformas solicitadas/analisadas:
-- Resultado principal e variação justa:
-- Veredito, confiança e decisão necessária:
+1. **Cabeçalho:** cliente · plataformas · período (comparado com) · fonte dos dados · confiança.
+2. **Resumo do período:** o resultado de negócio, o que melhorou, o que piorou e a decisão principal, em até 6 frases.
+3. **Resultado de negócio:** leads válidos, oportunidades, vendas e receita quando existirem. Em lead generation, custo por lead sozinho não prova qualidade; em e-commerce, ROAS não é lucro.
+4. **Os números por plataforma:** uma tabela por plataforma (Meta Ads, Google Ads e comercial separados), seguida de "Como ler esses números". Atribuições diferentes não são somadas.
+5. **O que foi bem e o que foi mal, e por quê:** para cada ponto, o número, a comparação e a explicação. Conferir as explicações de mecanismo na base oficial (skill 15 ou 17) e citar a fonte.
+6. **O que fizemos no período:** operações executadas, com a situação de cada uma e o resultado da avaliação quando a janela já venceu (`scripts/client_history.py list {slug}`).
+7. **Avaliações pendentes:** operações cuja janela de avaliação venceu, com a proposta de avaliação.
+8. **Próximas decisões:** o que o gestor precisa decidir, com opções e recomendação.
+9. **Limitações:** dados indisponíveis, por que importam e como conseguir.
 
-## Escopo e qualidade da leitura
+## Regras
 
-- Conta mascarada, moeda, timezone e modo de fonte por plataforma:
-- Janela, comparação e atribuição:
-- Gate de mensuração:
-- Mudanças/eventos no período:
-- Limitações que alteram a decisão:
-
-## Cobertura do diagnóstico
-
-| Plataforma | Camada | Status | Entidades | Cobertura de investimento | Cobertura de conversões | Motivo/limitação |
-|---|---|---|---:|---:|---:|---|
-
-Em `full`, nenhuma camada aplicável pode ser omitida.
-
-## KPIs e denominadores
-
-| Plataforma/fonte | KPI | Fórmula/denominador | Unidade | Atual | Comparação | Delta absoluto | Delta % | Meta | Limitação |
-|---|---|---|---|---:|---:|---:|---:|---:|---|
-
-Separar Meta Ads, Google Ads e comercial antes de qualquer síntese. Ausência não é zero e atribuições diferentes não são somadas silenciosamente.
-
-## Pacote de evidências
-
-| Evidência | Plataforma/nível | Fonte/período | Métricas e comparação | Leitura | Limitação |
-|---|---|---|---|---|---|
-
-## Diagnóstico e hipóteses
-
-| Achado | Evidências | Impacto | Hipótese principal | Alternativa | Verificação | Confiança | Limitação |
-|---|---|---|---|---|---|---|---|
-
-## Plano de ação priorizado
-
-| Ação | Tipo | Achados | Alvo/baseline | Ação exata | Resultado esperado | Prioridade/confiança | Responsável/prazo | Janela | Sucesso | Parada | Dependência/risco |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-
-## Change set ou decisões
-
-Quando houver mutação, mostrar versão, itens completos, impacto, risco, reversão e modo (`mcp`, `manual_only` ou `blocked`). Aprovação e execução continuam separadas.
-
-## Testes, riscos e indisponibilidades
-
-- Testes em andamento ou sugeridos:
-- Riscos de interpretação/operação:
-- Dados indisponíveis e como obtê-los:
-
-## Próxima decisão e aprovação editorial
-
-Indicar exatamente o que o gestor precisa decidir ou fornecer. Marcar `diagnostic_id`, versão candidata e solicitar aprovação para registrar. Somente depois da aprovação informar `operation_id`, status e caminho do dossiê. Aprovação editorial não é `/aprovar-operacao`.
+- Separar Meta Ads, Google Ads e comercial antes de qualquer síntese.
+- Ausência de dado não é zero.
+- Janelas comparáveis e atribuição declarada.
+- Resultado observado não é impacto causal: diga quando é só correlação.
+- Aprendizado reutilizável vira proposta sanitizada, sem nomes, IDs ou valores, e só entra na base com aprovação de Davi.

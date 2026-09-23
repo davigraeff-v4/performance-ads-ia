@@ -1,0 +1,130 @@
+{
+  "title": "Unificação dos conjuntos de remarketing da campanha de formulário em Curitiba",
+  "type": "otimizacao",
+  "platform": "meta",
+  "depth": "focused",
+  "scope": "Campanha de formulário em Curitiba: 3 conjuntos ativos, foco nos 2 de remarketing.",
+  "scope_slug": "remarketing-curitiba",
+  "window": {"start": "2026-09-04", "end": "2026-09-21", "comparison_start": null, "comparison_end": null},
+  "accounts": {"meta": "account-****0000"},
+  "sources": [
+    "Leitura ao vivo da conta Meta pelo conector (MCP) em 21/09/2026",
+    "Ficha do cliente (CLIENTE.md)",
+    "Central de Ajuda da Meta: Entender a sobreposição de leilão; Sobre públicos sobrepostos"
+  ],
+  "route": {
+    "router_version": "2.0.0",
+    "route_ids": ["otimizacao:meta:connected_read"],
+    "executed_skills": [
+      "01-client-campaign-intake",
+      "02-meta-account-connection",
+      "15-meta-help-center-retrieval",
+      "03-measurement-data-quality",
+      "04-goals-kpis-baseline",
+      "11-performance-diagnosis",
+      "12-optimization-change-set"
+    ],
+    "skipped_skills": []
+  },
+  "record_statement": "pode registrar",
+  "knowledge_checks": [
+    {
+      "premise": "Combinar conjuntos com públicos sobrepostos melhora a entrega e o aprendizado",
+      "verdict": "sustenta",
+      "source_title": "Entender a sobreposição de leilão",
+      "source_url": "https://www.facebook.com/business/help/537699989762051",
+      "note": "A Meta recomenda combinar conjuntos parecidos e transferir o orçamento para o conjunto ativo."
+    },
+    {
+      "premise": "Conjuntos sobrepostos disputam entre si no leilão e encarecem o lance",
+      "verdict": "contradiz",
+      "source_title": "Sobre públicos sobrepostos",
+      "source_url": "https://www.facebook.com/business/help/1679591828938781",
+      "note": "A Meta escolhe um único anúncio do anunciante por leilão; o efeito real é perda de entrega. Justificativa corrigida no texto."
+    },
+    {
+      "premise": "Existe tamanho mínimo oficial para público de remarketing",
+      "verdict": "sem_cobertura",
+      "source_title": null,
+      "source_url": null,
+      "note": "Sem regra oficial; acompanhar a capacidade de gasto do conjunto."
+    }
+  ],
+  "pending_decisions": [
+    "Criar o conjunto de formulário novo no Gerenciador de Anúncios (o conector não cria conjuntos de formulário nativo)",
+    "Manter ou tirar o público de Seguidores do conjunto novo"
+  ],
+  "changes": [
+    {
+      "change_id": "c1",
+      "title": "Criar o conjunto “Remarketing unificado 180 dias”",
+      "platform": "meta",
+      "account": "account-****0000",
+      "target": {"type": "adset", "id": null, "name": "Remarketing unificado 180 dias"},
+      "field": "criação do conjunto",
+      "before": null,
+      "after": {
+        "objetivo": "formulário nativo",
+        "orçamento diário": "R$ 86,14",
+        "públicos": "visitantes do site 180 dias, engajamento Facebook e Instagram 180 dias, vídeo assistido 180 dias",
+        "sem": "seguidores sem limite de tempo",
+        "status inicial": "pausado até você revisar"
+      },
+      "action_kind": "create",
+      "execution_mode": "manual_only",
+      "why": "Achado 1: os dois remarketings miram o mesmo público e atrapalham a entrega um do outro.",
+      "expected_impact": "Um conjunto só, com todo o orçamento do remarketing, entrando em mais leilões e saindo do aprendizado mais rápido.",
+      "daily_budget_delta": 86.14,
+      "risk": "Baixo: nasce pausado e só entra no ar depois de você revisar.",
+      "rollback": "Pausar o conjunto novo e reativar os dois conjuntos atuais.",
+      "order": 1,
+      "depends_on": []
+    },
+    {
+      "change_id": "c2",
+      "title": "Pausar o conjunto “Remarketing 60 dias”",
+      "platform": "meta",
+      "account": "account-****0000",
+      "target": {"type": "adset", "id": "100000000000001", "name": "Remarketing 60 dias"},
+      "field": "Status",
+      "before": "ACTIVE",
+      "after": "PAUSED",
+      "action_kind": "pause",
+      "execution_mode": "mcp",
+      "why": "Achado 1 e Achado 2: o público passa a ser coberto pelo conjunto unificado, sem os seguidores antigos.",
+      "expected_impact": "Fim da divisão de entrega entre os dois remarketings.",
+      "daily_budget_delta": -60.0,
+      "risk": "Baixo: pausa reversível e histórico preservado.",
+      "rollback": "Reativar o conjunto.",
+      "order": 2,
+      "depends_on": ["c1"]
+    },
+    {
+      "change_id": "c3",
+      "title": "Pausar o conjunto “Remarketing 180 dias”",
+      "platform": "meta",
+      "account": "account-****0000",
+      "target": {"type": "adset", "id": "100000000000002", "name": "Remarketing 180 dias"},
+      "field": "Status",
+      "before": "ACTIVE",
+      "after": "PAUSED",
+      "action_kind": "pause",
+      "execution_mode": "mcp",
+      "why": "Achado 1: o público passa a ser coberto pelo conjunto unificado.",
+      "expected_impact": "Fim da divisão de entrega entre os dois remarketings.",
+      "daily_budget_delta": -26.14,
+      "risk": "Baixo: pausa reversível e histórico preservado.",
+      "rollback": "Reativar o conjunto.",
+      "order": 3,
+      "depends_on": ["c1"]
+    }
+  ],
+  "evaluation": {
+    "due_date": "2026-10-12",
+    "success_criteria": ["Custo por lead do conjunto unificado abaixo de R$ 60,00 com pelo menos 8 leads"],
+    "stop_criteria": [
+      "Conjunto sem gastar 70% do orçamento diário por 5 dias seguidos",
+      "Custo por lead acima de R$ 110,00"
+    ]
+  }
+}

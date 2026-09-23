@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Validate a persisted, editorially approved operation dossier."""
+"""Valida dossiês legados (Markdown com bloco JSON embutido, schema 1.1).
+
+Dossiês V2 em `clients/{slug}/operacoes/` são delegados para `scripts/dossier.py verify`.
+"""
 
 from __future__ import annotations
 
@@ -13,6 +16,7 @@ import jsonschema
 
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
 OPERATION_SCHEMA = json.loads((ROOT / "schemas" / "operation-dossier.schema.json").read_text(encoding="utf-8"))
 ANALYSIS_SCHEMA = json.loads((ROOT / "schemas" / "analysis.schema.json").read_text(encoding="utf-8"))
 ANALYTIC_TYPES = {"auditoria", "analise", "otimizacao", "relatorio"}
@@ -132,6 +136,11 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("path", type=Path)
     args = parser.parse_args()
+    if args.path.parent.name == "operacoes":
+        # Dossiês V2 (.md + .json em operacoes/) são verificados pelo dossier.py.
+        from dossier import main as dossier_main  # noqa: PLC0415
+
+        return dossier_main(["verify", "--path", str(args.path)])
     try:
         payload = extract_payload(args.path)
         errors = validate_dossier_payload(payload)

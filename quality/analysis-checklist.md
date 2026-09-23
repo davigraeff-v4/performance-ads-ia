@@ -14,18 +14,18 @@
 - [ ] KPIs decisórios mostram atual, comparação, delta absoluto, delta percentual e unidade.
 - [ ] Ausência não foi convertida em zero.
 - [ ] Plataformas e comercial não foram reconciliados silenciosamente.
-- [ ] Fatos, cálculos, hipóteses, recomendações e indisponibilidades estão rotulados.
+- [ ] Fatos, cálculos, hipóteses, recomendações e indisponibilidades estão distinguidos com palavras, sem códigos entre colchetes.
 - [ ] Hipóteses alternativas foram consideradas.
 - [ ] Correlação não foi tratada como causalidade.
 - [ ] Limitações e confiança aparecem por achado.
-- [ ] Cada achado possui ID, impacto, hipótese principal, alternativa e verificação discriminante.
-- [ ] Cada achado referencia `evidence_ids` existentes.
-- [ ] Cada recomendação informa ação exata/alvo, prioridade, responsável, prazo e janela de avaliação.
-- [ ] Cada ação possui `action_id`, `finding_ids`, baseline, resultado esperado, dependência e risco.
-- [ ] Cada change set referencia ações, achados e evidências no nível do alvo.
+- [ ] Cada achado tem título em linguagem de negócio, o que vimos (com números), impacto, hipótese principal, alternativa e o que as diferencia.
+- [ ] Cada número importante tem leitura: o que é, a conta, a comparação e o que significa.
+- [ ] Cada recomendação informa alvo exato, antes e depois, resultado esperado e janela de avaliação.
+- [ ] Cada mudança diz de qual achado vem e tem evidência no nível do alvo.
+- [ ] Premissas de mecanismo foram conferidas na base oficial; o que contradiz foi corrigido.
 - [ ] Critérios de sucesso e de parada são verificáveis; campo indisponível foi declarado, não omitido.
 - [ ] Todas as skills planejadas foram executadas ou puladas com motivo válido.
-- [ ] O relatório completo foi entregue e iterado no chat antes de qualquer dossiê novo.
-- [ ] Aprovação editorial literal e hash correspondem à versão persistida.
-- [ ] Dossiê só foi criado após aprovação editorial e está na pasta correta.
+- [ ] O relatório completo foi entregue e iterado no chat, no formato de `templates/resposta-chat.md`, antes de qualquer dossiê novo.
+- [ ] Nenhum ID interno, hash, nome de skill, JSON ou abreviação própria apareceu no chat.
+- [ ] Dossiê criado só por `scripts/dossier.py`, depois da aprovação do conteúdo, e `dossier.py verify` passou.
 - [ ] Aprovação editorial não foi tratada como aprovação operacional ou execução.

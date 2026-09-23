@@ -18,7 +18,7 @@ description: Estrutura cliente, plataformas, contas e campanha a partir de brief
 3. Separar valores confirmados, hipóteses e campos ausentes.
 4. Perguntar em uma única rodada apenas pelos críticos: cliente, modelo, objetivo, oferta, plataforma, conta/escopo quando houver, budget ou limite, restrições e definição do resultado.
 5. Criar/atualizar `CLIENTE.md` sem apagar histórico.
-6. Iniciar a representação candidata em memória. Não criar dossiê antes de apresentar o conteúdo no chat e obter aprovação editorial.
+6. Iniciar a representação candidata em memória. Não criar dossiê antes de apresentar o conteúdo no chat e obter aprovação do conteúdo; o registro é sempre por `scripts/dossier.py`.
 
 ## Saída
 
@@ -36,6 +36,13 @@ Restrições:
 Lacunas críticas:
 Hipóteses permitidas:
 ```
+
+## Histórico do cliente (intenção `historico` e consulta antes de agir)
+
+1. `python3 scripts/client_history.py list {slug} --limit 10` para a linha do tempo, com legados e V2; `--open` só para o que está sem fechamento.
+2. `python3 scripts/client_history.py search {slug} "termos"` para achar o que já foi analisado ou decidido sobre um tema; abrir o dossiê inteiro só quando o trecho for relevante.
+3. Dossiês legados são somente leitura. Nunca editar; operação legada aberta que precise seguir adiante é migrada pelo `dossier.py migrate`.
+4. Responder no chat: o que foi feito (data, o quê, situação), o que ficou pendente e o que vale revisar agora. Nunca cruzar clientes.
 
 ## Validação
 

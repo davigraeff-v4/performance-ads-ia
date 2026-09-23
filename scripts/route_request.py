@@ -35,6 +35,9 @@ def condition_matches(
     raise ValueError(f"condicao de rota desconhecida: {condition}")
 
 
+NO_SOURCE_INTENTS = {"duvida", "historico", "configuracao", "onboarding", "planejamento", "criacao"}
+
+
 def resolve_branch(
     matrix: dict[str, object],
     *,
@@ -43,6 +46,7 @@ def resolve_branch(
     source_mode: str,
     requires_keywords: bool,
     requires_gtm_audit: bool = False,
+    depth: str | None = None,
 ) -> dict[str, object]:
     intents = matrix["intents"]
     assert isinstance(intents, dict)
@@ -80,12 +84,7 @@ def resolve_branch(
 
     gates: list[str] = []
     status = "ready"
-    if source_mode == "unavailable" and intent not in {
-        "configuracao",
-        "onboarding",
-        "planejamento",
-        "criacao",
-    }:
+    if source_mode == "unavailable" and intent not in NO_SOURCE_INTENTS:
         status = "blocked"
         gates.append("required_source_unavailable")
 
@@ -95,7 +94,27 @@ def resolve_branch(
 
     dossier_policy = matrix.get("dossier_policy", {})
     candidate_intents = set(dossier_policy.get("candidate_intents", []))
+    no_dossier_intents = set(dossier_policy.get("no_dossier_intents", []))
     requires_editorial_approval = intent in candidate_intents
+    default_depth = matrix.get("default_depth", {})
+    assert isinstance(default_depth, dict)
+
+    if intent in no_dossier_intents:
+        return {
+            "route_id": f"{intent}:{platform}:{source_mode}",
+            "platform": platform,
+            "source_mode": source_mode,
+            "status": status,
+            "planned_skills": planned if status == "ready" else [],
+            "skipped_skills": skipped,
+            "gates": gates,
+            "depth": depth or default_depth.get(intent),
+            "final_state": route.get("final_state"),
+            "output": route.get("output"),
+            "delivery_state": "chat_only",
+            "dossier_persistence": "none",
+            "dossier_state_after_approval": None,
+        }
 
     return {
         "route_id": f"{intent}:{platform}:{source_mode}",
@@ -105,6 +124,7 @@ def resolve_branch(
         "planned_skills": planned if status == "ready" else [],
         "skipped_skills": skipped,
         "gates": gates,
+        "depth": depth or default_depth.get(intent),
         "final_state": route.get("final_state"),
         "output": route.get("output"),
         "delivery_state": (
@@ -134,6 +154,11 @@ def parser() -> argparse.ArgumentParser:
     route_parser.add_argument("--google-source-mode")
     route_parser.add_argument("--requires-keywords", action="store_true")
     route_parser.add_argument("--requires-gtm-audit", action="store_true")
+    route_parser.add_argument(
+        "--depth",
+        choices=["quick", "focused", "full"],
+        help="sobrescreve a profundidade padrão (use full só em auditoria ou quando o gestor pedir análise completa)",
+    )
     route_parser.add_argument("--json", action="store_true", dest="as_json")
     return route_parser
 
@@ -178,15 +203,26 @@ def main() -> int:
                     source_mode=source_mode,
                     requires_keywords=args.requires_keywords,
                     requires_gtm_audit=args.requires_gtm_audit,
+                    depth=args.depth,
                 )
             )
-        status = "ready" if all(branch["status"] == "ready" for branch in branches) else "blocked"
+        if args.platform == "both":
+            # Em pedido multicanal, uma intenção que só existe numa plataforma
+            # (ex: pesquisa de palavras-chave) não bloqueia a outra.
+            supported = [b for b in branches if "intent_platform_not_supported" not in b["gates"]]
+            if supported and len(supported) < len(branches):
+                for branch in branches:
+                    if branch not in supported:
+                        branch["status"] = "not_applicable"
+                branches = supported + [b for b in branches if b not in supported]
+        active = [branch for branch in branches if branch["status"] != "not_applicable"]
+        status = "ready" if active and all(branch["status"] == "ready" for branch in active) else "blocked"
         payload = {
             "router_version": matrix["version"],
             "intent": args.intent,
             "status": status,
             "branches": branches,
-            "gates": [gate for branch in branches for gate in branch["gates"]],
+            "gates": [gate for branch in active for gate in branch["gates"]],
         }
 
     if args.as_json:
@@ -194,7 +230,11 @@ def main() -> int:
     else:
         print(f"Rota: {payload['intent']} | status: {payload['status']}")
         for branch in payload.get("branches", []):
-            print(f"- {branch['route_id']}: {', '.join(branch['planned_skills']) or 'nenhuma skill'}")
+            if branch["status"] == "not_applicable":
+                print(f"- {branch['route_id']}: não se aplica a esta plataforma")
+                continue
+            depth = f" | profundidade: {branch['depth']}" if branch.get("depth") else ""
+            print(f"- {branch['route_id']}: {', '.join(branch['planned_skills']) or 'nenhuma skill'}{depth}")
         for gate in payload.get("gates", []):
             print(f"  gate: {gate}")
     return 0 if payload["status"] == "ready" else 3

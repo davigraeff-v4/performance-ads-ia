@@ -18,7 +18,7 @@ description: Consolida estratégia, arquitetura, públicos, budget, lances, trac
 3. Verificar compatibilidade entre objetivo, conversion location, performance goal, evento, público, posicionamento, budget, lance e criativo.
 4. Definir status inicial seguro; preferir criação pausada quando a ferramenta permitir.
 5. Gerar change set versionado com ordem, antes/depois, risco e reversão.
-6. Apresentar a candidata completa no chat. Após aprovação editorial, criar dossiê `proposed`; somente então orientar `/aprovar-operacao <id>`.
+6. Apresentar tudo no chat no formato de `templates/resposta-chat.md`. Depois da aprovação do conteúdo, registrar com `scripts/dossier.py new` (nasce `proposed`); só então orientar `/aprovar-operacao`. Consultar `knowledge/platform-quirks/meta-ads-mcp.md`: conjuntos de formulário nativo e vídeo com WhatsApp têm limitações no conector.
 
 ## Gate
 

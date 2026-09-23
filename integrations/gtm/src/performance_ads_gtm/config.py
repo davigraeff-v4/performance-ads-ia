@@ -39,7 +39,16 @@ class Settings:
     token_cache_path: Path
 
     @classmethod
-    def from_environment(cls) -> "Settings":
+    def from_environment(cls, base_dir: Path | None = None) -> "Settings":
+        """Lê a política local. Caminhos relativos resolvem a partir de
+        ``base_dir`` (os scripts passam a raiz do projeto), nunca do diretório
+        de onde o comando foi chamado."""
+        base = base_dir or Path.cwd()
+
+        def resolve(value: str) -> Path:
+            path = Path(value).expanduser()
+            return path if path.is_absolute() else base / path
+
         declared = _csv("PERFORMANCE_ADS_GTM_DECLARED_CAPABILITIES") or frozenset(
             {"reporting"}
         )
@@ -71,7 +80,7 @@ class Settings:
             raise ConfigurationError(
                 "PERFORMANCE_ADS_GTM_CREDENTIALS_PATH nao configurado"
             )
-        credentials_path = Path(credentials_value).expanduser()
+        credentials_path = resolve(credentials_value)
         if not credentials_path.is_file():
             raise ConfigurationError(
                 f"arquivo de credencial OAuth nao encontrado: {credentials_path}"
@@ -81,7 +90,7 @@ class Settings:
             "PERFORMANCE_ADS_GTM_TOKEN_CACHE_PATH",
             str(Path("credentials") / "gtm-oauth-token.json"),
         )
-        token_cache_path = Path(token_cache_value).expanduser()
+        token_cache_path = resolve(token_cache_value)
 
         return cls(
             declared_capabilities=declared,
@@ -104,6 +113,9 @@ class Settings:
         return normalized
 
     def require_write_enabled(self) -> None:
+        """Bloqueia escrita quando desabilitada. Em ``validate_only`` a
+        chamada segue até write.py, que devolve o que seria enviado sem
+        gravar nada."""
         if self.write_mode == "disabled":
             raise ConfigurationError(
                 "escrita GTM desabilitada localmente "

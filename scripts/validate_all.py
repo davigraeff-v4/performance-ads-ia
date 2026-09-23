@@ -12,6 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 INTEGRATION_SRC = ROOT / "integrations" / "google_ads_extended" / "src"
+GTM_SRC = ROOT / "integrations" / "gtm" / "src"
 
 
 def run(label: str, command: list[str], *, env: dict[str, str] | None = None) -> None:
@@ -41,12 +42,23 @@ def integration_runtime() -> str:
                 / "bin"
                 / "python"
             )
-    return str(next((candidate for candidate in candidates if candidate.is_file()), Path(sys.executable)))
+    # O launcher pode ser um script shell (README §15.8): só aceitar interpretadores Python.
+    pythons = (candidate for candidate in candidates if candidate.is_file() and candidate.name.startswith("python"))
+    return str(next(pythons, Path(sys.executable)))
 
 
 def main() -> int:
     run("estrutura e contratos", [sys.executable, "scripts/validate_repository.py"])
-    run("rotas, RAG e schemas", [sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v"])
+    run("prompts CLAUDE.md e AGENTS.md sincronizados", [sys.executable, "scripts/build_agent_prompts.py", "--check"])
+    run("rotas, RAG, schemas e dossiês V2", [sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v"])
+    run("dossiês V2 dos clientes locais", [sys.executable, "scripts/dossier.py", "verify"])
+    gtm_env = os.environ.copy()
+    gtm_env["PYTHONPATH"] = str(GTM_SRC) + (os.pathsep + gtm_env["PYTHONPATH"] if gtm_env.get("PYTHONPATH") else "")
+    run(
+        "GTM: nunca publica, allowlist por caminho e validate_only",
+        [sys.executable, "-m", "unittest", "discover", "-s", "integrations/gtm/tests", "-v"],
+        env=gtm_env,
+    )
     integration_env = os.environ.copy()
     integration_python = integration_runtime()
     if integration_python == sys.executable:
@@ -57,7 +69,7 @@ def main() -> int:
         [integration_python, "-m", "unittest", "discover", "-s", "integrations/google_ads_extended/tests", "-v"],
         env=integration_env,
     )
-    print("HOMOLOGATION OK: V1 local validado sem mutações externas")
+    print("HOMOLOGATION OK: V2 local validado sem mutações externas")
     return 0
 
 

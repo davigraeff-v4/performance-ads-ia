@@ -376,7 +376,7 @@ def main() -> int:
         visit(name)
 
     matrix = json.loads((ROOT / "routing_matrix.json").read_text(encoding="utf-8"))
-    if matrix.get("version") != "1.1.0":
+    if matrix.get("version") != "2.0.0":
         fail(errors, "versão inesperada da matriz de roteamento")
     declared_platforms = set(matrix.get("platforms", []))
     if declared_platforms != {"meta", "google_ads"}:
@@ -405,6 +405,17 @@ def main() -> int:
     command_names = {path.name for path in (ROOT / ".claude" / "commands").glob("*.md")}
     if command_names != EXPECTED_COMMANDS:
         fail(errors, f"comandos divergentes: {sorted(command_names ^ EXPECTED_COMMANDS)}")
+    for command in sorted((ROOT / ".claude" / "commands").glob("*.md")):
+        header = re.match(r'^---\ndescription: "[^"]+"\nargument-hint: "[^"]*"\n---\n', command.read_text(encoding="utf-8"))
+        if not header:
+            fail(errors, f"comando sem description/argument-hint entre aspas: {command.name}")
+
+    no_dossier = set(policy.get("no_dossier_intents", []))
+    if no_dossier & set(policy.get("candidate_intents", [])):
+        fail(errors, "intenção marcada ao mesmo tempo como com e sem dossiê")
+    for intent in no_dossier:
+        if intent not in matrix.get("intents", {}):
+            fail(errors, f"intenção sem dossiê inexistente na matriz: {intent}")
 
     required_references = [
         "knowledge/README.md",
@@ -416,6 +427,22 @@ def main() -> int:
         "examples/synthetic/analysis-actionable.json",
         "scripts/route_request.py",
         "scripts/validate_dossier.py",
+        "scripts/dossier.py",
+        "scripts/client_history.py",
+        "scripts/build_agent_prompts.py",
+        "scripts/hooks/check_client_write.py",
+        "schemas/operation-v2.schema.json",
+        "templates/resposta-chat.md",
+        "prompt/agent-prompt.md",
+        "examples/synthetic/v2/otimizacao-remarketing.spec.json",
+        "examples/synthetic/v2/otimizacao-remarketing.body.md",
+        "knowledge/platform-quirks/README.md",
+        "knowledge/platform-quirks/meta-ads-mcp.md",
+        "knowledge/platform-quirks/gtm-api.md",
+        "knowledge/platform-quirks/google-ads-api.md",
+        "tests/test_dossier_v2.py",
+        "integrations/gtm/tests/test_write_guards.py",
+        ".claude/settings.json",
         "scripts/validate_all.py",
         "tests/test_meta_help_search.py",
         "tests/test_google_ads_help_search.py",

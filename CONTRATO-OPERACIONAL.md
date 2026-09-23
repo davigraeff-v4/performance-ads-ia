@@ -22,7 +22,9 @@ Search Console, Google Trends, GA4, TikTok Ads e outras plataformas ficam fora d
 
 ## 2. Roteamento da demanda
 
-Toda solicitação em linguagem natural ou comando entra pela skill pública `25-performance-ads-router`, descoberta por `.agents/skills/` no Codex e `.claude/skills/` no Claude Code. O roteador resolve a rota em `routing_matrix.json` por meio de `scripts/route_request.py`; skills internas não dependem de acionamento manual pelo gestor.
+Toda solicitação em linguagem natural ou comando entra pela skill pública `25-performance-ads-router`, descoberta por `.agents/skills/` no Codex e `.claude/skills/` no Claude Code. O roteador resolve a rota em `routing_matrix.json` por meio de `scripts/route_request.py`; skills internas não dependem de acionamento manual pelo gestor. Skills genéricas de mídia paga ou de analytics instaladas no ambiente não substituem o roteador para Meta Ads, Google Ads ou rastreamento de mídia.
+
+Intenções: `duvida`, `consulta` e `historico` respondem no chat e nunca geram dossiê; `configuracao`, `onboarding`, `pesquisa_palavras_chave`, `planejamento`, `criacao`, `auditoria`, `analise`, `otimizacao`, `ajuste`, `relatorio` e `reversao` geram dossiê depois da aprovação editorial; `aprovacao` e `execucao` atualizam uma operação registrada. `ajuste` é a aplicação de uma decisão já tomada pelo gestor: dispensa diagnóstico, mas não dispensa change set, checagem de boas práticas nem as duas aprovações.
 
 Antes de acionar skills operacionais, registrar:
 
@@ -53,6 +55,8 @@ Uma fonte inferior não pode sobrescrever silenciosamente uma superior. Divergê
 
 ## 4. Knowledge Gate
 
+A base oficial não serve só para responder dúvidas: ela confere as premissas do diagnóstico, das mudanças e da leitura de resultados. Toda operação com mudanças registra ao menos uma checagem de boas práticas (`knowledge_checks`: premissa, veredito sustenta/contradiz/sem cobertura, fonte e nota). Premissa contradita pela fonte oficial exige correção do texto e do plano antes da apresentação. No Meta, a ferramenta `ads_get_help_article` do conector é fonte oficial ao vivo válida.
+
 Antes de analisar ou propor mudanças:
 
 1. Ler `knowledge/README.md`.
@@ -75,7 +79,7 @@ O repositório mantém uma base seletiva da Central de Ajuda em `knowledge/offic
 
 ## 5. Contrato analítico
 
-`auditoria`, `analise` e `otimizacao` usam `depth_mode=full` por padrão. `focused` só é permitido quando o gestor restringir explicitamente o escopo e não pode ser apresentado como diagnóstico completo da conta.
+A profundidade padrão vem de `routing_matrix.json`: `auditoria` usa `full`; `analise`, `otimizacao` e `relatorio` usam `focused`; `consulta` e `ajuste` usam `quick`. `full` fora de auditoria só quando o gestor pedir análise completa. Um diagnóstico `focused` declara o foco e nunca é apresentado como diagnóstico completo da conta.
 
 Toda análise deve declarar:
 
@@ -89,17 +93,13 @@ Toda análise deve declarar:
 - Definição e denominador de cada KPI.
 - Limitações, atrasos, lacunas e divergências.
 
-Classificar afirmações como `[F]` fato, `[C]` cálculo, `[H]` hipótese, `[R]` recomendação ou `[I]` indisponibilidade.
+Distinguir fato, cálculo, hipótese, recomendação e indisponibilidade com palavras ("vimos que", "calculamos", "acreditamos que", "recomendo", "não temos esse dado porque"), nunca com códigos entre colchetes.
 
-Cada achado deve conter ID rastreável, plataforma/nível, evidência, impacto, confiança, limitação, hipótese principal, hipótese alternativa, verificação discriminante, ação exata, prioridade, responsável, prazo, janela de avaliação e critérios de sucesso e parada. Campo sem base fica explicitamente indisponível; não pode ser omitido para produzir um plano genérico.
+Cada achado apresenta, em linguagem de negócio: plataforma e nível, o que foi visto (com números, fórmula e comparação), impacto, hipótese principal, hipótese alternativa e o que as diferencia, confiança e limitação. Cada ação apresenta alvo exato, antes e depois, resultado esperado, janela de avaliação e critérios de sucesso e de parada. Campo sem base fica explicitamente indisponível; não pode ser omitido para produzir um plano genérico.
 
-Antes dos achados, toda análise `full` deve produzir:
+Toda análise `full` cobre as camadas de `knowledge/methodology/diagnostic-coverage-contract.md` e mostra, em linguagem simples, o que foi analisado, o que ficou indisponível ou insuficiente e por quê. Camada aplicável ausente bloqueia o rótulo de diagnóstico completo.
 
-1. Matriz de cobertura por plataforma e tipo de campanha, conforme `knowledge/methodology/diagnostic-coverage-contract.md`.
-2. Pacote de evidências comparativas com IDs, fonte, nível, janela, unidade, definição, denominador, valores, variações e cobertura de investimento/conversões.
-3. Camadas marcadas como `analyzed`, `unavailable`, `insufficient` ou `not_applicable`. Camada aplicável ausente bloqueia o rótulo de diagnóstico completo.
-
-A rastreabilidade obrigatória é `evidence_id -> finding_id -> action_id -> change_id`. Ação sem evidência no nível do alvo não pode virar change set.
+A rastreabilidade é por nome: cada mudança diz de qual achado vem, e cada achado mostra a evidência numérica que o sustenta. Ação sem evidência no nível do alvo não pode virar change set. Códigos internos de rastreio não aparecem no chat.
 
 Não tratar correlação como causalidade. Não confundir atribuição da plataforma com incrementalidade. Não declarar lucratividade sem custos e margem suficientes.
 
@@ -133,15 +133,20 @@ Separar compras atribuídas, receita atribuída, CPA, ROAS, ticket, margem e ROA
 
 ## 9. Entrega chat-first e dossiê aprovado
 
-O chat é a superfície obrigatória de análise e decisão. Antes de criar qualquer dossiê novo, o agent deve entregar a versão completa no chat, iterar com o gestor e identificar uma versão final candidata. Não criar arquivo provisório, vazio ou parcialmente preenchido.
+O chat é a superfície obrigatória de análise e decisão, no formato de `templates/resposta-chat.md`: explicativo, visual, com todo número acompanhado de leitura, tabelas de até 5 colunas e mudanças em blocos, sem IDs internos, hashes, nomes de skills, JSON ou abreviações próprias. Antes de criar qualquer dossiê novo, o agent deve entregar a versão completa no chat, iterar com o gestor e identificar uma versão final candidata. Não criar arquivo provisório, vazio ou parcialmente preenchido.
 
 A persistência exige aprovação editorial explícita para registrar exatamente a versão candidata. Uma aprovação genérica só vale como editorial quando existe uma candidata aguardando registro e não há `/aprovar-operacao <id>` nem pedido explícito de aprovação operacional. Sem aprovação editorial, nenhum dossiê novo é criado.
 
-Depois da aprovação, criar Markdown em `clients/{slug}/` usando `templates/dossie-operacao.md`. O conteúdo humano deve reproduzir integralmente a versão aprovada no chat; o bloco estruturado registra `record_approval`, hash do conteúdo, análise, rota e estado. O agent localiza dossiês existentes por `operation_id`, cliente, plataforma, escopo, tipo, status e atualização; nunca apenas pelo mais recente.
+Depois da aprovação, o dossiê é criado exclusivamente por `scripts/dossier.py new`, em dois arquivos com o mesmo nome dentro de `clients/{slug}/operacoes/`:
 
-Nome: `AAAA-MM-DD-HHMM-{plataforma}-{tipo}-{escopo}.md`.
+- `AAAA-MM-DD-HHMM-{plataforma}-{tipo}-{escopo}.md`: o dossiê legível. O texto aprovado no chat fica entre os marcadores `corpo-aprovado`; mudanças, andamento e dados técnicos são gerados a partir do JSON e regenerados a cada mudança de estado;
+- `AAAA-MM-DD-HHMM-{plataforma}-{tipo}-{escopo}.json`: o registro de máquina (`schemas/operation-v2.schema.json`), com metadados, rota, checagens de boas práticas, decisões pendentes, mudanças, aprovações, execução e avaliação.
 
-Estados persistidos: `proposed`, `approved`, `executing`, `executed`, `partial_failure`, `failed`, `reverted`, `analysis_only`, `blocked`. `draft` é legado; novas versões candidatas ficam somente no chat como `awaiting_record_approval`.
+O agent prepara o corpo e o spec em `.work/` (fora do Git) e nunca escreve ou edita `operacoes/` à mão. `scripts/dossier.py verify` confere formato, hash do texto aprovado, hash das mudanças, rota obrigatória, estado e regras de mudança; no Claude Code, um hook bloqueia antes da gravação qualquer escrita direta em `operacoes/`, edição de dossiê legado e dossiê novo escrito à mão.
+
+Estados persistidos: `analysis_only`, `proposed`, `approved`, `executed`, `partial_failure`, `failed`, `reverted`, `blocked`, `evaluated`. O status de execução é calculado pelo script a partir dos resultados por mudança; `evaluated` registra se a operação funcionou ao fim da janela de avaliação.
+
+Dossiês legados (Markdown com bloco JSON embutido na raiz de `clients/{slug}/`) ficam como base de consulta somente leitura, pesquisável por `scripts/client_history.py`. Operação legada ainda aberta que precise ser aprovada ou executada é migrada antes por `dossier.py migrate` (rascunho revisável) e `dossier.py new`; aprovações operacionais legadas não são transportadas.
 
 Análise sem mutação termina como `analysis_only`. Nunca usar `executed` para recomendação não aplicada.
 
@@ -156,7 +161,7 @@ Existem duas aprovações independentes:
 
 Cada mutação deve registrar plataforma, conta, ID e versão da operação, achados de origem, alvo, antes/depois, evidência, justificativa, impacto esperado, confiança, impacto financeiro, risco, reversão, precondições, modo de execução, ordem, dependências, responsável, janela de avaliação e critérios de sucesso e parada.
 
-O hash lógico de aprovação é SHA-256 da representação canônica do ID, versão e lista ordenada de mudanças, sem o bloco de aprovação. Qualquer alteração invalida a aprovação.
+O hash lógico de aprovação é SHA-256 da representação canônica do ID, versão e lista ordenada de mudanças, sem o bloco de aprovação, calculado sempre por `scripts/dossier.py` (mesma canonicalização de `scripts/hash_change_set.py`), nunca pelo modelo. Qualquer alteração invalida a aprovação; mudança de conteúdo antes da execução gera nova versão por `dossier.py revise`.
 
 `/aprovar-operacao <id>` nunca deve ser inferido de “aprovado” usado para registrar a versão candidata. `/executar-operacao <id>` é uma ação separada. Antes de executar, recalcular hash, confirmar versão, reler alvos, comparar snapshots e confirmar capacidade/permissão. Não aceitar aprovação aberta ou multicanal para lotes não individualizados.
 
@@ -167,8 +172,8 @@ O hash lógico de aprovação é SHA-256 da representação canônica do ID, ver
 - Não trocar plataforma, conta, moeda, objetivo ou fonte de conversão silenciosamente.
 - Não usar navegador como fallback implícito.
 - Se escrita não estiver disponível, entregar instrução manual e manter status sem execução.
-- Registrar chamadas como `success`, `failed` ou `not_attempted`.
-- Falha parcial exige `partial_failure`.
+- Registrar cada mudança como `success`, `executed_manually` (feita pelo gestor no gerenciador e conferida por leitura), `failed` ou `not_attempted`, com as diferenças em relação ao aprovado.
+- Falha parcial exige `partial_failure`; o status é derivado dos resultados por `dossier.py record-execution`.
 - Capturar snapshot posterior antes de encerrar.
 - Reversão restaura apenas valores anteriores conhecidos, com novo lote e nova aprovação.
 

@@ -1,106 +1,109 @@
 ---
 name: 25-performance-ads-router
-description: Roteia solicitações de Meta Ads ou Google Ads, executa as skills necessárias e entrega uma versão completa no chat antes de persistir um dossiê aprovado. Use para configurar, cadastrar cliente, pesquisar palavras-chave, planejar, criar, auditar, analisar, otimizar, relatar, aprovar, executar ou reverter operações de mídia paga. Não use para SEO, GA4, Search Console, Google Trends ou plataformas fora do contrato V1.
+description: Porta de entrada do PERFORMANCE ADS IA para qualquer pedido sobre Meta Ads, Google Ads ou rastreamento de mídia (GTM, pixel, conversões, UTM de campanha) — dúvidas, consultas rápidas, histórico do cliente, cadastro, palavras-chave, planejamento, criação, auditoria, análise, otimização, ajustes, relatórios, aprovação, execução e reversão. Tem precedência sobre skills genéricas de mídia paga e de analytics neste projeto. Não use para SEO, GA4, Search Console, Google Trends ou plataformas fora do contrato.
 ---
 
 # Roteador PERFORMANCE ADS IA
 
-Atuar como única entrada implícita do agent. Selecionar e executar as skills internas; não pedir que o gestor as acione manualmente.
+Única entrada do agent. Classifica o pedido, executa as skills internas na ordem certa, entrega no chat no formato de `templates/resposta-chat.md` e, depois da aprovação do gestor, registra pelo `scripts/dossier.py`. O gestor nunca precisa acionar skills internas.
 
 ## 1. Preparar o contexto
 
-1. Ler `CONTRATO-OPERACIONAL.md` e `routing_matrix.json`.
-2. Identificar **todas** as intenções normalizadas presentes na mensagem — pode haver mais de uma: `configuracao`, `onboarding`, `pesquisa_palavras_chave`, `planejamento`, `criacao`, `auditoria`, `analise`, `otimizacao`, `relatorio`, `aprovacao`, `execucao` ou `reversao`.
-3. Identificar `requested_platforms`, `active_platforms` e `source_mode` por plataforma.
-4. Se houver cliente, ler `clients/{slug}/CLIENTE.md` antes de perguntar informação já registrada.
-5. Localizar no contexto uma versão candidata ainda não persistida. Localizar dossiê somente quando já houve aprovação editorial ou a demanda continua uma operação registrada.
-6. Em dossiê existente, buscar por `operation_id`, cliente, plataforma, escopo, tipo, status e atualização. Tratar arquivo sem `schema_version` ou `route` como legado.
+1. Ler `CONTRATO-OPERACIONAL.md` uma vez por sessão. A matriz de rotas é lida pelo `route_request.py`; não é preciso abri-la.
+2. Identificar **todas** as intenções da mensagem: `duvida`, `consulta`, `historico`, `configuracao`, `onboarding`, `pesquisa_palavras_chave`, `planejamento`, `criacao`, `auditoria`, `analise`, `otimizacao`, `ajuste`, `relatorio`, `aprovacao`, `execucao` ou `reversao`. A tabela de decisão e os exemplos estão no CLAUDE.md/AGENTS.md.
+3. Identificar plataformas pedidas e o modo de fonte de cada uma: `connected_read`, `file_based`, `context_only` ou `unavailable`.
+4. Com cliente identificado:
+   - ler `clients/{slug}/CLIENTE.md`;
+   - rodar `python3 scripts/client_history.py list {slug} --limit 8`;
+   - mencionar no início da resposta operações abertas, decisões pendentes e avaliações vencidas que tenham relação com o pedido.
+5. Histórico legado: os dossiês antigos na raiz da pasta do cliente são base de consulta somente leitura. Use `python3 scripts/client_history.py search {slug} "termos"` quando o gestor pedir para verificar o que já foi feito, quando a análise depender de uma decisão anterior ou antes de repetir uma recomendação. Abra o arquivo inteiro só quando o trecho encontrado for relevante.
 
-### Aprovação editorial versus operacional
+Perguntar numa única rodada, e só quando cliente, plataforma, conta, objetivo ou operação continuarem materialmente ambíguos.
 
-- Se existe candidata `awaiting_record_approval` e o gestor diz “aprovado”, “pode registrar” ou equivalente sem `/aprovar-operacao <id>`, interpretar como aprovação editorial e criar o dossiê exato daquela versão.
-- Somente `/aprovar-operacao <id>` ou autorização operacional explícita com operação, versão e hash entra na intenção `aprovacao`.
-- Aprovação editorial não aprova nem executa change set.
+### Mensagens com mais de um pedido
 
-Perguntar em uma única rodada somente quando cliente, plataforma, conta, objetivo ou operação permanecerem materialmente ambíguos.
+`onboarding` e `configuracao` são rotas estreitas e não incluem a base oficial. Se a mesma mensagem também pergunta sobre funcionamento, estratégia ou otimização, essa segunda parte é outra intenção, com a sua própria chamada ao `route_request.py` e a sua própria execução.
 
-### Mensagens compostas (mais de uma intenção)
+Exemplo real: "tenho um novo cliente X, aqui está a conta… qual a melhor forma de rodar campanha de visitas ao local e quais as boas práticas?" são duas intenções, `onboarding:meta` e `planejamento:meta`. Resolva e execute as duas rotas.
 
-`onboarding` e `configuracao` são intenções estreitas — planejam pouquíssimas skills (ex: `onboarding` só planeja `01-client-campaign-intake`) e **não** incluem a skill 15/17 de recuperação de conhecimento. Se a mesma mensagem também contiver uma pergunta de funcionamento, boas práticas, estratégia ou otimização, essa segunda parte é uma intenção separada (tipicamente `planejamento`, `analise` ou `otimizacao`) que **tem** a skill 15/17 como passo `always` — e precisa da sua própria chamada ao `route_request.py` e da sua própria execução de skills. Nunca responder a segunda pergunta usando só o que a primeira intenção carregou.
+### Aprovação do conteúdo versus aprovação de execução
 
-Exemplo real que já aconteceu: gestor manda "tenho um novo cliente X, aqui está a conta... qual a melhor forma de rodar campanha de visitas ao local e quais as boas práticas?" numa mensagem só. Isso é `onboarding:meta` **e** `planejamento:meta` — resolver e executar as duas rotas, não só a primeira.
+- Se há uma versão apresentada no chat aguardando registro e o gestor diz "aprovado", "pode registrar" ou equivalente, sem `/aprovar-operacao`, isso é **aprovação do conteúdo**: registre com `dossier.py new` (ou `revise`, se a operação já existia).
+- Só `/aprovar-operacao` ou uma autorização explícita de execução entra na intenção `aprovacao`. Se o gestor digitar `/aprovar-operacao` sem identificar a operação, rode `python3 scripts/dossier.py list --client {slug} --open`, mostre o título, a versão e o número de mudanças da operação candidata e peça confirmação antes de aprovar. Se houver mais de uma candidata, pergunte qual.
+- Aprovar o conteúdo não aprova a execução. Aprovar a execução não executa.
 
 ## 2. Resolver a rota
 
-Executar o roteador determinístico depois de classificar a demanda:
-
 ```bash
-python3 scripts/route_request.py \
-  --intent analise \
-  --platform google_ads \
-  --source-mode connected_read \
-  --json
+python3 scripts/route_request.py --intent otimizacao --platform meta --source-mode connected_read --json
 ```
 
-Para escopo multicanal, informar os modos separadamente:
+Multicanal, com modos separados:
 
 ```bash
-python3 scripts/route_request.py \
-  --intent otimizacao \
-  --platform both \
-  --meta-source-mode connected_read \
-  --google-source-mode file_based \
-  --json
+python3 scripts/route_request.py --intent auditoria --platform both \
+  --meta-source-mode connected_read --google-source-mode file_based --json
 ```
 
-Adicionar `--requires-keywords` somente quando Search, search themes ou validação de demanda exigirem a skill `18`.
-
-Se a rota retornar `blocked`, parar antes das skills operacionais e apresentar o gate. Não improvisar plataforma, fonte, conta ou objetivo.
+- `--depth full` fora de `auditoria` só quando o gestor pedir análise completa; a profundidade padrão de cada intenção vem na resposta.
+- `--requires-keywords` quando Search, temas de pesquisa ou validação de demanda exigirem a skill `18`.
+- `--requires-gtm-audit` quando o rastreamento passa por um container GTM, em auditoria ou otimização.
+- Rota `blocked`: parar antes das skills operacionais e explicar o bloqueio. Não improvisar plataforma, fonte, conta ou objetivo.
+- Ramo `not_applicable` (ex.: palavras-chave no Meta): seguir só com o outro ramo e dizer isso ao gestor.
 
 ## 3. Executar as skills
 
-1. Seguir `planned_skills` na ordem retornada e usar `output` como contrato do tipo de entrega esperado para cada ramo.
-2. Ler integralmente cada `skills/{nome}/SKILL.md` antes de executá-la.
-3. Não abrir skills de outra plataforma.
-4. Não executar `00-configuracao-mcp` apenas porque a fonte é por arquivo ou contexto.
-5. Em `connected_read`, validar a conta por `02` ou `16`; voltar à `00` somente se a conexão estiver ausente ou falhar.
-6. Para otimização, exigir diagnóstico `11` no Meta ou `24` no Google Ads antes da `12`.
-7. Para `auditoria`, `analise` e `otimizacao`, usar `depth_mode=full` salvo restrição explícita do gestor.
-8. Manter a representação estruturada em memória; não criar ou atualizar dossiê novo antes da aprovação editorial.
+1. Seguir `planned_skills` na ordem, lendo cada `skills/{nome}/SKILL.md` antes de agir. Não abrir skills de outra plataforma.
+2. Não executar `00-configuracao-mcp` só porque a fonte é arquivo ou contexto. Em `connected_read`, validar a conta pela `02` ou `16`; voltar à `00` só se a conexão faltar ou falhar.
+3. Skills `15` e `17` rodam em toda rota que as planeja. Fora de `duvida`, elas **checam premissas**: liste as afirmações de mecanismo do diagnóstico, das mudanças ou da leitura de resultados e confira cada uma. No Meta, use também `ads_get_help_article` do conector. Registre cada checagem com veredito (sustenta, contradiz, sem cobertura), fonte e nota. Se contradiz, corrija o texto e o plano antes de mostrar.
+4. `otimizacao` exige o diagnóstico `11` (Meta) ou `24` (Google Ads) antes da `12`. `ajuste` não exige diagnóstico: a decisão é do gestor; leia o estado atual do alvo e registre a motivação dele.
+5. Antes de executar pelo conector Meta ou pela API do GTM, ler `knowledge/platform-quirks/`.
+6. Guardar em memória, para o registro: rotas, skills executadas, skills não executadas com motivo, checagens de boas práticas, mudanças, critérios de avaliação e decisões pendentes.
 
-## 4. Montar a versão candidata
+Uma skill planejada não executada precisa de motivo de uma lista fechada: `condition_not_met` (só quando a condição da rota não é `always` e não se aplica), `source_unavailable`, `account_not_enabled`, `platform_not_applicable`, `user_restricted_scope` ou `no_platform_mechanism` (só para 15/17, e só em operação sem mudanças). O `dossier.py` rejeita outros casos.
 
-Manter na candidata:
+## 4. Entregar no chat
 
-- `router_version`, `route_id`/`route_ids` canônicos (`intencao:plataforma:source_mode`) e `output_contracts` por plataforma.
-- Intenção, plataformas e modos de fonte.
-- Skills planejadas, executadas e puladas com motivo.
-- Gates encontrados e decisão tomada.
-- Matriz de cobertura, pacote de evidências, achados, ações e estado persistido esperado.
+Seguir `templates/resposta-chat.md` à risca: cabeçalho, resumo, números com a seção "Como ler esses números", achados, mudanças em blocos, checagem com boas práticas, como vamos avaliar, o que preciso de você e próximo passo. O exemplo completo está em `examples/synthetic/v2/otimizacao-remarketing.body.md`.
 
-Skill planejada deve aparecer como executada ou pulada com motivo. Uma skill obrigatória silenciosamente ausente bloqueia a candidata final.
+Nunca mostrar no chat IDs internos, hashes, nomes ou números de skills, rotas, JSON, GAQL, caminhos de arquivo ou logs de ferramenta. As exceções são o comando que o gestor precisa digitar e o caminho do dossiê depois de salvo.
 
-## 5. Entregar no chat
+`duvida`, `consulta` e `historico` terminam no chat, sem dossiê.
 
-Antes de persistir, apresentar no chat um relatório autossuficiente contendo, conforme a demanda:
+## 5. Registrar depois da aprovação do conteúdo
 
-1. Veredito executivo e confiança.
-2. Escopo, conta, fonte, janela, comparação e atribuição.
-3. Matriz de cobertura por nível e cobertura de investimento/conversões.
-4. Resultado de negócio, KPIs, comparações, unidades e denominadores.
-5. Pacote de evidências identificadas.
-6. Achados com evidência, impacto, hipótese principal, alternativa e limitação.
-7. Plano de ação ligado aos achados, com baseline, alvo, prioridade, responsável, prazo, janela, sucesso/parada, dependência e risco.
-8. Testes, riscos, indisponibilidades e próxima decisão.
+1. Escrever em `.work/`:
+   - o **corpo**: o texto aprovado no chat, sem alterações de conteúdo, com `<!-- mudancas -->` no lugar dos blocos de mudança (o script renderiza as mudanças a partir do spec);
+   - o **spec**: JSON no formato de `examples/synthetic/v2/otimizacao-remarketing.spec.json`.
+2. Rodar `python3 scripts/dossier.py new --client {slug} --spec .work/{nome}.spec.json --body .work/{nome}.body.md`.
+3. Se o script recusar, corrigir o spec ou o corpo e rodar de novo; nunca contornar escrevendo os arquivos à mão.
+4. Informar ao gestor, numa linha, o caminho do dossiê e o próximo passo que o script devolve.
 
-Marcar a entrega como candidata e solicitar aprovação editorial para registrar. Após aprovação, persistir exatamente a mesma versão e informar status, `operation_id` e caminho. O chat não precisa reproduzir logs, JSON, GAQL ou respostas brutas, mas deve mostrar todos os dados decisórios.
+Regras do spec: `changes` vazio gera `analysis_only`. Com mudanças, são obrigatórios `knowledge_checks` e `evaluation` (data, critérios de sucesso e de parada). Uma operação com mudanças é de uma plataforma só; em multicanal, registre uma operação por plataforma.
 
-## 6. Gates de mutação
+## 6. Aprovar, executar, avaliar, reverter
 
-- Antes da aprovação editorial, demandas novas terminam `awaiting_record_approval` no chat e não têm dossiê.
-- Após aprovação editorial, `planejamento`, `auditoria`, `analise` e `relatorio` persistem `analysis_only` quando não houver mutação.
-- Após aprovação editorial, `criacao`, `otimizacao` e `reversao` podem persistir `proposed`; nunca executar no mesmo comando.
-- `aprovacao` registra a versão/hash e termina `approved`; não executa.
-- `execucao` exige comando explícito, aprovação válida e skill `13`.
+- **Aprovar a execução** (`/aprovar-operacao`): `python3 scripts/dossier.py approve {operation_id} --statement "<frase literal do gestor>"`. O script calcula o hash e muda o status para aprovado.
+- **Executar** (`/executar-operacao`): skill `13`. Ao terminar, registrar tudo com `dossier.py record-execution {operation_id} --results '<lista>'`. Isso inclui o que o gestor fez à mão (`executed_manually`, com as diferenças em relação ao aprovado). O status (executado, parcial, falhou) é calculado pelo script.
+- **Mudanças manuais** (Google Ads, criação de conjunto de formulário no Meta, publicação no GTM): depois de aprovadas, o gestor aplica no gerenciador. Quando ele avisar, confirmar por leitura na plataforma sempre que possível e registrar com `record-execution`.
+- **Avaliar** ao fim da janela: comparar com os critérios registrados, explicar no chat se funcionou e por quê (à luz da base oficial) e registrar com `dossier.py evaluate {operation_id} --result success|failure|inconclusive --notes "…"`.
+- **Reverter**: nova operação `reversao` com os valores anteriores conhecidos, sempre com pausa, nunca com exclusão.
+- **Mudar o conteúdo depois de registrado** e antes de executar: `dossier.py revise`, que cria uma nova versão e invalida a aprovação anterior.
+
+## 7. Operações legadas abertas
+
+Para aprovar ou executar uma operação legada ainda aberta (`proposed` ou `approved` num dossiê antigo):
+
+1. `python3 scripts/dossier.py migrate clients/{slug}/{arquivo-legado}.md`;
+2. revisar o rascunho gerado em `.work/` (títulos das mudanças, prazo de avaliação, checagens de boas práticas);
+3. apresentar a versão migrada no chat;
+4. registrar com `dossier.py new` depois da aprovação do conteúdo.
+
+A aprovação operacional antiga não é transportada. O arquivo legado nunca é editado.
+
+## 8. Gates
+
+- Nunca excluir ou arquivar, nem na reversão; nunca ativar recomendações automáticas; nunca ampliar o lote aprovado.
 - Google Ads permanece `manual_only` enquanto `write_tools_registered` não estiver homologado.
-- Nunca excluir, arquivar, ativar recomendações automáticas ou ampliar o lote.
+- GTM: escrita só em rascunho de workspace, com o container na allowlist local; publicação sempre manual.
+- Qualquer mutação exige o dossiê registrado, `/aprovar-operacao` e `/executar-operacao`, nessa ordem.

@@ -1,0 +1,220 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://performance-ads-ia.local/schemas/operation-v2.schema.json",
+  "title": "Registro de operação V2 — arquivo .json gerado por scripts/dossier.py ao lado do dossiê .md",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "operation_id", "version", "client_slug", "type", "platform", "status",
+    "title", "created_at", "updated_at", "depth", "scope", "window", "accounts", "sources",
+    "route", "record_approval", "knowledge_checks", "pending_decisions", "changes",
+    "approval", "execution", "evaluation", "previous_versions", "files"
+  ],
+  "definitions": {
+    "datetime": {"type": "string", "format": "date-time"},
+    "date": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+    "nullable_text": {"type": ["string", "null"]},
+    "change": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "change_id", "title", "platform", "account", "target", "field", "before", "after",
+        "action_kind", "execution_mode", "why", "expected_impact", "daily_budget_delta",
+        "risk", "rollback", "order", "depends_on"
+      ],
+      "properties": {
+        "change_id": {"type": "string", "pattern": "^c[0-9]{1,3}$"},
+        "title": {"type": "string", "minLength": 5, "maxLength": 160},
+        "platform": {"enum": ["meta", "google_ads"]},
+        "account": {"type": "string", "minLength": 1},
+        "target": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "id", "name"],
+          "properties": {
+            "type": {"enum": [
+              "account", "campaign", "adset", "ad", "creative", "ad_group", "keyword", "negative_keyword",
+              "asset", "asset_group", "audience", "conversion_action", "gtm_tag", "gtm_trigger",
+              "gtm_variable", "other"
+            ]},
+            "id": {"type": ["string", "null"]},
+            "name": {"type": "string", "minLength": 1}
+          }
+        },
+        "field": {"type": "string", "minLength": 1},
+        "before": {},
+        "after": {},
+        "action_kind": {"enum": ["create", "update", "pause", "activate"]},
+        "execution_mode": {"enum": ["mcp", "api_script", "manual_only", "blocked"]},
+        "why": {"type": "string", "minLength": 10},
+        "expected_impact": {"type": "string", "minLength": 5},
+        "daily_budget_delta": {"type": ["number", "null"]},
+        "risk": {"type": "string", "minLength": 3},
+        "rollback": {"type": "string", "minLength": 3},
+        "order": {"type": "integer", "minimum": 1},
+        "depends_on": {"type": "array", "items": {"type": "string", "pattern": "^c[0-9]{1,3}$"}}
+      }
+    },
+    "execution_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["change_id", "status", "via", "at", "detail", "readback_confirmed", "divergences"],
+      "properties": {
+        "change_id": {"type": "string", "pattern": "^c[0-9]{1,3}$"},
+        "status": {"enum": ["success", "executed_manually", "failed", "not_attempted"]},
+        "via": {"type": "string", "minLength": 1},
+        "at": {"$ref": "#/definitions/datetime"},
+        "detail": {"type": "string"},
+        "readback_confirmed": {"type": "boolean"},
+        "divergences": {"type": "array", "items": {"type": "string", "minLength": 3}}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "operation_id": {"type": "string", "pattern": "^op-[0-9]{8}-[0-9]{4}-[a-z0-9-]+$"},
+    "version": {"type": "integer", "minimum": 1},
+    "client_slug": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "type": {"enum": [
+      "configuracao", "onboarding", "pesquisa_palavras_chave", "planejamento", "criacao",
+      "auditoria", "analise", "otimizacao", "ajuste", "relatorio", "reversao"
+    ]},
+    "platform": {"enum": ["meta", "google_ads", "multicanal"]},
+    "status": {"enum": [
+      "analysis_only", "proposed", "approved", "executed", "partial_failure", "failed",
+      "reverted", "blocked", "evaluated"
+    ]},
+    "title": {"type": "string", "minLength": 5, "maxLength": 140},
+    "created_at": {"$ref": "#/definitions/datetime"},
+    "updated_at": {"$ref": "#/definitions/datetime"},
+    "depth": {"enum": ["quick", "focused", "full"]},
+    "scope": {"type": "string", "minLength": 5},
+    "window": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["start", "end"],
+      "properties": {
+        "start": {"$ref": "#/definitions/date"},
+        "end": {"$ref": "#/definitions/date"},
+        "comparison_start": {"anyOf": [{"$ref": "#/definitions/date"}, {"type": "null"}]},
+        "comparison_end": {"anyOf": [{"$ref": "#/definitions/date"}, {"type": "null"}]}
+      }
+    },
+    "accounts": {"type": "object", "additionalProperties": {"type": "string"}},
+    "sources": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 3}},
+    "route": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["router_version", "route_ids", "executed_skills", "skipped_skills"],
+      "properties": {
+        "router_version": {"type": "string"},
+        "route_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^[a-z_]+:(meta|google_ads):(connected_read|file_based|context_only|unavailable)$"}
+        },
+        "executed_skills": {"type": "array", "items": {"type": "string"}},
+        "skipped_skills": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["skill", "reason_code", "detail"],
+            "properties": {
+              "skill": {"type": "string"},
+              "reason_code": {"enum": [
+                "condition_not_met", "source_unavailable", "account_not_enabled",
+                "platform_not_applicable", "user_restricted_scope", "no_platform_mechanism"
+              ]},
+              "detail": {"type": "string", "minLength": 5}
+            }
+          }
+        }
+      }
+    },
+    "record_approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approved_at", "statement", "content_hash"],
+      "properties": {
+        "approved_at": {"$ref": "#/definitions/datetime"},
+        "statement": {"type": "string", "minLength": 1},
+        "content_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "knowledge_checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["premise", "verdict", "source_title", "source_url", "note"],
+        "properties": {
+          "premise": {"type": "string", "minLength": 10},
+          "verdict": {"enum": ["sustenta", "contradiz", "sem_cobertura"]},
+          "source_title": {"$ref": "#/definitions/nullable_text"},
+          "source_url": {"$ref": "#/definitions/nullable_text"},
+          "note": {"type": "string", "minLength": 5}
+        }
+      }
+    },
+    "pending_decisions": {"type": "array", "items": {"type": "string", "minLength": 5}},
+    "changes": {"type": "array", "items": {"$ref": "#/definitions/change"}},
+    "approval": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["approved_at", "statement", "version", "hash"],
+      "properties": {
+        "approved_at": {"$ref": "#/definitions/datetime"},
+        "statement": {"type": "string", "minLength": 1},
+        "version": {"type": "integer", "minimum": 1},
+        "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "execution": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["started_at", "finished_at", "results", "post_snapshot"],
+      "properties": {
+        "started_at": {"$ref": "#/definitions/datetime"},
+        "finished_at": {"$ref": "#/definitions/datetime"},
+        "results": {"type": "array", "minItems": 1, "items": {"$ref": "#/definitions/execution_result"}},
+        "post_snapshot": {"$ref": "#/definitions/nullable_text"}
+      }
+    },
+    "evaluation": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["due_date", "success_criteria", "stop_criteria", "result", "evaluated_at", "notes"],
+      "properties": {
+        "due_date": {"$ref": "#/definitions/date"},
+        "success_criteria": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 5}},
+        "stop_criteria": {"type": "array", "items": {"type": "string", "minLength": 5}},
+        "result": {"enum": [null, "success", "failure", "inconclusive"]},
+        "evaluated_at": {"anyOf": [{"$ref": "#/definitions/datetime"}, {"type": "null"}]},
+        "notes": {"$ref": "#/definitions/nullable_text"}
+      }
+    },
+    "previous_versions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["version", "replaced_at", "content_hash", "changes_hash", "reason"],
+        "properties": {
+          "version": {"type": "integer", "minimum": 1},
+          "replaced_at": {"$ref": "#/definitions/datetime"},
+          "content_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "changes_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "reason": {"type": "string", "minLength": 3}
+        }
+      }
+    },
+    "legacy_source": {"type": "string"},
+    "files": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["markdown"],
+      "properties": {"markdown": {"type": "string", "pattern": "\\.md$"}}
+    }
+  }
+}

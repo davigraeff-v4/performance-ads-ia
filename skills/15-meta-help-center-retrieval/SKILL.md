@@ -9,6 +9,21 @@ description: Localiza e lê seletivamente artigos oficiais da Central de Ajuda d
 
 Dar ao agente acesso confiável à base local sem carregar os 151 artigos no contexto. Esta skill é transversal: ela complementa as skills operacionais, mas não substitui dados atuais da conta, metodologia nem validação online quando necessária.
 
+## Dois modos de uso
+
+1. **Dúvida:** o gestor pergunta como algo funciona. A consulta é a pergunta original.
+2. **Checagem de premissas:** em diagnóstico, mudanças e relatório, a consulta é cada premissa de mecanismo que sustenta um achado ou mudança (ex.: "conjuntos com públicos sobrepostos competem no mesmo leilão"). Este modo roda em toda rota que planeja esta skill, mesmo sem pergunta do gestor.
+
+Na checagem de premissas:
+
+- buscar com `scripts/search_meta_help.py` usando a premissa como consulta e, também, `ads_get_help_article` do conector Meta (fonte oficial ao vivo, costuma achar o artigo certo quando a base local não tem);
+- ler o artigo encontrado antes de julgar; resultado de busca não é leitura;
+- dar o veredito: **sustenta**, **contradiz** ou **sem cobertura**, com título, URL e uma nota curta;
+- se contradiz, corrigir o texto e o plano antes de apresentar e contar isso ao gestor na seção "Checagem com boas práticas";
+- registrar cada checagem em `knowledge_checks` do spec do dossiê.
+
+A busca local tem baixa precisão para premissas escritas como afirmação (costuma trazer artigos de política). Se os três primeiros resultados não tratarem do tema, reescreva a consulta com os termos do produto (ex.: "sobreposição de leilão") ou use o conector.
+
 ## Entrada
 
 - Pergunta original do usuário, sem reescrever antes da busca.

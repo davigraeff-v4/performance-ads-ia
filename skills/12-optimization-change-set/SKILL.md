@@ -7,26 +7,28 @@ description: Transforma diagnóstico Meta Ads ou Google Ads em lote versionado d
 
 ## Pré-requisitos
 
-1. Skill `11` para Meta Ads ou `24` para Google Ads, com diagnóstico, cobertura e evidências identificadas. Em um build plan, `10` ou `23` pode originar o lote, mantendo os mesmos gates. Em reversão, o dossiê executado e o snapshot anterior substituem o diagnóstico somente para restaurar valores conhecidos.
+1. Skill `11` para Meta Ads ou `24` para Google Ads, com diagnóstico e evidências. Em um build plan, `10` ou `23` pode originar o lote, mantendo os mesmos gates. Em `ajuste`, a origem é a decisão do gestor: registrar a motivação dele como justificativa e ler o estado atual do alvo. Em reversão, o dossiê executado e o snapshot anterior substituem o diagnóstico somente para restaurar valores conhecidos.
 2. Candidato final no chat com uma única plataforma de mutação; o dossiê ainda não deve existir, salvo continuação de uma operação já registrada.
 3. Estado atual dos alvos.
-4. Se algum item do lote depender de entender um mecanismo específico da plataforma (ex: como um tipo de orçamento, lance ou elegibilidade de recurso funciona) que o diagnóstico de origem ainda não esclareceu, consultar a skill `15` (Meta) ou `17` (Google Ads) antes de escrever a justificativa do item — não assumir funcionamento de memória.
+4. Checagem de boas práticas das premissas de cada item pela skill `15` (Meta, mais `ads_get_help_article`) ou `17` (Google Ads). É obrigatória: o `dossier.py` recusa operação com mudanças sem `knowledge_checks`.
+5. `knowledge/platform-quirks/` para saber o que o conector consegue ou não fazer. Por exemplo, o conector Meta não cria conjuntos de formulário nativo, então esse item é `manual_only`.
 
 ## Processo
 
 1. Rejeitar diagnóstico `full` com camada aplicável ausente e ação cujo nível-alvo não esteja `analyzed`.
 2. Selecionar somente recomendações que sustentem ação.
 3. Ordenar dependências e separar itens independentes.
-4. Para cada item, registrar `action_ids`, `finding_ids`, `evidence_ids`, alvo, campo, antes, depois, justificativa, impacto esperado, impacto financeiro, confiança, risco, reversão, precondições, dependências, ordem, responsável, janela e critérios de sucesso e parada.
-5. Quantificar impacto financeiro quando houver budget.
-6. Marcar ações não suportadas como `manual_only`; Google Ads permanece assim enquanto não houver escrita homologada.
-7. Proibir itens de exclusão/arquivamento.
-8. Apresentar o change set completo como parte da versão final candidata no chat.
-9. Após aprovação editorial, criar o dossiê como `proposed` e calcular o hash operacional do change set.
+4. Para cada item, definir no formato do spec (`examples/synthetic/v2/otimizacao-remarketing.spec.json`): título em linguagem de ação, plataforma, conta, alvo (tipo, ID e nome), campo, antes, depois, tipo de ação (`create`, `update`, `pause`, `activate`), modo de execução (`mcp`, `api_script`, `manual_only`, `blocked`), por quê (citando o achado pelo nome), resultado esperado, efeito no orçamento diário, risco, como desfazer, ordem e dependências.
+5. Definir a avaliação da operação: data a partir da qual avaliar, critérios de sucesso com número e critérios de parada.
+6. Quantificar o efeito no orçamento quando houver budget.
+7. Marcar como `manual_only` o que o conector não suporta; Google Ads permanece assim enquanto não houver escrita homologada.
+8. Proibir exclusão e arquivamento, inclusive na reversão (reverter é pausar ou restaurar valor).
+9. Apresentar as mudanças no chat em blocos, no formato de `templates/resposta-chat.md`.
+10. Depois da aprovação do conteúdo, registrar com `scripts/dossier.py new`: o status nasce `proposed` e o script calcula os hashes.
 
 ## Checkpoint
 
-Primeiro pedir aprovação editorial para registrar o diagnóstico, plano e change set no dossiê. Depois da persistência, explicar que `/aprovar-operacao <id>` é uma aprovação operacional separada. Não executar nesta skill.
+Primeiro pedir aprovação do conteúdo para registrar diagnóstico, plano e mudanças. Depois do registro, explicar que `/aprovar-operacao` é uma aprovação de execução separada. Não executar nesta skill.
 
 ## Validação
 
@@ -34,5 +36,5 @@ Primeiro pedir aprovação editorial para registrar o diagnóstico, plano e chan
 - Nenhuma mudança implícita.
 - Todo budget tem atual, proposto e impacto.
 - Toda reversão usa valor conhecido.
-- Todo item aponta para ação, achado e evidência identificados e possui responsável, janela e critérios verificáveis.
+- Todo item diz de qual achado vem e a operação tem critérios de avaliação verificáveis.
 - Itens bloqueados não entram como executáveis.

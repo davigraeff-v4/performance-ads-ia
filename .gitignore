@@ -32,6 +32,9 @@ clients/*
 !clients/cliente-template/
 !clients/cliente-template/**
 
+# Área de trabalho do agent (spec e corpo antes do registro do dossiê)
+.work/
+
 # Exportações e dossiês reais
 outputs/
 imports/
