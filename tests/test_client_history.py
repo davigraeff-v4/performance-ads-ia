@@ -61,6 +61,25 @@ class ClientHistoryTests(unittest.TestCase):
         self.assertIn("4 km", output)
         self.assertNotIn("Outro cliente", output)
 
+    def test_legacy_platform_is_normalized_or_declared_missing(self) -> None:
+        infer = client_history.legacy_platform
+        self.assertEqual(infer({"platform": "both"}, "x.md"), "multicanal")
+        self.assertEqual(infer({"platform": "cross_channel"}, "x.md"), "multicanal")
+        self.assertEqual(infer({"platform": "multiplataforma"}, "x.md"), "multicanal")
+        self.assertEqual(infer({"sources": [{"platform": "meta"}, {"platform": "commercial"}]}, "x.md"), "meta")
+        self.assertEqual(infer({"changes": [{"platform": "meta"}, {"platform": "google_ads"}]}, "x.md"), "multicanal")
+        self.assertEqual(infer({}, "2026-08-24-1600-google_ads-relatorio-jul-ago.md"), "google_ads")
+        self.assertIsNone(infer({}, "2026-08-24-1200-relatorio-resultados-jul-ago.md"))
+
+        base = self.tmp / "cliente-a"
+        (base / "2026-08-24-1200-relatorio-resultados.md").write_text("# Relatório antigo\n", encoding="utf-8")
+        (base / "2026-08-19-1000-multicanal-otimizacao.md").write_text(
+            '# Otimização antiga\n\n```json\n{"platform": "both"}\n```\n', encoding="utf-8")
+        output = run("--clients-dir", str(self.tmp), "list", "cliente-a")
+        self.assertIn("19/08/2026 · Multicanal ·", output)
+        self.assertIn("24/08/2026 · plataforma não registrada ·", output)
+        self.assertNotIn("· both ·", output)
+
     def test_invalid_slug_is_rejected(self) -> None:
         with self.assertRaises(SystemExit):
             run("--clients-dir", str(self.tmp), "list", "../cliente-b")

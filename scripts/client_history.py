@@ -45,6 +45,17 @@ STATUS_LABELS = {
     "evaluated": "avaliado",
     "draft": "rascunho legado",
 }
+# Os legados usaram vários nomes para a mesma coisa; normalizamos na leitura.
+PLATFORM_ALIASES = {
+    "meta": "meta",
+    "google_ads": "google_ads",
+    "google": "google_ads",
+    "both": "multicanal",
+    "cross_channel": "multicanal",
+    "multicanal": "multicanal",
+    "multiplataforma": "multicanal",
+}
+PLATFORM_LABELS = {"meta": "Meta Ads", "google_ads": "Google Ads", "multicanal": "Multicanal"}
 
 
 @dataclass
@@ -93,10 +104,31 @@ def legacy_entry(path: Path) -> Entry | None:
         kind="legado",
         status=payload.get("status") if isinstance(payload, dict) else None,
         title=heading,
-        platform=payload.get("platform") if isinstance(payload, dict) else None,
+        platform=legacy_platform(payload if isinstance(payload, dict) else {}, path.name),
         type=payload.get("type") if isinstance(payload, dict) else None,
         text=human_text(markdown),
     )
+
+
+def legacy_platform(payload: dict, filename: str) -> str | None:
+    """Plataforma de um legado: campo do topo, depois fontes e mudanças, depois o nome do arquivo."""
+    if (top := PLATFORM_ALIASES.get(str(payload.get("platform") or ""))):
+        return top
+    found = {
+        PLATFORM_ALIASES.get(str(item.get("platform") or ""))
+        for key in ("sources", "changes")
+        for item in (payload.get(key) or [])
+        if isinstance(item, dict)
+    } - {None}
+    if len(found) == 1:
+        return found.pop()
+    if found:
+        return "multicanal"
+    name_tokens = set(re.split(r"[-.]", filename))
+    from_name = {PLATFORM_ALIASES[token] for token in name_tokens if token in PLATFORM_ALIASES}
+    if len(from_name) == 1:
+        return from_name.pop()
+    return None
 
 
 def v2_entry(json_path: Path) -> Entry | None:
@@ -112,7 +144,7 @@ def v2_entry(json_path: Path) -> Entry | None:
         kind="v2",
         status=operation.get("status"),
         title=operation.get("title", json_path.stem),
-        platform=operation.get("platform"),
+        platform=PLATFORM_ALIASES.get(operation.get("platform") or ""),
         type=operation.get("type"),
         text=human_text(markdown),
     )
@@ -128,7 +160,7 @@ def collect(clients_dir: Path, slug: str) -> list[Entry]:
 def format_entry(entry: Entry, clients_dir: Path) -> str:
     day = "/".join(reversed(entry.date.split("-"))) if entry.date else "—"
     status = STATUS_LABELS.get(entry.status or "", entry.status or "sem status")
-    platform = {"meta": "Meta Ads", "google_ads": "Google Ads"}.get(entry.platform or "", entry.platform or "multicanal")
+    platform = PLATFORM_LABELS.get(entry.platform or "", "plataforma não registrada")
     relative = entry.path.relative_to(clients_dir.resolve()) if entry.path.is_relative_to(clients_dir.resolve()) else entry.path
     return f"{day} · {platform} · {status} · {entry.title}\n    {relative} ({entry.kind})"
 
