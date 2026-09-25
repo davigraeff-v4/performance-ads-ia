@@ -152,7 +152,9 @@ def print_brief(data: dict) -> None:
 
     print("\n## Aprendizados")
     if data["learnings"]:
-        body = data["learnings"].split("\n", 1)[1].strip() if data["learnings"].startswith("# ") else data["learnings"]
+        # Só as regras: a introdução do arquivo (antes da primeira seção) não se repete a cada conversa.
+        text = data["learnings"]
+        body = text[text.index("\n## ") + 1:] if "\n## " in text else text
         print(drop_empty_sections(body))
     else:
         print("Sem APRENDIZADOS.md ainda.")
