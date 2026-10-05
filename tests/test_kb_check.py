@@ -16,10 +16,12 @@ import sys
 import unittest
 from contextlib import redirect_stdout
 from pathlib import Path
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
+import help_search  # noqa: E402
 import kb_check  # noqa: E402
 
 
@@ -77,6 +79,60 @@ class KbCheckAcceptanceTests(unittest.TestCase):
     def test_missing_platform_is_refused(self) -> None:
         with self.assertRaises(SystemExit):
             kb_check.main(["reduzir orçamento reinicia o aprendizado"])
+
+
+class SearchStatusTests(unittest.TestCase):
+    """O agent precisa saber quando a busca semântica (fastembed) não está ativa."""
+
+    PREMISE = "Os dois conjuntos de remarketing disputam internamente o leilão e isso encarece o CPM"
+
+    def test_engine_missing_reports_lexical_only_with_action(self) -> None:
+        with mock.patch.object(kb_check, "engine_status", return_value=(False, "pacote fastembed não instalado")):
+            payload = run("--platform", "meta", self.PREMISE)
+        status = payload["search_status"]
+        self.assertEqual(status["status"], "lexical_only")
+        self.assertIn("pacote fastembed não instalado", status["reasons"])
+        self.assertIn("pip install -r requirements-dev.txt", status["action"])
+
+    def test_engine_missing_prints_warning_before_results(self) -> None:
+        out = io.StringIO()
+        with mock.patch.object(kb_check, "engine_status", return_value=(False, "pacote fastembed não instalado")):
+            with redirect_stdout(out):
+                kb_check.main(["--platform", "meta", self.PREMISE])
+        text = out.getvalue()
+        self.assertTrue(text.startswith("ATENÇÃO: a busca semântica não está ativa"))
+        self.assertLess(text.index("ATENÇÃO"), text.index("Premissa 1"))
+
+    def test_engine_ready_reports_hybrid_without_warning(self) -> None:
+        out = io.StringIO()
+        with mock.patch.object(kb_check, "engine_status", return_value=(True, None)):
+            with redirect_stdout(out):
+                kb_check.main(["--platform", "meta", self.PREMISE])
+            payload = run("--platform", "meta", self.PREMISE)
+        self.assertNotIn("ATENÇÃO", out.getvalue())
+        self.assertEqual(payload["search_status"], {"status": "hybrid", "reasons": [], "action": None})
+
+    def test_vector_failure_during_search_is_reported_with_reason(self) -> None:
+        weak = "quando eu mexo muito na verba o sistema volta a aprender do zero"
+        with mock.patch.object(kb_check, "engine_status", return_value=(True, None)), \
+             mock.patch.object(help_search, "vector_candidates", return_value=None), \
+             mock.patch.object(help_search, "unavailable_reason", return_value="falha ao gerar o vetor da consulta (OSError)"):
+            payload = run("--platform", "meta", weak)
+        self.assertEqual(payload["checks"][0]["search_mode"], "lexical_fallback")
+        self.assertEqual(payload["search_status"]["status"], "lexical_only")
+        self.assertIn("falha ao gerar o vetor da consulta (OSError)", payload["search_status"]["reasons"])
+
+    def test_help_search_payload_names_the_mode(self) -> None:
+        with mock.patch.object(help_search, "vector_candidates", return_value=None), \
+             mock.patch.object(help_search, "unavailable_reason", return_value="pacote fastembed não instalado"):
+            payload = help_search.search("quando eu mexo muito na verba o sistema volta a aprender do zero",
+                                         base_platform="meta", requested_platform="meta", warn=lambda _m: None)
+        self.assertEqual(payload["search_mode"], "lexical_fallback")
+        self.assertEqual(payload["vector_unavailable_reason"], "pacote fastembed não instalado")
+        lexical = help_search.search("quando eu mexo muito na verba o sistema volta a aprender do zero",
+                                     base_platform="meta", requested_platform="meta", mode="lexical")
+        self.assertEqual(lexical["search_mode"], "lexical")
+        self.assertIsNone(lexical["vector_unavailable_reason"])
 
 
 if __name__ == "__main__":

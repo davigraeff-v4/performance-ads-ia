@@ -11,6 +11,10 @@ competem no leilão") e, para cada uma, devolve:
 - para Meta, a sugestão de consulta ao vivo em `ads_get_help_article`;
 - um esqueleto de `knowledge_checks` com o veredito em branco.
 
+Se o sinal semântico (fastembed) não estiver ativo na máquina, a saída abre
+com um aviso e o JSON traz `search_status.status = "lexical_only"`: avise o
+gestor logo no início da resposta.
+
 O script NÃO decide o veredito. O agent lê os artigos e preenche
 sustenta / contradiz / sem_cobertura, com a nota e a fonte que usou. Um
 veredito sustenta ou contradiz sem URL oficial é recusado por
@@ -34,6 +38,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from _vector_search import INSTALL_HINT, engine_status  # noqa: E402
 from help_search import PLATFORMS, ROOT, load_rewrites, search  # noqa: E402
 
 READ_IN_FULL = {"exact", "strong"}
@@ -117,6 +122,7 @@ def check_premise(item: dict, limit: int) -> dict:
     if payload["out_of_scope"]:
         return {"premise": item["premise"], "platform": platform, "out_of_scope": True,
                 "reason": payload["reason"], "candidates": [], "read_in_full": [], "live_query": None,
+                "search_mode": None, "vector_unavailable_reason": None,
                 "skeleton": skeleton(item["premise"], None)}
 
     premise_terms = set(config.tokens(item["premise"]))
@@ -146,9 +152,33 @@ def check_premise(item: dict, limit: int) -> dict:
         "candidates": candidates,
         "read_in_full": [c["path"] for c in candidates if c["match"] in READ_IN_FULL],
         "no_local_coverage": not relevant,
+        "search_mode": payload["search_mode"],
+        "vector_unavailable_reason": payload["vector_unavailable_reason"],
         "live_query": live_query_hint(payload, platform),
         "skeleton": skeleton(item["premise"], relevant[0] if relevant else None),
     }
+
+
+def search_status(results: list[dict]) -> dict:
+    """Diz ao agent se o sinal semântico (fastembed + índice) está funcionando.
+
+    `lexical_only` quando o motor não está pronto nesta máquina ou quando alguma
+    premissa tentou o sinal semântico e ele falhou. O agent deve avisar o gestor
+    no início da resposta e dizer o que fazer, sem tratar como falha da base.
+    """
+    platforms = sorted({r["platform"] for r in results})
+    reasons: list[str] = []
+    for platform in platforms:
+        ready, reason = engine_status(platform)
+        if not ready and reason not in reasons:
+            reasons.append(reason)
+    for result in results:
+        reason = result.get("vector_unavailable_reason")
+        if reason and reason not in reasons:
+            reasons.append(reason)
+    if not reasons:
+        return {"status": "hybrid", "reasons": [], "action": None}
+    return {"status": "lexical_only", "reasons": reasons, "action": INSTALL_HINT}
 
 
 def skeleton(premise: str, top: dict | None) -> dict:
@@ -161,7 +191,11 @@ def skeleton(premise: str, top: dict | None) -> dict:
     }
 
 
-def print_human(results: list[dict]) -> None:
+def print_human(results: list[dict], status: dict) -> None:
+    if status["status"] == "lexical_only":
+        print("ATENÇÃO: a busca semântica não está ativa nesta máquina (" + "; ".join(status["reasons"]) + ").")
+        print("Os candidatos abaixo vêm só de título e conteúdo e podem perder premissas escritas com outras palavras.")
+        print(f"Avise o gestor e, para corrigir: {status['action']}")
     for index, result in enumerate(results, start=1):
         label = "Meta" if result["platform"] == "meta" else "Google Ads"
         print(f"\nPremissa {index} ({label}): {result['premise']}")
@@ -193,10 +227,12 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     results = [check_premise(item, args.limit) for item in load_premises(args)]
+    status = search_status(results)
     if args.as_json:
-        print(json.dumps({"checks": results, "skeleton": [r["skeleton"] for r in results]}, ensure_ascii=False, indent=2))
+        print(json.dumps({"search_status": status, "checks": results, "skeleton": [r["skeleton"] for r in results]},
+                         ensure_ascii=False, indent=2))
     else:
-        print_human(results)
+        print_human(results, status)
     return 0
 
 

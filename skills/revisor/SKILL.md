@@ -20,6 +20,7 @@ Dois modos, nas duas plataformas:
 Regras comuns:
 
 - Resultado de busca e trecho não são leitura: `exact` e `strong` exigem ler o artigo inteiro.
+- Busca semântica: a saída do `kb_check.py` traz `search_status`. Em `lexical_only` (pacote `fastembed` ou modelo de embedding indisponível), avise o gestor no início da resposta com o comando de correção do aviso, e não registre `sem_cobertura` só pela base local: confira também a fonte ao vivo.
 - Cada plataforma tem a sua base e o seu índice; a busca recusa consulta da outra plataforma.
 - Nunca atribua uma heurística interna à Meta ou ao Google. Política, cobrança, elegibilidade e regras que mudam exigem fonte ao vivo.
 - Qualidade da busca: `python3 scripts/eval_retrieval.py --compare` antes e depois de mexer em pesos, no dicionário (`knowledge/retrieval-rewrites.json`) ou na base.

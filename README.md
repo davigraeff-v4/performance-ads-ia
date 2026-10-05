@@ -59,7 +59,15 @@ git clone https://github.com/davigraeff-v4/performance-ads-ia.git
 cd performance-ads-ia
 ```
 
-Pré-requisitos: `git` instalado e Claude Code ou Codex configurado na máquina. Não é necessário instalar nenhum pacote Python pra uso básico — `pip install -r requirements-dev.txt` só é necessário para quem for rodar a validação local (seção 13) ou reconstruir o índice vetorial (seção 12).
+Pré-requisitos: `git` instalado e Claude Code ou Codex configurado na máquina.
+
+Depois de clonar, rode uma vez, na pasta do projeto:
+
+```bash
+python3 -m pip install -r requirements-dev.txt
+```
+
+Isso instala o `fastembed`, o motor da busca semântica na base oficial (seção 12). O índice com os vetores já vem pronto no clone, mas é o `fastembed` que transforma a pergunta do gestor em vetor para compará-la com ele. Na primeira busca semântica a máquina precisa de internet para baixar o modelo de embedding, que fica no diretório temporário do sistema (se o sistema limpar essa pasta, o modelo é baixado de novo). Sem o `fastembed` o agent continua funcionando, mas cai para busca só por título e conteúdo, e nesse caso o próprio agent avisa o gestor no início da resposta. Reconstruir o índice (seção 12) e rodar a validação local (seção 13) usam o mesmo comando.
 
 Cada gestor deve manter seu próprio clone local, já que `clients/`, dossiês e credenciais reais nunca são versionados (seção 14) — eles ficam só na máquina de quem os criou, nunca sincronizados automaticamente entre clones.
 
@@ -261,7 +269,9 @@ Para (re)construir o índice vetorial localmente (só necessário depois de edit
 python3 scripts/build_knowledge_vector_index.py --platform all
 ```
 
-Sem esse passo, a busca cai automaticamente para o modo lexical original — não é obrigatório para o agent funcionar.
+Sem o índice ou sem o `fastembed` instalado, a busca cai para o modo lexical original — o agent continua funcionando, mas com menos alcance, e avisa o gestor. O que se perde é medido: nas consultas de controle da avaliação (`scripts/eval_retrieval.py`, 11 consultas não usadas para calibrar o dicionário de reescrita), desligar o sinal semântico derruba o acerto no 1º resultado de 91% para 73% e, entre os 3 primeiros, de 100% para 91% (medido em 2026-10-05). Nas consultas calibradas não há diferença, porque o dicionário de reescrita compensa — o efeito aparece em premissas escritas com outras palavras.
+
+Como saber se está ativo: a saída de `scripts/kb_check.py` abre com um aviso quando a busca semântica não está funcionando, e o JSON traz `search_status.status` (`hybrid` ou `lexical_only`) com o motivo e o comando de correção.
 
 - Revisor de boas práticas (V2, Sprint 2): `scripts/kb_check.py` recebe as premissas de mecanismo de um diagnóstico ou change set e devolve, por plataforma, os artigos a ler, os trechos mais ligados a cada premissa e o esqueleto de `knowledge_checks`. O ranqueamento vive em `scripts/help_search.py` (as duas interfaces `search_*_help.py` são finas). Premissas passam por um dicionário controlado de reescrita (`knowledge/retrieval-rewrites.json`); `strong` só com evidência de título; artigos de política só sobem em consulta sobre política. Medição: `python3 scripts/eval_retrieval.py --compare` (51 consultas rotuladas, 11 delas de controle). Em 2026-09-23, o acerto no 1º resultado foi de 58% para 97% nas consultas de ajuste e de 60% para 91% nas de controle, com zero "forte" errado.
 

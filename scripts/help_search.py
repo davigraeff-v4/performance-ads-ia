@@ -35,7 +35,7 @@ from _help_index_common import (  # noqa: E402
     read_frontmatter_field,
     score_article as _score_article,
 )
-from _vector_search import vector_candidates  # noqa: E402
+from _vector_search import INSTALL_HINT, unavailable_reason, vector_candidates  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 REWRITES_PATH = ROOT / "knowledge" / "retrieval-rewrites.json"
@@ -243,11 +243,13 @@ def search(
         ranked.sort(key=lambda item: (-item[0], normalize(item[1].title)))
 
     vector_used = False
+    vector_reason: str | None = None
     combined: list[list] = [[score, article, "lexical", None] for score, article in ranked]
     if not title_only and mode != "lexical" and (mode == "vector" or top_title_score < STRONG):
         candidates = vector_candidates(query, base_platform)
         if candidates is None:
-            warn(f"aviso: índice vetorial indisponível para {base_platform}; usando busca lexical apenas.")
+            vector_reason = unavailable_reason(base_platform) or "motivo desconhecido"
+            warn(f"aviso: busca semântica indisponível para {base_platform} ({vector_reason}); usando busca lexical apenas.")
         else:
             vector_used = True
             combined = []
@@ -305,6 +307,10 @@ def search(
         "article_count": len(articles),
         "body_fallback": used_body_fallback,
         "vector_used": vector_used,
+        # hybrid: o sinal semântico rodou. lexical_fallback: era para rodar e não rodou
+        # (ver vector_unavailable_reason). lexical: não era necessário (título forte) ou foi desligado.
+        "search_mode": "hybrid" if vector_used else ("lexical_fallback" if vector_reason else "lexical"),
+        "vector_unavailable_reason": vector_reason,
         "rewrites": [rule["id"] for rule in rules],
         "results": results,
     }
@@ -319,6 +325,9 @@ def print_human(payload: dict, label: str) -> None:
     stage = " + ".join(stage_parts) if len(stage_parts) > 1 else "somente índice"
     print(f"Consulta {label}: {payload['query']}")
     print(f"Base: {payload['article_count']} artigos | Busca: {stage} | Resultados: {len(payload['results'])}")
+    if payload.get("search_mode") == "lexical_fallback":
+        print(f"ATENÇÃO: a busca semântica não rodou ({payload['vector_unavailable_reason']}). "
+              f"O resultado vem só de título e conteúdo e pode perder perguntas parafraseadas. Para corrigir: {INSTALL_HINT}")
     for index, item in enumerate(payload["results"], start=1):
         print(f"\n{index}. [{item['match']}|{item['signal']}] {item['score']:.2f} — {item['title']}")
         print(f"   Caminho: {item['path']}")

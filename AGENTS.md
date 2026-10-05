@@ -66,6 +66,7 @@ A base oficial (módulo `revisor`: `revisor/meta` e `revisor/google-ads`) roda *
 - no Meta, use também a ferramenta `ads_get_help_article` do conector para a versão ao vivo da Central de Ajuda;
 - registre cada checagem como sustenta, contradiz ou sem cobertura; sustenta e contradiz exigem o link oficial; se contradiz, corrija o texto e o plano antes de mostrar;
 - em relatório, use a base para explicar por que um resultado está bom ou ruim.
+- se a saída do `kb_check.py` (ou da busca de dúvidas) abrir com aviso de que a busca semântica não está ativa (`search_status` = `lexical_only`), avise o gestor logo no início da resposta, sem tratar como falha da base: o pacote `fastembed` ou o modelo de embedding não está disponível nesta máquina e a busca caiu para título e conteúdo, o que pode perder premissas escritas com outras palavras. Diga o comando de correção que o próprio aviso traz (`python3 -m pip install -r requirements-dev.txt`, com internet na primeira vez) e, enquanto isso, não conclua `sem cobertura` só pela busca: confira também pela fonte ao vivo.
 
 Uma operação com mudanças não pode ser registrada sem checagem de boas práticas.
 

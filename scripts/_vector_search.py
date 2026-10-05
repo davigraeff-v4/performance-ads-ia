@@ -26,6 +26,40 @@ SIMILARITY_CEILING = 0.85
 SCORE_CEILING = 95.0
 
 _MODEL_CACHE: dict[str, object] = {}
+_UNAVAILABLE: dict[str, str] = {}
+
+INSTALL_HINT = (
+    "python3 -m pip install -r requirements-dev.txt "
+    "(na primeira busca semântica a máquina precisa de internet para baixar o modelo de embedding)"
+)
+
+
+def _index_missing(platform: str) -> bool:
+    slug = PLATFORM_CONFIGS[platform]["index_slug"]
+    return not ((INDEX_DIR / f"{slug}.npz").is_file() and (INDEX_DIR / f"{slug}-meta.json").is_file())
+
+
+def engine_status(platform: str | None = None) -> tuple[bool, str | None]:
+    """Checagem barata (sem carregar o modelo) de que o sinal semântico pode rodar.
+
+    Devolve (True, None) ou (False, motivo). Não detecta modelo ainda não
+    baixado nem sem internet: esse caso só aparece na busca de fato, via
+    `unavailable_reason`.
+    """
+    import importlib.util
+
+    for module in ("numpy", "fastembed"):
+        if importlib.util.find_spec(module) is None:
+            return False, f"pacote {module} não instalado"
+    for name in ([platform] if platform else list(PLATFORM_CONFIGS)):
+        if _index_missing(name):
+            return False, f"índice vetorial ausente para {name} (rode scripts/build_knowledge_vector_index.py)"
+    return True, None
+
+
+def unavailable_reason(platform: str) -> str | None:
+    """Motivo da última falha do sinal semântico para a plataforma, se houve."""
+    return _UNAVAILABLE.get(platform)
 
 
 def _map_similarity(cosine: float) -> float:
@@ -70,8 +104,13 @@ def _embed_query(text: str):
 def vector_candidates(query: str, platform: str, *, top_chunks: int = 15) -> dict[str, dict] | None:
     """Retorna {path_relativo: {"score", "similarity", "section"}} ou None
     se o índice/motor não estiverem disponíveis (chamador cai para lexical)."""
+    _UNAVAILABLE.pop(platform, None)
     loaded = _load_index(platform)
     if loaded is None:
+        _UNAVAILABLE[platform] = (
+            f"índice vetorial ausente para {platform} (rode scripts/build_knowledge_vector_index.py)"
+            if _index_missing(platform) else f"não foi possível ler o índice vetorial de {platform}"
+        )
         return None
     vectors, metadata = loaded
     try:
@@ -80,7 +119,14 @@ def vector_candidates(query: str, platform: str, *, top_chunks: int = 15) -> dic
         query_vector = _embed_query(query)
         similarities = vectors @ query_vector
         top_indices = np.argsort(-similarities)[:top_chunks]
-    except Exception:
+    except ImportError as exc:
+        _UNAVAILABLE[platform] = f"pacote {exc.name or 'de embedding'} não instalado"
+        return None
+    except Exception as exc:
+        _UNAVAILABLE[platform] = (
+            f"falha ao gerar o vetor da consulta ({type(exc).__name__}); "
+            "se for a primeira execução, o modelo de embedding precisa ser baixado com internet"
+        )
         return None
 
     candidates: dict[str, dict] = {}
