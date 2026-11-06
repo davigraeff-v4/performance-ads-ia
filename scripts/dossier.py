@@ -583,8 +583,12 @@ def check_changes(operation: dict, errors: list[str], warnings: list[str]) -> No
         descriptive = " ".join([change["title"], change["field"], change["why"]])
         if DELETION_VERBS.search(descriptive) or SOFT_DELETION_VERBS.search(descriptive + " " + change["rollback"]):
             warnings.append(f"{label}: menciona excluir/remover; confirme que é segmentação, não exclusão de ativo")
-        if change["platform"] == "google_ads" and change["execution_mode"] == "mcp":
-            errors.append(f"{label}: Google Ads não tem escrita homologada; use manual_only")
+        if (
+            change["platform"] == "google_ads"
+            and change["execution_mode"] == "api_script"
+            and change["target"]["type"] not in GTM_TARGETS
+        ):
+            errors.append(f"{label}: Google Ads executa pelo servidor googleAdsServer (mcp) ou manual_only")
         if change["target"]["type"] in GTM_TARGETS and change["execution_mode"] == "mcp":
             errors.append(f"{label}: mudanças de GTM usam api_script ou manual_only")
         if change["action_kind"] == "create" and change["before"] not in (None, "", {}):

@@ -36,7 +36,7 @@
 
 Entregar no chat, antes de qualquer dossiê, no formato de `templates/resposta-chat.md`: resumo, números com a leitura de cada um, achados (o que vimos, por que acreditamos, outra explicação possível, confiança), plano de ação com alvo, antes e depois, resultado esperado, janela, sucesso e parada, e a checagem com boas práticas. Campo sem evidência fica explicitamente indisponível. Optimization Score e recomendações do Google ficam separados e nunca são aceitos automaticamente.
 
-Uma camada aplicável ausente bloqueia o rótulo de diagnóstico completo. Análise pura é registrada como `analysis_only` por `scripts/dossier.py new` depois da aprovação do conteúdo. Otimização segue para a etapa `change-set` no chat; itens Google Ads permanecem `manual_only`.
+Uma camada aplicável ausente bloqueia o rótulo de diagnóstico completo. Análise pura é registrada como `analysis_only` por `scripts/dossier.py new` depois da aprovação do conteúdo. Otimização segue para a etapa `change-set` no chat; o modo de execução de cada item segue a seção 8.1 do contrato (`mcp` pelo `googleAdsServer` ou `manual_only`).
 
 ## Modo avaliação (`avaliacao`, profundidade `quick`)
 

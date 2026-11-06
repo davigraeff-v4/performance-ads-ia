@@ -86,7 +86,7 @@ Regras do spec: `changes` vazio gera `analysis_only`. Com mudanças, são obriga
 
 - **Aprovar a execução** (`/aprovar-operacao`): `python3 scripts/dossier.py approve {operation_id} --statement "<frase literal do gestor>"`. O script calcula o hash e muda o status para aprovado.
 - **Executar** (`/executar-operacao`): etapa `executor`. Ao terminar, registrar tudo com `dossier.py record-execution {operation_id} --results '<lista>'`. Isso inclui o que o gestor fez à mão (`executed_manually`, com as diferenças em relação ao aprovado). O status (executado, parcial, falhou) é calculado pelo script.
-- **Mudanças manuais** (Google Ads, criação de conjunto de formulário no Meta, publicação no GTM): depois de aprovadas, o gestor aplica no gerenciador. Quando ele avisar, confirmar por leitura na plataforma sempre que possível e registrar com `record-execution`.
+- **Mudanças manuais** (Google Ads fora do `googleAdsServer`, criação de conjunto de formulário no Meta, publicação no GTM): depois de aprovadas, o gestor aplica no gerenciador. Quando ele avisar, confirmar por leitura na plataforma sempre que possível e registrar com `record-execution`.
 - **Avaliar** (`/avaliar-operacao` ou "a otimização de tal dia funcionou?"): intenção `avaliacao`, profundidade `quick`, só com dado da conta ou arquivo. Sem operação indicada, mostrar as avaliações vencidas do resumo do cliente e confirmar pelo título. Ler a janela depois da execução e a linha de base anterior, comparar critério por critério com o que foi registrado (sucesso e parada), separar o efeito da mudança de outras mudanças e da sazonalidade, e explicar no chat se funcionou e por quê, à luz da base oficial (checar as premissas da explicação com `kb_check.py`). Resultado: `success`, `failure` ou `inconclusive` (janela curta, volume baixo ou mudança misturada). Com o aval do gestor, registrar com `dossier.py evaluate {operation_id} --result … --notes "…"`; se a avaliação gerar uma regra durável, propor para `APRENDIZADOS.md`. Operação legada (sem critérios estruturados) é avaliada contra os critérios escritos no dossiê antigo e o resultado vai no chat; para registrar, migrar antes.
 - **Reverter**: nova operação `reversao` com os valores anteriores conhecidos, sempre com pausa, nunca com exclusão.
 - **Mudar o conteúdo depois de registrado** e antes de executar: `dossier.py revise`, que cria uma nova versão e invalida a aprovação anterior.
@@ -105,6 +105,6 @@ A aprovação operacional antiga não é transportada. O arquivo legado nunca é
 ## 8. Gates
 
 - Nunca excluir ou arquivar, nem na reversão; nunca ativar recomendações automáticas; nunca ampliar o lote aprovado.
-- Google Ads permanece `manual_only` enquanto `write_tools_registered` não estiver homologado.
+- Google Ads: escrita só pelo `googleAdsServer`, em conta da lista permitida, validando cada item com `validate_only=true` antes de gravar (contrato, seção 8.1). Exclusão continua proibida.
 - GTM: escrita só em rascunho de workspace, com o container na allowlist local; publicação sempre manual.
 - Qualquer mutação exige o dossiê registrado, `/aprovar-operacao` e `/executar-operacao`, nessa ordem.

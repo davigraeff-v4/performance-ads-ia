@@ -34,4 +34,4 @@ Regras comuns:
 - Negócio antes da métrica: o objetivo da plataforma serve ao resultado comercial registrado no perfil e nos aprendizados do cliente.
 - Toda escolha de mecanismo (objetivo, tipo de campanha, lance, público, correspondência) passa pelo módulo `revisor` antes de ir para o chat.
 - Copy e variações de anúncio ficam com a skill `ad-variations-creator`, depois do briefing criativo; anúncios de concorrentes, com `meta-ads-competitor` ou `google-ads-competitor`.
-- O plano de construção vira change set pelo módulo `change-set`; Google Ads é sempre `manual_only`.
+- O plano de construção vira change set pelo módulo `change-set`; no Google Ads, itens que cabem no `googleAdsServer` podem ser `mcp` (contrato, seção 8.1), o resto é `manual_only`.

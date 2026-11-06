@@ -21,7 +21,7 @@ description: Transforma diagnóstico Meta Ads ou Google Ads em lote versionado d
 4. Para cada item, definir no formato do spec (`examples/synthetic/v2/otimizacao-remarketing.spec.json`): título em linguagem de ação, plataforma, conta, alvo (tipo, ID e nome), campo, antes, depois, tipo de ação (`create`, `update`, `pause`, `activate`), modo de execução (`mcp`, `api_script`, `manual_only`, `blocked`), por quê (citando o achado pelo nome), resultado esperado, efeito no orçamento diário, risco, como desfazer, ordem e dependências.
 5. Definir a avaliação da operação: data a partir da qual avaliar, critérios de sucesso com número e critérios de parada.
 6. Quantificar o efeito no orçamento quando houver budget.
-7. Marcar como `manual_only` o que o conector não suporta; Google Ads permanece assim enquanto não houver escrita homologada.
+7. Marcar como `manual_only` o que o conector não suporta. No Google Ads, usar `mcp` só para conta da lista permitida do `googleAdsServer` e mudança que caiba nas ferramentas dele (contrato, seção 8.1); de preferência, validar o item com `validate_only=true` já aqui e dizer no chat que a API aceitou.
 8. Proibir exclusão e arquivamento, inclusive na reversão (reverter é pausar ou restaurar valor).
 9. Apresentar as mudanças no chat em blocos, no formato de `templates/resposta-chat.md`.
 10. Depois da aprovação do conteúdo, registrar com `scripts/dossier.py new`: o status nasce `proposed` e o script calcula os hashes.

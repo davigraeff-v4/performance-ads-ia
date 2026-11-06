@@ -44,7 +44,7 @@ Antes de qualquer item GTM entrar como executável em `executor`:
 
 1. Confirmar `write_mode` != `disabled` e capability `tag_management` declarada.
 2. Confirmar `container_id` do alvo está na allowlist local.
-3. Se qualquer uma falhar, marcar o item `manual_only` — mesma tratativa que change sets Google Ads recebem enquanto não houver escrita homologada.
+3. Se qualquer uma falhar, marcar o item `manual_only` — mesma tratativa de uma mudança Google Ads que não passa no gate de escrita.
 4. Publicação nunca é um item de change set: não existe caminho de execução para publish nesta integração. Se o resultado esperado exige a mudança ir ao ar, o item termina com a instrução explícita "publicar manualmente no GTM" como passo humano fora do escopo de `/executar-operacao`.
 
 ## Saída

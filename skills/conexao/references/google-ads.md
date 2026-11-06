@@ -20,7 +20,8 @@
 7. Confirmar ID mascarado, nome, moeda e timezone contra `CLIENTE.md` ou confirmação do gestor.
 8. Registrar recursos ou campos indisponíveis sem improvisar alternativa.
 9. Pedir confirmação diante de qualquer ambiguidade.
-10. Quando `google_ads_extended` estiver instalado, chamar `get_extended_capabilities` e registrar separadamente `planner_enabled`, `write_mode`, presença de credenciais e quantidade de customers permitidos, sem revelar valores.
+10. Quando a rota puder terminar em execução, chamar `list_allowed_accounts` do servidor `googleAdsServer` e registrar o modo de escrita e se a conta está na lista permitida, sem revelar o `.env` nem o token.
+11. Quando `google_ads_extended` estiver instalado, chamar `get_extended_capabilities` e registrar separadamente `planner_enabled`, `write_mode`, presença de credenciais e quantidade de customers permitidos, sem revelar valores.
 
 ## Preflight seguro
 
@@ -47,7 +48,7 @@
 - `file_based`: sem conexão, mas exports utilizáveis.
 - `context_only`: planejamento sem dados atuais da conta.
 
-Na etapa V1.1 inicial não existe `validated_write` para Google Ads. O complemento instalado com `write_tools_registered: false` não satisfaz esse gate. Não testar escrita criando objeto descartável.
+`validated_write` para Google Ads existe só pelo servidor `googleAdsServer` (contrato, seção 8.1): `write_mode` `execute`, conta na lista permitida e o item aceito com `validate_only=true`. O MCP oficial e o complemento `google_ads_extended` (`write_tools_registered: false`) não satisfazem esse gate. A prova de permissão é a validação, que não grava; nunca testar escrita criando objeto descartável.
 
 Planner é uma capability separada: somente registrar `planner_connected` depois de `planner_enabled: true`, customer allowlisted e uma chamada real bem-sucedida. Basic Access ou transporte conectado isoladamente não bastam.
 

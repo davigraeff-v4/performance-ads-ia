@@ -37,9 +37,7 @@ class RoutingTests(unittest.TestCase):
                         args = ["--intent", intent, "--platform", platform, "--source-mode", source_mode]
                         if requires_keywords:
                             args.append("--requires-keywords")
-                        blocked = (platform == "google_ads" and intent == "execucao") or (
-                            intent == "avaliacao" and source_mode == "context_only"
-                        )
+                        blocked = intent == "avaliacao" and source_mode == "context_only"
                         payload = route(*args, expected_code=3 if blocked else 0)
                         if payload["status"] == "blocked":
                             continue
@@ -140,11 +138,13 @@ class RoutingTests(unittest.TestCase):
                 skills = payload["branches"][0]["planned_skills"]
                 self.assertIn(knowledge_skill, skills)
 
-    def test_google_execution_is_fail_closed(self) -> None:
-        payload = route("--intent", "execucao", "--platform", "google_ads", "--source-mode", "connected_read", expected_code=3)
-        self.assertEqual(payload["status"], "blocked")
-        self.assertIn("google_ads_write_manual_only", payload["gates"])
-        self.assertEqual(payload["branches"][0]["planned_skills"], [])
+    def test_google_execution_routes_to_executor(self) -> None:
+        # Desde 2026-11-06 a escrita Google Ads é homologada pelo googleAdsServer
+        # (contrato, seção 8.1); as travas ficam no executor e no próprio servidor.
+        payload = route("--intent", "execucao", "--platform", "google_ads", "--source-mode", "connected_read")
+        self.assertEqual(payload["status"], "ready")
+        self.assertNotIn("google_ads_write_manual_only", payload["gates"])
+        self.assertEqual(payload["branches"][0]["planned_skills"], ["executor"])
 
     def test_undefined_platform_is_blocked(self) -> None:
         payload = route("--intent", "analise", "--platform", "undefined", expected_code=3)

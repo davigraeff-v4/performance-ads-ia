@@ -14,7 +14,7 @@
 2. Marcar campos confirmados, hipóteses, indisponíveis e dependentes de interface.
 3. Verificar compatibilidade entre tipo, rede, budget, lance, conversões, targeting, ads/assets, feed e destino.
 4. Definir status inicial seguro e checklist de publicação manual.
-5. Gerar change set versionado com itens Google Ads marcados `manual_only` enquanto `write_tools_registered` for falso.
+5. Gerar change set versionado. Itens que cabem no `googleAdsServer` (campanha, orçamento, grupo, palavras-chave, negativas, anúncio responsivo, recursos) em conta da lista permitida podem ser `mcp`; criação que dependa de upload pelo Google Ads Editor ou da interface fica `manual_only`.
 6. Apresentar tudo no chat no formato de `templates/resposta-chat.md`. Depois da aprovação do conteúdo, registrar com `scripts/dossier.py new`: nasce `proposed` quando houver mutação; planejamento puro fica `analysis_only`.
 
 ## Gate

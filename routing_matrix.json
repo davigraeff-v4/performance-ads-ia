@@ -180,7 +180,7 @@
           {"skill": "planejamento/google-ads-plano-de-construcao", "when": "always"}
         ],
         "final_state": "proposed",
-        "output": "plano_construcao_manual"
+        "output": "plano_construcao"
       }
     },
     "auditoria": {
@@ -264,7 +264,7 @@
           {"skill": "change-set", "when": "always"}
         ],
         "final_state": "proposed",
-        "output": "plano_otimizacao_manual"
+        "output": "plano_otimizacao"
       }
     },
     "ajuste": {
@@ -286,7 +286,7 @@
           {"skill": "change-set", "when": "always"}
         ],
         "final_state": "proposed",
-        "output": "ajuste_pontual_manual"
+        "output": "ajuste_pontual"
       }
     },
     "relatorio": {
@@ -316,7 +316,7 @@
       "google_ads": {
         "steps": [],
         "final_state": "approved",
-        "output": "registro_aprovacao_manual"
+        "output": "registro_aprovacao"
       }
     },
     "execucao": {
@@ -332,8 +332,9 @@
         "steps": [
           {"skill": "executor", "when": "always"}
         ],
-        "final_state": "blocked_manual_only",
-        "output": "instrucao_manual"
+        "final_state": "executed",
+        "output": "resultado_execucao",
+        "possible_final_states": ["executed", "partial_failure", "failed"]
       }
     },
     "avaliacao": {
@@ -375,7 +376,7 @@
           {"skill": "change-set", "when": "always"}
         ],
         "final_state": "proposed",
-        "output": "change_set_reversao_manual"
+        "output": "change_set_reversao"
       }
     }
   }

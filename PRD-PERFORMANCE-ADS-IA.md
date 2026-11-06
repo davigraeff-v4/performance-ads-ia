@@ -177,7 +177,7 @@ Separar aprovação editorial de aprovação operacional. A primeira autoriza pe
 
 ### RF-12 — Execução
 
-Executar somente ferramentas homologadas. Na V1.1 inicial, Google Ads continua `manual_only` porque o complemento não registra ferramentas de escrita.
+Executar somente ferramentas homologadas. Desde 2026-11-06, Google Ads executa pelo servidor local `googleAdsServer` nas contas da lista permitida (contrato, seção 8.1); o resto continua `manual_only`.
 
 ### RF-13 — Relatório
 
@@ -264,7 +264,7 @@ Quando aplicável: termos, keywords, match type, negativas, parcela de impressõ
 - Funcionamento sem MCP.
 - Zero mistura silenciosa de contas/plataformas.
 - Zero mutação sem aprovação válida.
-- Google Ads permanece `manual_only` enquanto `write_tools_registered` não estiver homologado.
+- Google Ads escreve só pelo `googleAdsServer`, com validação prévia, conta permitida e exclusão bloqueada; o complemento `google_ads_extended` continua sem escrita (`write_tools_registered: false`).
 - 100% dos dossiês novos correspondem a uma versão previamente mostrada e aprovada no chat.
 - 100% das entregas analíticas compreensíveis e decidíveis diretamente no chat.
 - 100% dos diagnósticos `full` com todas as camadas aplicáveis declaradas.

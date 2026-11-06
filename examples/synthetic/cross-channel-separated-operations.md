@@ -9,4 +9,4 @@
 
 ## Comportamento esperado
 
-Compartilhar briefing, meta comercial e dados de CRM. Manter atribuição, conta, fonte, moeda/timezone e conclusões por plataforma. Se houver mudanças propostas, gerar `operation_id` Meta e `operation_id` Google Ads separados. Google Ads deve permanecer `manual_only`.
+Compartilhar briefing, meta comercial e dados de CRM. Manter atribuição, conta, fonte, moeda/timezone e conclusões por plataforma. Se houver mudanças propostas, gerar `operation_id` Meta e `operation_id` Google Ads separados. Cada operação tem a própria aprovação e execução; no Google Ads, só pelo `googleAdsServer` ou à mão.

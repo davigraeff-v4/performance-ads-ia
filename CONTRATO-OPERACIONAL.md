@@ -2,6 +2,8 @@
 
 Este é o documento normativo do sistema. Em caso de divergência, ele prevalece sobre `README.md`, PRD, comandos e skills. `CLAUDE.md` e `AGENTS.md` executam este contrato.
 
+Revisão de 2026-11-06: a escrita no Google Ads passa a ser homologada pelo servidor local `googleAdsServer` (seção 8.1). As demais regras não mudaram.
+
 ## 1. Missão e fronteiras
 
 O PERFORMANCE ADS IA ajuda gestores a decidir, planejar, analisar e otimizar Meta Ads e Google Ads com rapidez e rastreabilidade. O sistema pode ler dados, criar estruturas e executar mudanças suportadas por uma integração homologada, mas nunca executa mutação sem aprovação explícita e versionada.
@@ -127,9 +129,22 @@ Separar compras atribuídas, receita atribuída, CPA, ROAS, ticket, margem e ROA
 - Não ativar recomendações automáticas.
 - Avaliar correspondência, negativas, conversões e Smart Bidding em conjunto.
 - Não inferir disponibilidade de tipo, subtipo, asset ou estratégia de lance sem validar a conta e a fonte oficial atual.
-- O MCP oficial Google Ads é usado apenas para leitura.
+- O MCP oficial Google Ads (`google_ads`) é usado apenas para leitura; escrita só pelo servidor `googleAdsServer`, conforme a seção 8.1.
 - O conector local complementar pode expor Keyword Planner somente quando o uso permitido do developer token, a allowlist de customer e o flag local estiverem confirmados. Conexão ou Basic Access isoladamente não satisfazem esse gate.
-- Na etapa V1.1 inicial, nenhuma ferramenta de escrita Google Ads é registrada; toda mudança permanece `manual_only` até existir adapter específico, permissão homologada, testes em conta de teste e nova versão deste contrato.
+
+### 8.1 Escrita Google Ads
+
+A escrita no Google Ads é feita somente pelo servidor local `googleAdsServer`, instalado fora do repositório (`~/.mcp/google-ads`) e registrado no escopo de usuário do Claude. O MCP oficial e o complemento `google_ads_extended` continuam sem escrita. As particularidades do servidor estão em `knowledge/platform-quirks/google-ads-api.md`.
+
+Uma mudança Google Ads só tem modo de execução `mcp` quando o gate `validated_write` passa, com tudo ao mesmo tempo:
+
+1. `list_allowed_accounts` responde com `write_mode` igual a `execute` e a conta alvo está na lista de contas permitidas, com a MCC de entrada correta.
+2. A mudança cabe nas ferramentas do servidor: `set_status`, `update_campaign_budget`, `add_keywords`, `add_negative_keywords`, `mutate` ou `mutate_multi`. O que não couber, ou só existir na interface (aceitar recomendação, importação pelo Google Ads Editor, upload de vídeo), fica `manual_only`.
+3. A mesma chamada, com `validate_only=true`, foi aceita pela API no preflight da execução, sem drift em relação ao snapshot aprovado.
+
+Validar (`validate_only=true`) não grava nada e pode ser usado já na montagem do change set para provar que o item é aceito. Gravar (`validate_only=false`) só acontece dentro de `/executar-operacao`, com `/aprovar-operacao` válido, um item por vez, na ordem aprovada. Depois de cada item: confirmar por leitura GAQL e por `get_change_history`, e registrar com `dossier.py record-execution` como `success` via `googleAdsServer`.
+
+Continua proibido no Google Ads: excluir ou arquivar (o servidor bloqueia `remove` e status `REMOVED`, e este contrato não autoriza ligar `GOOGLE_ADS_ALLOW_REMOVE`); aceitar ou aplicar recomendações da plataforma e ativar a aplicação automática; usar `partial_failure=true` sem que o change set aprovado preveja; alterar conta fora da lista; mudar a lista de contas ou o modo de escrita para destravar uma execução sem pedido explícito do gestor; fazer mutação real como teste.
 
 ## 9. Entrega chat-first e dossiê aprovado
 
@@ -189,8 +204,8 @@ Para Google Ads:
 - Manter qualquer conector complementar em processo e namespace separados do MCP oficial.
 - Exigir Google Cloud, OAuth/ADC, developer token e `login-customer-id` quando houver manager account.
 - Manter `google-ads.yaml`, JSONs, tokens e configuração real fora do Git.
-- Tratar o servidor como somente leitura no V1.
-- Declarar capacidades locais de forma fail-closed: `reporting` por padrão, Planner desligado, escrita desligada e allowlist de customers vazia.
+- Tratar o servidor oficial como somente leitura. A escrita segue a seção 8.1, pelo servidor `googleAdsServer`, em processo e namespace próprios; o `.env`, o token e a lista de contas dele ficam fora do Git e nunca são exibidos por inteiro.
+- Declarar capacidades locais do complemento `google_ads_extended` de forma fail-closed: `reporting` por padrão, Planner desligado, escrita desligada e allowlist de customers vazia.
 - Nunca tratar nível Basic como autorização automática para Planner ou mutação; conferir também o uso permitido registrado no API Center.
 - Oferecer sempre o modo `file_based` ou `context_only`.
 

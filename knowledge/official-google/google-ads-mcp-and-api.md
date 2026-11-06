@@ -12,7 +12,7 @@ O MCP oficial expõe listagem de customers, consultas GAQL e descoberta de metad
 
 Neste projeto, o MCP oficial é somente leitura. Geração de ideias e forecasts do Keyword Planner não deve ser presumida como ferramenta do MCP oficial.
 
-O complemento local `google_ads_extended` é um processo separado. Na V1.1 inicial ele expõe diagnóstico sanitizado de capacidades e um adapter de `KeywordPlanIdeaService`, bloqueado por padrão. Planner exige uso permitido compatível no API Center, flag local explícito e customer allowlisted. Não existem ferramentas de escrita registradas nesta etapa.
+O complemento local `google_ads_extended` é um processo separado. Na V1.1 inicial ele expõe diagnóstico sanitizado de capacidades e um adapter de `KeywordPlanIdeaService`, bloqueado por padrão. Planner exige uso permitido compatível no API Center, flag local explícito e customer allowlisted. Ele não registra ferramentas de escrita. A escrita é do servidor local `googleAdsServer` (contrato, seção 8.1), instalado fora do repositório.
 
 ## Componentes da autenticação
 
@@ -44,5 +44,5 @@ Preferir `pipx install` e um launcher local fora do repositório. Claude Code e 
 - Proteger diretório local com `0700` e arquivos secretos com `0600`.
 - Copiar somente credenciais Google Ads quando a fonte local contiver segredos de outros serviços.
 - Validar transporte, autenticação, customer e leitura separadamente.
-- Não testar escrita.
+- Não testar escrita com mutação real; a permissão se prova com `validate_only=true`, que não grava.
 - Não expor IDs integrais quando a apresentação puder usar máscara.

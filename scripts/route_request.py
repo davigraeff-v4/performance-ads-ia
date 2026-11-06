@@ -94,10 +94,6 @@ def resolve_branch(
         status = "blocked"
         gates.append("evaluation_requires_account_or_file_data")
 
-    if platform == "google_ads" and intent == "execucao":
-        status = "blocked"
-        gates.append("google_ads_write_manual_only")
-
     dossier_policy = matrix.get("dossier_policy", {})
     candidate_intents = set(dossier_policy.get("candidate_intents", []))
     no_dossier_intents = set(dossier_policy.get("no_dossier_intents", []))

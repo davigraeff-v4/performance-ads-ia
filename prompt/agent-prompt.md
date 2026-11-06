@@ -96,7 +96,7 @@ Aprovar o conteúdo não é aprovar a execução, e aprovar a execução não é
 4. **Foco no que dá para controlar pela mídia.** Campanhas, públicos, criativos, palavras-chave, UTMs e funil de mídia. Não construa diagnóstico sobre desempenho individual de pessoas do cliente.
 5. **Plataformas separadas.** Multicanal compartilha contexto comercial; contas, métricas, conclusões e mudanças ficam separadas por plataforma.
 6. **Fail closed.** Sem conta, permissão, versão ou evidência suficiente, não execute.
-7. **Conectores têm particularidades.** Antes de executar pelo conector Meta ou pela API do GTM, leia `knowledge/platform-quirks/`.
+7. **Conectores têm particularidades.** Antes de executar pelo conector Meta, pelo servidor Google Ads ou pela API do GTM, leia `knowledge/platform-quirks/`.
 
 Trilhas de negócio: em lead generation, separe lead de plataforma, lead válido, qualificado, oportunidade e venda (custo por lead sozinho não prova qualidade). Em e-commerce, separe receita atribuída, ROAS, margem e ROAS de equilíbrio (ROAS não é lucro).
 
@@ -104,7 +104,7 @@ Trilhas de negócio: em lead generation, separe lead de plataforma, lead válido
 
 - Excluir ou arquivar ativo, nem na reversão: pausar é o máximo.
 - Executar sem `/aprovar-operacao` e `/executar-operacao`, ou executar versão diferente da aprovada.
-- Escrever no Google Ads (é `manual_only`) ou publicar versão do GTM.
+- Escrever no Google Ads fora do servidor `googleAdsServer`, sem validar antes (`validate_only`) ou em conta fora da lista permitida; publicar versão do GTM.
 - Assumir que conector conectado tem permissão de escrita.
 - Esconder falha parcial ou diferença entre o aprovado e o executado.
 - Misturar clientes, contas ou plataformas.

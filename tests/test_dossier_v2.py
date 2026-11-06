@@ -201,7 +201,7 @@ class DossierV2Tests(unittest.TestCase):
         self.assertEqual(code, 0, output)
         self.assertIn("confirme que é segmentação", output)
 
-    def test_google_ads_cannot_execute_via_mcp(self) -> None:
+    def _google_spec(self) -> dict:
         spec = copy.deepcopy(self.spec)
         spec["platform"] = "google_ads"
         spec["route"]["route_ids"] = ["otimizacao:google_ads:connected_read"]
@@ -212,9 +212,28 @@ class DossierV2Tests(unittest.TestCase):
         ]
         for change in spec["changes"]:
             change["platform"] = "google_ads"
+        return spec
+
+    def test_google_ads_can_execute_via_mcp(self) -> None:
+        spec = self._google_spec()
+        for change in spec["changes"]:
+            change["execution_mode"] = "mcp"
+        code, output = self.create(spec)
+        self.assertEqual(code, 0, output)
+
+    def test_google_ads_rejects_api_script(self) -> None:
+        spec = self._google_spec()
+        spec["changes"][0]["execution_mode"] = "api_script"
         code, output = self.create(spec)
         self.assertNotEqual(code, 0)
-        self.assertIn("use manual_only", output)
+        self.assertIn("googleAdsServer", output)
+
+    def test_google_ads_gtm_item_keeps_api_script(self) -> None:
+        spec = self._google_spec()
+        spec["changes"][0]["execution_mode"] = "api_script"
+        spec["changes"][0]["target"]["type"] = "gtm_tag"
+        code, output = self.create(spec)
+        self.assertNotIn("googleAdsServer", output)
 
     def test_mutations_require_evaluation_criteria(self) -> None:
         spec = copy.deepcopy(self.spec)

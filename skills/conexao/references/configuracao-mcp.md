@@ -34,7 +34,7 @@
 
 ## Google Ads
 
-O servidor oficial é executado localmente a partir de `googleads/google-ads-mcp` e permanece somente leitura. O conector `google_ads_extended` roda em processo separado e nunca amplia capacidade apenas porque está instalado.
+O servidor oficial é executado localmente a partir de `googleads/google-ads-mcp` e permanece somente leitura. O conector `google_ads_extended` roda em processo separado e nunca amplia capacidade apenas porque está instalado. A escrita é do servidor `googleAdsServer` (escopo de usuário, `~/.mcp/google-ads`): diagnosticar com `list_allowed_accounts` (modo de escrita, contas permitidas, versão da API), sem abrir o `.env` nem o token.
 
 ### Fontes obrigatórias
 

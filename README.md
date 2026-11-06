@@ -252,7 +252,7 @@ Análises multicanal podem compartilhar um dossiê, mas mutações usam um `oper
 Na V1.1 inicial:
 
 - Meta pode ser executado somente se escrita tiver sido homologada.
-- Google Ads permanece `manual_only`; o complemento ainda não registra ferramentas de escrita.
+- Google Ads executa pelo servidor local `googleAdsServer` (escopo de usuário, `~/.mcp/google-ads`), só nas contas da lista permitida e validando cada item antes de gravar (contrato, seção 8.1). O complemento `google_ads_extended` continua sem escrita.
 - Recomendações automáticas nunca são aplicadas por padrão.
 
 ## 12. Conhecimento
@@ -545,7 +545,7 @@ Abra uma nova sessão no Claude Code e uma nova tarefa no Codex. Valide nesta or
 5. `search_search` executa uma consulta GAQL pequena, com período e `limit`.
 6. O dossiê registra horário, ferramentas, contas mascaradas e limitações.
 
-Nunca faça uma mutação como teste. No V1, `connected_read` comprova somente leitura; mudanças Google Ads continuam `manual_only`.
+Nunca faça uma mutação como teste. `connected_read` comprova somente leitura; a escrita é do servidor `googleAdsServer` e é comprovada com `validate_only=true`, que não grava (contrato, seção 8.1).
 
 ### 15.12 Complemento local experimental
 

@@ -5,7 +5,7 @@
 - [ ] `knowledge/platform-quirks/` foi lido para a plataforma do lote.
 - [ ] Aprovação tem responsável, timestamp e declaração.
 - [ ] Plataforma, conta, moeda e timezone conferem.
-- [ ] Integração e permissão de escrita foram validadas; `google_ads_extended` com escrita ausente ou desabilitada bloqueia execução Google Ads.
+- [ ] Integração e permissão de escrita foram validadas. Google Ads: `googleAdsServer` com `write_mode` `execute`, conta na lista permitida e cada item aceito com `validate_only=true`; sem isso, o item é `manual_only`.
 - [ ] Estado atual dos alvos confere com snapshot.
 - [ ] Não há exclusão ou arquivamento.
 - [ ] Todos os budgets mostram impacto financeiro.

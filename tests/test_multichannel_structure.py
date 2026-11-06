@@ -19,11 +19,15 @@ class MultichannelStructureTests(unittest.TestCase):
         self.assertIn("planejamento/google-ads-plano-de-construcao", google)
         self.assertIn("diagnostico/google-ads", google)
 
-    def test_google_write_remains_fail_closed(self) -> None:
+    def test_google_write_is_gated_by_write_server(self) -> None:
         contract = (ROOT / "CONTRATO-OPERACIONAL.md").read_text(encoding="utf-8")
         executor = (ROOT / "skills/executor/SKILL.md").read_text(encoding="utf-8")
-        self.assertIn("nenhuma ferramenta de escrita Google Ads é registrada", contract)
+        self.assertIn("### 8.1 Escrita Google Ads", contract)
+        for marker in ("googleAdsServer", "validate_only=true", "lista de contas permitidas", "GOOGLE_ADS_ALLOW_REMOVE"):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, contract)
         self.assertIn("bloquear toda chamada de escrita", executor)
+        self.assertIn("validate_only=true", executor)
 
     def test_google_ads_extended_is_fail_closed(self) -> None:
         base = ROOT / "integrations" / "google_ads_extended"
