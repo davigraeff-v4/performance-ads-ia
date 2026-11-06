@@ -1,0 +1,12 @@
+{
+  "_comment": "Contas que o servidor pode ALTERAR. Leitura não depende desta lista. Lido a cada chamada, sem reiniciar. Formato de cada conta em _exemplo_de_conta.",
+  "_exemplo_de_conta": {
+    "1234567890": {
+      "name": "Nome da conta no Google Ads",
+      "client": "slug-do-cliente-em-clients",
+      "login_customer_id": "ID da MCC por onde se entra nesta conta"
+    }
+  },
+  "default_login_customer_id": "",
+  "accounts": {}
+}

@@ -134,7 +134,7 @@ Separar compras atribuídas, receita atribuída, CPA, ROAS, ticket, margem e ROA
 
 ### 8.1 Escrita Google Ads
 
-A escrita no Google Ads é feita somente pelo servidor local `googleAdsServer`, instalado fora do repositório (`~/.mcp/google-ads`) e registrado no escopo de usuário do Claude. O MCP oficial e o complemento `google_ads_extended` continuam sem escrita. As particularidades do servidor estão em `knowledge/platform-quirks/google-ads-api.md`.
+A escrita no Google Ads é feita somente pelo servidor local `googleAdsServer`, instalado fora do repositório (`~/.mcp/google-ads`, por `integrations/google_ads_write_server/install.sh`) e registrado no escopo de usuário do Claude. O MCP oficial e o complemento `google_ads_extended` continuam sem escrita. As particularidades do servidor estão em `knowledge/platform-quirks/google-ads-api.md`.
 
 Uma mudança Google Ads só tem modo de execução `mcp` quando o gate `validated_write` passa, com tudo ao mesmo tempo:
 

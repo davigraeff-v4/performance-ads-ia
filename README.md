@@ -601,6 +601,16 @@ codex mcp remove google_ads
 
 Não apague credenciais ou revogue acessos automaticamente. Confirme o alvo e a necessidade antes de qualquer ação destrutiva.
 
+### 15.15 Servidor de escrita (`googleAdsServer`)
+
+O MCP oficial e o complemento acima só leem. Para o agent executar mudanças no Google Ads (contrato, seção 8.1), instale o servidor de escrita `googleAdsServer`. Ele fica fora do repositório, em `~/.mcp/google-ads`, e é registrado no escopo de usuário, então vale em qualquer projeto e no Claude Desktop:
+
+```bash
+bash integrations/google_ads_write_server/install.sh
+```
+
+O passo a passo completo está em [`integrations/google_ads_write_server/README.md`](integrations/google_ads_write_server/README.md). Ele cobre os pré-requisitos, o token OAuth, o `.env`, o registro no Claude, a lista de contas permitidas, o teste em `validate_only` e as travas. Sem esse servidor, as mudanças no Google Ads continuam manuais.
+
 ## 16. Apêndice opcional — Google Tag Manager (GTM)
 
 ### 16.1 Como funciona
